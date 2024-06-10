@@ -1,0 +1,91 @@
+
+
+ion-footer {
+    --ion-background-color: #f6f6f6;
+}
+
+ion-toolbar {
+    --background: #f6f6f6;
+    --color: #222;
+}
+
+.signinButton {
+    background: #2ecc71;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 2.5rem;
+    font-size: 18px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+
+.signupButton {
+    border-radius: 10px;
+    text-align: center;
+    line-height: 2.5rem;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+
+.forgotButton {
+    background: transparent;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #2980b9;
+    cursor: pointer;
+}
+
+ion-button {
+    --color: #ffffff;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+ion-input {
+    --color: #ffffff !important;
+}
+
+ion-row {
+    padding: 0px !important;
+}
+
+ion-item {
+    box-shadow: none !important;
+    border: 1px solid rgb(122, 120, 120);
+    border-radius: 8px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    --background: transparent;
+    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 480px) {
+    .box {
+        border-radius: 20px;
+    }
+
+    .container {
+        height: auto !important;
+    }
+}
+
+.container {
+    background: linear-gradient(55deg, #000, rgba(129, 128, 128, 0.3)), url(https://images.pexels.com/photos/2041627/pexels-photo-2041627.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
+    background-size: cover;
+    background-position: fixed;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}

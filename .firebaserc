@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "hrportal-new-app"
+  },
+  "targets": {
+    "hrportal-new-app": {
+      "hosting": {
+        "dev.timesofpeople.com": [
+          "hr--portal-dev"
+        ],
+        "timesofpeople.com": [
+          "hrportal-new-app"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

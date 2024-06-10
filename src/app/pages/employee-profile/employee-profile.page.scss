@@ -1,0 +1,43 @@
+  
+  ion-item {
+    --background: transparent;
+  }
+  
+  ion-input {
+    border: 0.5px solid var(--ion-color-dark) !important;
+    background: var(--ion-color-light) !important;
+    border-radius: 10px;
+    padding: 0px 10px !important;
+    color: var(--ion-color-dark) !important;
+  }
+  
+
+
+
+  select {
+    border-radius: 10px;
+  }
+ 
+
+  
+  
+  .profileImage {
+        display: block;
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        border-radius: 50%;
+  }
+
+  input#file {
+    display: inline-block;
+    width: 100%;
+    padding: 50px 0 0 0;
+    height: 50px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: url(https://cdn1.iconfinder.com/data/icons/hawcons/32/698394-icon-130-cloud-upload-512.png) center center no-repeat var(--ion-color-gray);
+    border-radius: 10px;
+    background-size: 40px 40px;
+    border: 0.5px solid #434343;
+}

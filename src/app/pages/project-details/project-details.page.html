@@ -1,0 +1,645 @@
+<ion-header>
+  <ion-toolbar color="gray">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Project Details</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="tertiary">
+    <ion-segment [(ngModel)]="segment" style="margin: 0">
+      <ion-segment-button value="details">
+        <ion-text> Details </ion-text>
+      </ion-segment-button>
+      <ion-segment-button [disabled]="projectId === 'null'" value="members">
+        <ion-text> Members </ion-text>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-row>
+    <ion-col sizeLg="10" offsetLg="1" *ngIf="segment === 'details'">
+      <form [formGroup]="basic">
+        <ion-list lines="none" style="background: transparent">
+          <ion-row style="padding-bottom: 10px">
+            <ion-col size="6">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Project Name<span style="color: red"> *</span></ion-label
+                >
+                <ion-input formControlName="projectName"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Client<span style="color: red"> *</span></ion-label
+                >
+                <select
+                  formControlName="customerId"
+                  style="
+                    width: 100%;
+                    border: 0.5px solid var(--ion-color-dark) !important;
+                    border-radius: 10px;
+                    background: var(--ion-color-light);
+                    color: var(--ion-color-dark);
+                    padding: 7px;
+                    font-weight: 300;
+                  "
+                >
+                  <option value="0">Internal</option>
+                  <!-- <option value="1">Extranal</option> -->
+                  <option
+                    *ngFor="let customer of allCustomers"
+                    [value]="customer.customerId"
+                  >
+                    {{customer.companyName}}
+                  </option>
+                </select>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Estimated Hours <span style="color: red"> *</span></ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="estimatedHours"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Start Date <span style="color: red"> *</span></ion-label
+                >
+                <ion-input type="date" formControlName="startDate"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Project Status<span style="color: red"> *</span></ion-label
+                >
+                <select
+                  formControlName="projectStatus"
+                  style="
+                    width: 100%;
+                    border: 0.5px solid var(--ion-color-dark) !important;
+                    border-radius: 10px;
+                    background: var(--ion-color-light);
+                    color: var(--ion-color-dark);
+                    padding: 7px;
+                    font-weight: 300;
+                  "
+                >
+                  <option value="Upcoming">Upcoming</option>
+                  <option value="Ongoing">Ongoing</option>
+                  <option value="Onhold">On Hold</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Suspended">Suspended</option>
+                </select>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Project Stage<span style="color: red"> *</span></ion-label
+                >
+                <select
+                  formControlName="projectStage"
+                  style="
+                    width: 100%;
+                    border: 0.5px solid var(--ion-color-dark) !important;
+                    border-radius: 10px;
+                    background: var(--ion-color-light);
+                    color: var(--ion-color-dark);
+                    padding: 7px;
+                    font-weight: 300;
+                  "
+                >
+                  <option value="Initiate">Initiate</option>
+                  <option value="Plan">Plan</option>
+                  <option value="Execute">Execute</option>
+                  <option value="Deliver">Deliver</option>
+                  <option value="Close">Close</option>
+                </select>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Project Type<span style="color: red"> *</span></ion-label
+                >
+                <select
+                  formControlName="projectType"
+                  style="
+                    width: 100%;
+                    border: 0.5px solid var(--ion-color-dark) !important;
+                    border-radius: 10px;
+                    background: var(--ion-color-light);
+                    color: var(--ion-color-dark);
+                    padding: 7px;
+                    font-weight: 300;
+                  "
+                >
+                  <option value="Billable">Billable</option>
+                  <option value="Non-Billable">Non-Billable</option>
+                </select>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12">
+              <ion-item>
+                <p>Plan Estimated Efforts</p>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Architect Hours</ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="architect"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Designer Hours</ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="design"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >DB Architect Hours</ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="dbArchitect"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Backend Hours</ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="backendHrs"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Frontend Hours</ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="frontendHrs"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Project Manager Hours<span style="color: red">
+                    *</span
+                  ></ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="projectManager"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Server Setup Hours</ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="serverHrs"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Coordination Hours</ion-label
+                >
+                <ion-input
+                  type="number"
+                  min="0"
+                  formControlName="coordinationHrs"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <!-- replicate epic story -->
+            <ion-col size="4">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Replicate Epic/Stories<span style="color: red"> *</span></ion-label
+                >
+                
+
+                <select
+                  formControlName="replicateData"
+                  style="
+                    width: 100%;
+                    border: 0.5px solid var(--ion-color-dark) !important;
+                    border-radius: 10px;
+                    background: var(--ion-color-light);
+                    color: var(--ion-color-dark);
+                    padding: 7px;
+                    font-weight: 300;
+                  "
+                >
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="showReasonInput">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Select Project Id<span style="color: red"> *</span></ion-label
+                >
+                <!-- <select
+                  formControlName="sourceProjectId"
+                  style="
+                    width: 100%;
+                    border: 0.5px solid var(--ion-color-dark) !important;
+                    border-radius: 10px;
+                    background: var(--ion-color-light);
+                    color: var(--ion-color-dark);
+                    padding: 7px;
+                    font-weight: 300;
+                  "
+                >
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select> -->
+                <select formControlName="sourceProjectId" style="
+                width: 100%;
+                border: 0.5px solid var(--ion-color-dark) !important;
+                border-radius: 10px;
+                background: var(--ion-color-light);
+                color: var(--ion-color-dark);
+                padding: 7px;
+                font-weight: 300;
+              " >
+                  <option value="">Select</option>
+                  <option *ngFor="let item of allProjectsArray; let i = index" [value]="item.projectId">
+                    {{ item.projectName }}
+                  </option>
+                </select> 
+              </ion-item>
+            </ion-col>
+            <!-- replicate epic story -->
+            <!-- <ion-col size="4"> </ion-col>   -->
+            <ion-col size="4">
+              <ion-item>
+                <ion-checkbox
+                  formControlName="sendDailyStatus"
+                  slot="start"
+                ></ion-checkbox>
+                <ion-label>Send daily status updates</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-checkbox
+                  formControlName="sendWeeklyStatus"
+                  slot="start"
+                ></ion-checkbox>
+                <ion-label>Send weekly status updates</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4">
+              <ion-item>
+                <ion-checkbox
+                  formControlName="sendMonthlyStatus"
+                  slot="start"
+                ></ion-checkbox>
+                <ion-label>Send monthly status updates</ion-label>
+              </ion-item>
+            </ion-col>
+            <!-- Release number Ankit -->
+
+            <ion-col size="12" *ngIf="releaseNumberData.length>0">
+              <ion-item>
+                <ion-label style="color: #222" position="stacked"
+                  >Release Numbers</ion-label
+                >
+                <ion-chip *ngFor="let code of releaseNumberData">
+                  <ion-label>{{code}}</ion-label>
+                </ion-chip>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12">
+              <ion-row>
+                <ion-col size="6">
+                  <ion-item
+                    lines="none"
+                    style="margin-bottom: 5px; margin-top: 5px"
+                  >
+                    <ion-label style="color: #222" position="stacked"
+                      >Add Release Numbers</ion-label
+                    >
+                    <ion-input
+                      style="border: 1px solid #dcdcdc"
+                      type="number"
+                      formControlName="releaseNumber"
+                    ></ion-input>
+                    <ion-icon
+                      (click)="addRelease()"
+                      slot="end"
+                      name="save"
+                      color="dark"
+                      style="margin-top: 34px"
+                    ></ion-icon>
+                  </ion-item>
+                  <div
+                    style="padding: 0px 20px"
+                    *ngIf="releases && releases.length > 0"
+                  >
+                    <ion-chip *ngFor="let code of releases">
+                      <ion-label>{{code}}</ion-label>
+                      <ion-icon
+                        (click)="removeRelease(code)"
+                        name="close"
+                        color="dark"
+                      ></ion-icon>
+                    </ion-chip>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <!-- Release number Ankit -->
+
+            <ion-col size="12">
+              <ion-item>
+                <ion-label
+                  position="stacked"
+                  style="color: var(--ion-color-dark)"
+                  >Project Description<span style="color: red">
+                    *</span
+                  ></ion-label
+                >
+                <quill-editor
+                  [styles]="{height: '250px'}"
+                  formControlName="projectDescription"
+                  placeholder="Enter Text"
+                  [modules]="quillConfig"
+                  (onSelectionChanged)="onSelectionChanged($event)"
+                  (onContentChanged)="onContentChanged($event)"
+                  style="
+                    background-color: var(--ion-color-light);
+                    min-height: 100px;
+                    border-radius: 10px;
+                    border: 0.5px solid rgb(83, 83, 83);
+                    width: 100%;
+                  "
+                >
+                </quill-editor>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row style="padding-bottom: 10px"> </ion-row>
+        </ion-list>
+      </form>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col sizeLg="10" offsetLg="1" *ngIf="segment === 'members'">
+      <ion-row
+        style="
+          z-index: 999999999;
+          background-color: transparent;
+          color: var(--ion-color-light);
+          margin: 0px;
+        "
+      >
+        <ion-col size="12" style="background: transparent">
+          <ion-item lines="none">
+            <ion-label style="color: var(--ion-color-light)">
+              Members
+            </ion-label>
+          </ion-item>
+          <ion-toolbar color="gray">
+            <ion-searchbar
+              placeholder="Search Employee"
+              debounce="500"
+              (ionChange)="searchEmployee($event)"
+            >
+            </ion-searchbar>
+          </ion-toolbar>
+        </ion-col>
+      </ion-row>
+      <ion-row
+        *ngFor="let user of allUsers; index as i"
+        [ngClass]="(i % 2 === 0) ? 'odd' : 'even'"
+        style="
+          background: var(--ion-color-light);
+          border-radius: 10px;
+          margin: 10px;
+        "
+      >
+        <ion-col size="3" style="border-right: 1px solid rgb(63 68 73)">
+          <ion-item lines="none" style="width: 100%">
+            <ion-avatar slot="start">
+              <img
+                [src]="user.imageExists ? authService.apiUrl+'images/'+user.employeeId+'.png' : authService.apiUrl+'images/0.png'"
+              />
+            </ion-avatar>
+            <ion-label style="color: var(--ion-color-dark)">
+              {{user.firstName}} {{user.lastName}}
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col size="2" style="border-right: 1px solid rgb(63 68 73)">
+          <ion-item *ngIf="!checkInTeam(user)" lines="none" style="width: 100%">
+            <ion-checkbox
+              style="color: var(--ion-color-dark)"
+              [(ngModel)]="user.billable"
+              (ionChange)="selectBillable(user)"
+            >
+            </ion-checkbox>
+            <ion-label style="color: var(--ion-color-dark)">Billable</ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col size="2" style="border-right: 1px solid rgb(63 68 73)">
+          <ion-item *ngIf="!checkInTeam(user)" lines="none" style="width: 100%">
+            <ion-input
+              type="number"
+              min="0"
+              placeholder="Hrs Assigned"
+              [(ngModel)]="user.hoursAssign"
+              (ionChange)="selectHours(user)"
+              style="border: none; background: #161b22"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4" style="border-right: 1px solid rgb(63 68 73)">
+          <!-- <ion-select *ngIf="!checkInTeam(user)" style="color: var(--ion-color-dark);" interface="popover" [(ngModel)]="user.type"
+              placeholder="Select Role" (ionChange)="selectRole(user)">
+              <ion-select-option value="Frontend">Frontend Developer</ion-select-option>
+              <ion-select-option value="Backend">Backend Developer</ion-select-option>
+              <ion-select-option value="Functional">Functional Consultant</ion-select-option>
+              <ion-select-option value="Tester">Tester/QA</ion-select-option>
+              <ion-select-option value="Manager">Project Manager</ion-select-option>
+            </ion-select> -->
+
+          <!-- <ion-list>
+              <ion-item>
+                <ion-select placeholder="Select a Fruit" *ngIf="!checkInTeam(user)" style="color: var(--ion-color-dark);" interface="popover" [(ngModel)]="user.type"
+                placeholder="Select Role" (ionChange)="selectRole(user)">
+                 
+                  <ion-select-option value="Frontend">Frontend Developer</ion-select-option>
+                  <ion-select-option value="Backend">Backend Developer</ion-select-option>
+                  <ion-select-option value="Functional">Functional Consultant</ion-select-option>
+                  <ion-select-option value="Tester">Tester/QA</ion-select-option>
+                  <ion-select-option value="Manager">Project Manager</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>  -->
+
+          <ion-list>
+            <ion-item>
+              <ion-select
+                *ngIf="!checkInTeam(user)"
+                style="color: var(--ion-color-dark)"
+                [(ngModel)]="user.type"
+                placeholder="Select Role"
+                (ionChange)="selectRole(user)"
+              >
+                <ion-select-option value="Frontend"
+                  >Frontend Developer</ion-select-option
+                >
+                <ion-select-option value="Backend"
+                  >Backend Developer</ion-select-option
+                >
+                <ion-select-option value="Functional"
+                  >Functional Consultant</ion-select-option
+                >
+                <ion-select-option value="Tester">Tester/QA</ion-select-option>
+                <ion-select-option value="Manager"
+                  >Project Manager</ion-select-option
+                >
+                <ion-select-option value="Designer">Designer</ion-select-option>
+                <!-- <ion-select-option value="Producthead"
+                  >Product Head</ion-select-option
+                >
+                <ion-select-option value="SolutionArchitect"
+                  >Solution Architect</ion-select-option
+                > -->
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+        <ion-col size="1">
+          <ion-item lines="none" style="width: 100%">
+            <ion-button
+              *ngIf="checkInTeam(user)"
+              slot="end"
+              fill="clear"
+              (click)="addEmployeeTeam(user)"
+            >
+              <ion-icon color="success" name="add"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="!checkInTeam(user)"
+              slot="end"
+              fill="clear"
+              (click)="removeProjectMember(user)"
+            >
+              <ion-icon color="danger" name="close"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>
+<ion-footer>
+  <ion-toolbar *ngIf="segment === 'details'" color="gray">
+    <ion-buttons slot="end">
+      <ion-button
+        *ngIf="projectId === 'null'"
+        expand="block"
+        fill="solid"
+        color="success"
+        style="font-weight: 300; width: 150px"
+        (click)="saveProject()"
+      >
+        Create Project
+      </ion-button>
+      <ion-button
+        *ngIf="projectId !== 'null'"
+        expand="block"
+        fill="solid"
+        color="success"
+        style="font-weight: 300; width: 150px"
+        (click)="updateProject()"
+      >
+        Update
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

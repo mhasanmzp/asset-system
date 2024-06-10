@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>chatrooms</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button (click)="newPeer()">
+    New Peer
+    </ion-button>
+    <ion-input [(ngModel)]="peerId">
+
+    </ion-input>
+    <ion-button (click)="connect(peerId)">
+    Connect
+    </ion-button>
+    <!-- <ion-button (click)="answerCall()">
+    Answer Call
+    </ion-button> -->
+
+    <video #videoPlayer autoplay></video>
+
+</ion-content>

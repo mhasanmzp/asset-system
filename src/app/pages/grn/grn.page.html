@@ -1,0 +1,253 @@
+<ion-header style="margin-bottom: 50px;">
+  <ion-toolbar>
+    <ion-title>Goods Received Note</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openAddMaterialModal()">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Add Asset
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <!-- Search bar -->
+    <ion-row>
+      <ion-col size="12">
+            <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilter()" placeholder="Search Products"></ion-searchbar >
+
+        <!-- <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterPurchaseData()" placeholder="Search by Model or Serial Number"></ion-searchbar> -->
+      </ion-col>
+    </ion-row>
+    <!-- Table headers -->
+    <ion-row class="table-header">
+      <ion-col class="tg-hpky" style="width: 50px; margin-left: 50px;">Purchase Id</ion-col>
+      <ion-col class="tg-hpky" style="width: 170px;">
+        Category&nbsp;&nbsp;&nbsp;
+        <ion-icon style="font-size: 14px;" name="filter-outline"></ion-icon>
+      </ion-col>
+      <ion-col class="tg-hpky" style="width: 300px;">Product Name</ion-col>
+      <ion-col class="tg-hpky" style="width: 120px;">
+        Received Quantity&nbsp;&nbsp;&nbsp;
+      </ion-col>
+      <ion-col class="tg-hpky" style="width: 170px;">Quantity Rejected</ion-col>
+      <ion-col class="tg-hpky" style="width: 170px;">Stockable Quantity</ion-col>
+    </ion-row>
+    <!-- Data rows -->
+    <ion-row *ngFor="let item of filteredData; let i = index"
+      [ngClass]="{'data-row-even': i % 2 === 0, 'data-row-odd': i % 2 !== 0}"
+      style="border-bottom: 1px solid #ccc;"
+      (click)="openDetailsModal(item.purchaseId)">
+      <!-- Clickable Purchase ID -->
+      <ion-col style="width: 170px; margin-left: 30px;">{{ item.purchaseId }}</ion-col>
+      <ion-col style="width: 170px; margin-left: 30px;">{{ item.categoryName }}</ion-col>
+      <ion-col style="width: 300px; margin-left: 30px;">{{ item.productName }}</ion-col>
+      <ion-col style="width: 120px; margin-left: 50px;">{{ item.totalItems }}</ion-col>
+      <ion-col style="width: 170px; margin-left: 40px;">{{ item.quantityRejected }}</ion-col>
+      <ion-col style="width: 170px; margin-right: -40px;">{{ item.stockableQuantity }}</ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 90%; --height: 90%;">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Add Asset</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="addRow()">
+              <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+              Add Row
+            </ion-button>
+            <ion-button (click)="closeAddMaterialModal()">
+              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="2.4">
+              <ion-item>
+                <ion-label position="stacked">GRN Date</ion-label>
+                <ion-input style="border: 1px solid black; border-radius: 10px;" type="date"
+                  [(ngModel)]="material.grnDate" name="grnDate" required></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="2.4">
+              <ion-item>
+                <ion-label position="stacked">Store</ion-label>
+                <ion-input style="border: 1px solid black; border-radius: 10px;" type="text"
+                  [(ngModel)]="material.storeName" name="storeName" required></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="2.4">
+              <ion-item>
+                <ion-label position="stacked">OEM</ion-label>
+                <ion-select style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.oemName"
+                  name="oemName" placeholder="Select OEM" required>
+                  <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">{{ oem.oemName
+                    }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+            <ion-col size="2.4">
+              <ion-item>
+                <ion-label position="stacked">Challan No.</ion-label>
+                <ion-input style="border: 1px solid black; border-radius: 10px;" type="text"
+                  [(ngModel)]="material.challanNo" name="challanNo" required></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="2.4">
+              <ion-item>
+                <ion-label position="stacked">Challan Date</ion-label>
+                <ion-input style="border: 1px solid black; border-radius: 10px;" type="date"
+                  [(ngModel)]="material.challanDate" name="challanDate" required></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-header>
+      <ion-content>
+        <form (ngSubmit)="saveMaterial()">
+          <ion-grid>
+            <ng-container *ngFor="let item of materialRows; let i = index">
+              <ion-row>
+                <ion-col size="2.5">
+                  <ion-item>
+                    <ion-label position="stacked">Category</ion-label>
+                    <ion-select style="border: 1px solid black; border-radius: 10px;" 
+                    [(ngModel)]="item.categoryName"
+                      name="categoryName{{i}}" placeholder="Select Category" required>
+                      <ion-select-option *ngFor="let category of data2" [value]="category.id">{{ category.name
+                        }}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="2.5">
+                  <ion-item>
+                    <ion-label position="stacked">Product Name</ion-label>
+                    <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.productName"
+                      name="productName{{i}}" class="small-input" required></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="2.5">
+                  <ion-item>
+                    <ion-label position="stacked">Quantity</ion-label>
+                    <ion-input style="border: 1px solid black; border-radius: 10px;" type="number"
+                      [(ngModel)]="item.quantity" (ionChange)="updateSerialNumbersArray(item)" name="quantity{{i}}"
+                      class="small-input" required></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="2.5">
+                  <ion-item>
+                    <ion-label position="stacked">Unit</ion-label>
+                    <ion-select style="border: 1px solid black; border-radius: 10px;" interface="popover"
+                      placeholder="Select Unit" [(ngModel)]="item.quantityUnit" name="quantityUnit{{i}}"
+                      class="small-input" required>
+                      <ion-select-option value="KG">KG</ion-select-option>
+                      <ion-select-option value="Metre">Metre</ion-select-option>
+                      <ion-select-option value="Units">Units</ion-select-option>
+                      <ion-select-option value="Grams">Grams</ion-select-option>
+                      <ion-select-option value="Pieces">Pieces</ion-select-option>
+                      <ion-select-option value="Dozen">Dozen</ion-select-option>
+                      <ion-select-option value="Bag">Bag</ion-select-option>
+                      <ion-select-option value="Box">Box</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="2" class="ion-align-self-end">
+                  <ion-button expand="ion-button" (click)="removeRow(i)">Remove</ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="2.5">
+                  <ion-item>
+                    <ion-label position="stacked">Warranty Period (Months)</ion-label>
+                    <ion-input style="border: 1px solid black; border-radius: 10px;" type="number"
+                      [(ngModel)]="item.warrantyPeriodMonths" name="warrantyPeriodMonths{{i}}" class="small-input"
+                      required></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="2.5">
+                  <ion-item>
+                    <ion-label position="stacked">Address</ion-label>
+                    <ion-input style="border: 1px solid black; border-radius: 10px;" type="text"
+                      [(ngModel)]="item.storeLocation" name="storeLocation{{i}}" class="small-input"
+                      required></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="12">
+                  <ion-item>
+                    <ion-label position="">Serial Numbers</ion-label>
+                  </ion-item>
+                  <ion-row>
+                    <ng-container *ngFor="let serial of item.serialNumbers; let j = index">
+                      <ion-col size="2.5">
+                        <ion-item>
+                          <ion-label position="stacked">Serial Number: {{j + 1}}</ion-label>
+                          <ion-input style="border: 1px solid black; border-radius: 10px;"
+                            [(ngModel)]="item.serialNumbers[j]" name="serialNumber{{i}}{{j}}" class="small-input" debounce="10000"
+                            required></ion-input>
+                        </ion-item>
+                      </ion-col>
+                    </ng-container>
+                  </ion-row>
+                </ion-col>
+
+              </ion-row>
+            </ng-container>
+            <!-- Save Button -->
+            <ion-row>
+              <ion-col>
+                <ion-button expand="ion-button" type="submit" class="save-button">Save</ion-button>
+              </ion-col>.5
+            </ion-row>
+          </ion-grid>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <!-- Detail Modal -->
+  <ion-modal [isOpen]="isDetailModalOpen" (didDismiss)="closeDetailsModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Details</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeDetailsModal()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <!-- Modal content goes here -->
+        <!-- Display details fetched from the API -->
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-label>Store: {{ selectedPurchase.store }}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label>OEM: {{ selectedPurchase.oem }}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label>Challan No.: {{ selectedPurchase.challanNo }}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label>Challan Date: {{ selectedPurchase.challanDate }}</ion-label>
+            </ion-col>
+          </ion-row>
+          <!-- Add more rows to display other details -->
+        </ion-grid>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

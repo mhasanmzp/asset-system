@@ -1,0 +1,1169 @@
+<div style="padding: 0px 20px 20px 20px" *ngIf="segment === 'new'">
+  <div id="container" *ngIf="selectedSprintTasks.length === 0">
+    <strong class="capitalize">No Tasks Selected!</strong>
+    <p>
+      Select tasks from <b>List</b> tab to create a sprint.
+      <!-- <a target="_blank" rel="noopener noreferrer" href="">Goto List Tab</a> -->
+    </p>
+  </div>
+  <div *ngIf="selectedSprintTasks.length > 0">
+    <div style="position: sticky; top: 0; z-index: 999999999999">
+      <ion-item
+        lines="none"
+        style="background-color: var(--ion-color-light); margin-top: 20px"
+      >
+        <ion-icon slot="start" name="apps-outline"></ion-icon>
+
+        <ion-chip *ngFor="let assignee of sprintTasksAssignmentIds">
+          <ion-avatar>
+            <img
+              [src]="
+                authService.apiUrl + 'images/' + assignee + '.png' ||
+                authService.apiUrl + 'images/0.png'
+              "
+            />
+          </ion-avatar>
+          <ion-label> {{ sprintTasksAssignment[assignee] }} Hrs</ion-label>
+        </ion-chip>
+
+        <ion-note slot="end">
+          <div
+            style="
+              /* background-color: green; */
+              padding: 4px 10px;
+              font-size: 14px;
+              font-weight: bold;
+              border-radius: 5px;
+              color: var(--ion-color-dark) !important;
+            "
+          >
+            Total Tasks: {{ selectedSprintTasks.length }}
+          </div>
+        </ion-note>
+        <ion-note slot="end">
+          <div
+            style="
+              /* background-color: green; */
+              padding: 4px 10px;
+              font-size: 14px;
+              font-weight: bold;
+              border-radius: 5px;
+              color: var(--ion-color-dark) !important;
+            "
+          >
+            Total Estimated Man Hours: {{ estimatedHours }}
+          </div>
+        </ion-note>
+        <!-- <ion-note slot="end">
+        <div
+          style="
+            background-color: green;
+            padding: 4px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            color: #fff !important;
+          "
+        >
+          4 Days Remaining
+        </div>
+      </ion-note> -->
+        <ion-button
+          slot="end"
+          fill="outline"
+          color="success"
+          (click)="createSprint()"
+          >Create Sprint</ion-button
+        >
+      </ion-item>
+    </div>
+    <ion-row>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked"> Sprint Name </ion-label>
+          <ion-input [(ngModel)]="newSprint.sprintName"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+        <ion-item>
+          <ion-label position="stacked"> Start Date </ion-label>
+          <ion-input
+            [(ngModel)]="newSprint.startDate"
+            type="date"
+            class="ion-text-start"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+        <ion-item>
+          <ion-label position="stacked"> End Date </ion-label>
+          <ion-input
+            [(ngModel)]="newSprint.dueDate"
+            type="date"
+            class="ion-text-start"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked"> Sprint Goal </ion-label>
+          <ion-input [(ngModel)]="newSprint.sprintGoal"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <!-- added by ankit release Number-->
+      <ion-col size="3">
+        <ion-item lines="none">
+          <ion-label position="stacked"
+            >Release Number <span style="color: red"> *</span></ion-label
+          >
+          <select [(ngModel)]="newSprint.releaseNumber">
+            <option value="">Select</option>
+            <option
+              *ngFor="let item of releaseData; let i = index"
+              [value]="item.releaseNumber"
+            >
+              {{ item.releaseNumber }}
+            </option>
+          </select>
+        </ion-item>
+      </ion-col>
+
+      <!-- added by ankit release Number-->
+    </ion-row>
+    <table class="tg">
+      <thead>
+        <tr style="background-color: var(--ion-color-light)">
+          <th class="tg-hpky"></th>
+          <th class="tg-hpky">Task Id</th>
+          <th class="tg-hpky">Epic</th>
+          <th class="tg-hpky">Story</th>
+          <th class="tg-hpky">Task</th>
+          <!-- <th class="tg-hpky">Reporter</th> -->
+          <th class="tg-hpky">Assignee</th>
+          <th class="tg-hpky">Estimated Hours</th>
+          <th class="tg-hpky">Status</th>
+          <th class="tg-hpky">Priority</th>
+          <!-- <th class="tg-hpky">Planned Start Date</th> -->
+          <!-- <th class="tg-hpky">Created On</th> -->
+          <th class="tg-hpky">Planned End Date</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="projectMembers.length > 0">
+        <tr *ngFor="let epic of selectedSprintTasks; index as i">
+          <td class="tg-0pky">
+            <!-- <ion-checkbox [(ngModel)]="selectedTasks[epic.taskId]" (ngModelChange)="createSprint()" color="dark">
+          </ion-checkbox> -->
+            <ion-checkbox
+              [(ngModel)]="epic['checkedForSprint']"
+              (ngModelChange)="changeSprint()"
+              color="dark"
+            >
+            </ion-checkbox>
+          </td>
+          <td
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            [style.background]="
+              getTeamBoardColumns(epic.columnId) === 'Done'
+                ? '#2ecc71'
+                : getTeamBoardColumns(epic.columnId) === 'In Progress'
+                ? '#e67e22'
+                : getTeamBoardColumns(epic.columnId) === 'Testing'
+                ? '#3498db'
+                : getTeamBoardColumns(epic.columnId) === 'Hold'
+                ? '#B1907F'
+                : ''
+            "
+          >
+            {{ epic.taskId }}
+          </td>
+          <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+            {{ epic.epicName }}
+          </td>
+          <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+            {{ epic.storyName }}
+          </td>
+          <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+            {{ epic.taskName }}
+          </td>
+          <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{getListAssigneeDetails(epic, 'reporter', 'firstName')}}</td> -->
+          <td
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            style="font-weight: bold"
+          >
+            {{ getListAssigneeDetails(epic, "assignee", "firstName") }}
+          </td>
+          <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+            {{ epic.estimatedHours }}
+          </td>
+          <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+            {{ getTeamBoardColumns(epic.columnId) }}
+          </td>
+          <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.startDate}}</td> -->
+          <td
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            style="text-align: center; padding: 0px !important"
+          >
+            <ion-chip *ngIf="epic.priority === 2">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="danger"
+              ></ion-icon>
+              <ion-label>High</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 1">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="warning"
+              ></ion-icon>
+              <ion-label>Medium</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 0">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="secondary"
+              ></ion-icon>
+              <ion-label>Low</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 3">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="primary"
+              ></ion-icon>
+              <ion-label>Hold</ion-label>
+            </ion-chip>
+          </td>
+          <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.createdAt | date:'dd MMM'}}</td> -->
+          <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+            {{ epic.dueDate }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- Inactive or Upcoming Sprints -->
+
+<div style="padding: 0px 20px 20px 20px" *ngIf="segment === 'upcoming'">
+  <div id="container" *ngIf="inActiveSprints.length === 0">
+    <strong class="capitalize">No Upcoming Sprints!</strong>
+    <p>
+      Select tasks from <b>List</b> tab to create a sprint.
+      <!-- <a target="_blank" rel="noopener noreferrer" href="">Goto List Tab</a> -->
+    </p>
+  </div>
+  <div *ngIf="inActiveSprints.length > 0">
+    <div *ngFor="let sprint of inActiveSprints">
+      <div>
+        <ion-item
+          lines="none"
+          style="background-color: var(--ion-color-light); margin-top: 20px"
+        >
+          <ion-icon slot="start" name="apps-outline"></ion-icon>
+          <ion-note slot="start" (click)="viewSprintDetails(sprint)">
+            <span style="font-weight: bold; font-size: 20px"
+              >Sprint{{ sprint.sprintId }}</span
+            >
+            - {{ sprint.sprintName }}
+          </ion-note>
+          <ion-note slot="end" (click)="viewSprintDetails(sprint)">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Total Tasks: {{ getTasks(sprint).length }}
+            </div>
+          </ion-note>
+          <ion-note slot="end" (click)="viewSprintDetails(sprint)">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Estimated Hours: {{ sprint["estimatedHours"] }}
+            </div>
+          </ion-note>
+          <ion-note slot="end" (click)="viewSprintDetails(sprint)">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Actual Hours: {{ sprint["actualHours"] }}
+            </div>
+          </ion-note>
+          <ion-note slot="end">
+            <ion-button (click)="addTask(sprint)">Add Task</ion-button>
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-chip *ngFor="let assignee of getSprintAssignees(sprint)">
+            <ion-avatar>
+              <img
+                [src]="
+                  authService.apiUrl + 'images/' + assignee + '.png' ||
+                  authService.apiUrl + 'images/0.png'
+                "
+              />
+            </ion-avatar>
+            <ion-label>
+              <!-- {{ sprint["sprintTasksAssignment"][assignee] }} Hrs -->
+              {{ sprint["sprintTasksAssignment"][assignee].estimatedHours }} Hrs
+            </ion-label>
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #b1907f;
+              margin-right: 1px;
+            "
+            *ngIf="holdPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ holdPercentage }}% OnHold</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="font-weight: 400; margin-right: 1px"
+            *ngIf="pendingPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ pendingPercentage }}% Pending</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #e67e22;
+              margin-right: 1px;
+            "
+            *ngIf="inProgressPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ inProgressPercentage }}% InProgress</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #2ecc71;
+              margin-right: 1px;
+            "
+            *ngIf="donePercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ donePercentage }}% Done</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="font-weight: 400; background-color: #3498db"
+            *ngIf="testingPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ testingPercentage }}% Testing</small></ion-label
+            >
+          </ion-chip>
+        </ion-item>
+      </div>
+      <table class="tg">
+        <thead>
+          <tr style="background-color: var(--ion-color-light)">
+            <th class="tg-hpky">Task Id</th>
+            <th class="tg-hpky">Epic</th>
+            <th class="tg-hpky">Story</th>
+            <th class="tg-hpky">Task</th>
+            <!-- <th class="tg-hpky">Reporter</th> -->
+            <th class="tg-hpky">Assignee</th>
+            <th class="tg-hpky">Estimated Hours</th>
+            <th class="tg-hpky">Status</th>
+            <th class="tg-hpky">Priority</th>
+            <!-- <th class="tg-hpky">Planned Start Date</th> -->
+            <!-- <th class="tg-hpky">Created On</th> -->
+            <th class="tg-hpky">Planned End Date</th>
+            <th class="tg-hpky"></th>
+          </tr>
+        </thead>
+        <tbody *ngIf="projectMembers.length > 0">
+          <tr *ngFor="let epic of getTasks(sprint); index as i">
+            <td
+              class="tg-0pky"
+              (click)="viewTaskDetails(epic, null)"
+              [style.background]="
+                getTeamBoardColumns(epic.columnId) === 'Done'
+                  ? '#2ecc71'
+                  : getTeamBoardColumns(epic.columnId) === 'In Progress'
+                  ? '#e67e22'
+                  : getTeamBoardColumns(epic.columnId) === 'Testing'
+                  ? '#3498db'
+                  : getTeamBoardColumns(epic.columnId) === 'Hold'
+                  ? '#B1907F'
+                  : ''
+              "
+            >
+              {{ epic.taskId }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.epicName }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.storyName }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.taskName }}
+            </td>
+            <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{getListAssigneeDetails(epic, 'reporter', 'firstName')}}</td> -->
+            <td
+              class="tg-0pky"
+              (click)="viewTaskDetails(epic, null)"
+              style="font-weight: bold"
+            >
+              {{ getListAssigneeDetails(epic, "assignee", "firstName") }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.estimatedHours }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ getTeamBoardColumns(epic.columnId) }}
+            </td>
+            <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.startDate}}</td> -->
+            <td
+              class="tg-0pky"
+              (click)="viewTaskDetails(epic, null)"
+              style="text-align: center; padding: 0px !important"
+            >
+              <ion-chip *ngIf="epic.priority === 2">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="danger"
+                ></ion-icon>
+                <ion-label>High</ion-label>
+              </ion-chip>
+              <ion-chip *ngIf="epic.priority === 1">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="warning"
+                ></ion-icon>
+                <ion-label>Medium</ion-label>
+              </ion-chip>
+              <ion-chip *ngIf="epic.priority === 0">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="secondary"
+                ></ion-icon>
+                <ion-label>Low</ion-label>
+              </ion-chip>
+              <ion-chip *ngIf="epic.priority === 3">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="primary"
+                ></ion-icon>
+                <ion-label>Hold</ion-label>
+              </ion-chip>
+            </td>
+            <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.createdAt | date:'dd MMM'}}</td> -->
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.dueDate }}
+            </td>
+            <td class="tg-0pky" style="text-align: center">
+              <ion-icon
+                name="trash-outline"
+                style="cursor: pointer"
+                (click)="removeSprintTask(epic.taskId, sprint)"
+              ></ion-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- inActiveAprints -->
+
+<!-- Past Sprints -->
+
+<div style="padding: 0px 20px 20px 20px" *ngIf="segment === 'past'">
+  <div id="container" *ngIf="pastSprints.length === 0">
+    <strong class="capitalize">No Past Sprints!</strong>
+    <p>
+      Select tasks from <b>List</b> tab to create a sprint.
+      <!-- <a target="_blank" rel="noopener noreferrer" href="">Goto List Tab</a> -->
+    </p>
+  </div>
+  <div *ngIf="pastSprints.length > 0">
+    <div *ngFor="let sprint of pastSprints">
+      <div (click)="viewSprintDetails(sprint)">
+        <ion-item
+          lines="none"
+          style="background-color: var(--ion-color-light); margin-top: 20px"
+        >
+          <ion-icon slot="start" name="apps-outline"></ion-icon>
+          <ion-note slot="start">
+            <span style="font-weight: bold; font-size: 20px"
+              >Sprint{{ sprint.sprintId }}</span
+            >
+            - {{ sprint.sprintName }}
+          </ion-note>
+          <ion-note slot="end">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Total Tasks: {{ getTasks(sprint).length }}
+            </div>
+          </ion-note>
+          <ion-note slot="end">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              <!-- Estimated Hours: {{ sprint['estimatedHours'] }} -->
+              Estimated Hours: {{ getSprintEstimatedHours(sprint) }}
+            </div>
+          </ion-note>
+          <ion-note slot="end">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Actual Hours: {{ sprint["actualHours"] }}
+            </div>
+          </ion-note>
+
+          <!-- <ion-note slot="end">
+          <div
+            style="
+            padding: 4px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            color: var(--ion-color-dark) !important;
+            "
+          >
+            4 Days Remaining
+          </div>
+        </ion-note> -->
+        </ion-item>
+        <ion-item>
+          <div class="scroll-container">
+            <div class="chips-container">
+              <ion-chip *ngFor="let assignee of getSprintAssignees(sprint)">
+                <ion-avatar>
+                  <img
+                    [src]="
+                      authService.apiUrl + 'images/' + assignee + '.png' ||
+                      authService.apiUrl + 'images/0.png'
+                    "
+                  />
+                </ion-avatar>
+                <ion-label>
+                  <!-- {{ sprint["sprintTasksAssignment"][assignee] }} Hrs -->
+                  {{
+                    sprint["sprintTasksAssignment"][assignee].estimatedHours
+                  }}
+                  Hrs/
+                  {{ sprint["sprintTasksAssignment"][assignee].actualHours }}
+                  Hrs
+                </ion-label>
+              </ion-chip>
+            </div>
+          </div>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #b1907f;
+              margin-right: 1px;
+            "
+            *ngIf="holdPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ holdPercentage }}% OnHold</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="font-weight: 400; margin-right: 1px"
+            *ngIf="pendingPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ pendingPercentage }}% Pending</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #e67e22;
+              margin-right: 1px;
+            "
+            *ngIf="inProgressPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ inProgressPercentage }}% InProgress</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #2ecc71;
+              margin-right: 1px;
+            "
+            *ngIf="donePercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ donePercentage }}% Done</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="font-weight: 400; background-color: #3498db"
+            *ngIf="testingPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ testingPercentage }}% Testing</small></ion-label
+            >
+          </ion-chip>
+        </ion-item>
+      </div>
+      <table class="tg">
+        <thead>
+          <tr style="background-color: var(--ion-color-light)">
+            <th class="tg-hpky">Task Id</th>
+            <th class="tg-hpky">Epic</th>
+            <th class="tg-hpky">Story</th>
+            <th class="tg-hpky">Task</th>
+            <!-- <th class="tg-hpky">Reporter</th> -->
+            <th class="tg-hpky">Assignee</th>
+            <th class="tg-hpky">Estimated Hours</th>
+            <th class="tg-hpky">Status</th>
+            <th class="tg-hpky">Priority</th>
+            <!-- <th class="tg-hpky">Planned Start Date</th> -->
+            <!-- <th class="tg-hpky">Created On</th> -->
+            <th class="tg-hpky">Planned End Date</th>
+            <th class="tg-hpky">Task %</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="projectMembers.length > 0">
+          <tr *ngFor="let epic of getTasks(sprint); index as i">
+            <td
+              class="tg-0pky"
+              (click)="viewTaskDetails(epic, null)"
+              [style.background]="
+                getTeamBoardColumns(epic.columnId) === 'Done'
+                  ? '#2ecc71'
+                  : getTeamBoardColumns(epic.columnId) === 'In Progress'
+                  ? '#e67e22'
+                  : getTeamBoardColumns(epic.columnId) === 'Testing'
+                  ? '#3498db'
+                  : getTeamBoardColumns(epic.columnId) === 'Hold'
+                  ? '#B1907F'
+                  : ''
+              "
+            >
+              {{ epic.taskId }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.epicName }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.storyName }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.taskName }}
+            </td>
+            <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{getListAssigneeDetails(epic, 'reporter', 'firstName')}}</td> -->
+            <td
+              class="tg-0pky"
+              (click)="viewTaskDetails(epic, null)"
+              style="font-weight: bold"
+            >
+              {{ getListAssigneeDetails(epic, "assignee", "firstName") }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.estimatedHours }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ getTeamBoardColumns(epic.columnId) }}
+            </td>
+            <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.startDate}}</td> -->
+            <td
+              class="tg-0pky"
+              (click)="viewTaskDetails(epic, null)"
+              style="text-align: center; padding: 0px !important"
+            >
+              <ion-chip *ngIf="epic.priority === 2">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="danger"
+                ></ion-icon>
+                <ion-label>High</ion-label>
+              </ion-chip>
+              <ion-chip *ngIf="epic.priority === 1">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="warning"
+                ></ion-icon>
+                <ion-label>Medium</ion-label>
+              </ion-chip>
+              <ion-chip *ngIf="epic.priority === 0">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="secondary"
+                ></ion-icon>
+                <ion-label>Low</ion-label>
+              </ion-chip>
+              <ion-chip *ngIf="epic.priority === 3">
+                <ion-icon
+                  name="radio-button-on-outline"
+                  color="primary"
+                ></ion-icon>
+                <ion-label>Hold</ion-label>
+              </ion-chip>
+            </td>
+            <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.createdAt | date:'dd MMM'}}</td> -->
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              {{ epic.dueDate }}
+            </td>
+            <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+              <ng-container
+                *ngIf="getTeamBoardColumns(epic.columnId) === 'Done'"
+              >
+                100%
+              </ng-container>
+              <ng-container
+                *ngIf="getTeamBoardColumns(epic.columnId) === 'Testing'"
+              >
+                100%
+              </ng-container>
+              <ng-container
+                *ngIf="getTeamBoardColumns(epic.columnId) === 'To Do'"
+              >
+                0%
+              </ng-container>
+              <ng-container
+                *ngIf="getTeamBoardColumns(epic.columnId) === 'Hold'"
+              >
+                <!-- {{ ((calculateHoldCount(epicTasksListOriginal) / epicTasksListOriginal.length) * 100).toFixed(2) }}%
+                 -->
+                0%
+              </ng-container>
+              <ng-container
+                *ngIf="getTeamBoardColumns(epic.columnId) === 'In Progress'"
+              >
+                {{
+                  ((epic.totalHoursSpent / epic.estimatedHours) * 100).toFixed(
+                    2
+                  )
+                }}%
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- past Sprints -->
+
+<!-- Active Sprints -->
+
+<div style="padding: 0px 20px 20px 20px" *ngIf="segment === 'ongoing'">
+  <div id="container" *ngIf="activeSprints.length === 0">
+    <strong class="capitalize">No Active Sprints!</strong>
+    <p>
+      Select tasks from <b>List</b> tab to create a sprint.
+      <!-- <a target="_blank" rel="noopener noreferrer" href="">Goto List Tab</a> -->
+    </p>
+  </div>
+  <div *ngIf="activeSprints.length > 0">
+    <div *ngFor="let sprint of activeSprints">
+      <div>
+        <ion-item
+          lines="none"
+          style="background-color: var(--ion-color-light); margin-top: 20px"
+        >
+          <ion-icon
+            slot="start"
+            name="cloud-download-outline"
+            style="cursor: pointer"
+            (click)="downloadSprint(sprint)"
+          ></ion-icon>
+          <ion-icon
+            slot="start"
+            name="apps-outline"
+            (click)="viewSprintDetails(sprint)"
+          ></ion-icon>
+          <ion-note slot="start" (click)="viewSprintDetails(sprint)">
+            <span style="font-weight: bold; font-size: 20px"
+              >Sprint{{ sprint.sprintId }}</span
+            >
+            - {{ sprint.sprintName }}
+          </ion-note>
+          <ion-note slot="end" (click)="viewSprintDetails(sprint)">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Total Tasks: {{ getTasks(sprint).length }}
+            </div>
+          </ion-note>
+          <ion-note slot="end" (click)="viewSprintDetails(sprint)">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              <!-- tarun tomar   -->
+              Estimated Hours: {{ getSprintEstimatedHours(sprint) }}
+            </div>
+          </ion-note>
+          <ion-note slot="end" (click)="viewSprintDetails(sprint)">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Actual Hours: {{ sprint["actualHours"] }}
+            </div>
+          </ion-note>
+          <!-- added by ankit -->
+          <ion-note
+            slot="end"
+            (click)="viewSprintDetails(sprint)"
+            *ngIf="sprint.releaseNumber"
+          >
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              Release Number: {{ sprint["releaseNumber"] }}
+            </div>
+          </ion-note>
+          <!-- added by ankit -->
+
+          <ion-note slot="end" (click)="viewSprintDetails(sprint)">
+            <div
+              style="
+                padding: 4px 10px;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 5px;
+                color: var(--ion-color-dark) !important;
+              "
+            >
+              <span
+                *ngIf="getDaysRemaining(sprint) > 0"
+                style="color: var(--ion-color-success)"
+                >{{ getDaysRemaining(sprint) }} days remaining</span
+              >
+              <span
+                *ngIf="getDaysRemaining(sprint) === 0"
+                style="color: var(--ion-color-danger)"
+              >
+                Due Today</span
+              >
+              <span
+                *ngIf="getDaysRemaining(sprint) === 0"
+                style="color: var(--ion-color-danger)"
+              >
+                Overdue by {{ -1 * getDaysRemaining(sprint) }} Days
+              </span>
+              <!-- {{getDaysRemaining(sprint)}} days remaining -->
+            </div>
+          </ion-note>
+
+          <ion-note slot="end">
+            <ion-button (click)="addTask(sprint)">Add Task</ion-button>
+          </ion-note>
+        </ion-item>
+        <ion-item lines="none">
+          <div class="scroll-container">
+            <div class="chips-container">
+              <ion-chip *ngFor="let assignee of getSprintAssignees(sprint)">
+                <ion-avatar>
+                  <img
+                    [src]="
+                      authService.apiUrl + 'images/' + assignee + '.png' ||
+                      authService.apiUrl + 'images/0.png'
+                    "
+                  />
+                </ion-avatar>
+                <ion-label>
+                  {{ sprint["sprintTasksAssignment"][assignee].estimatedHours }}
+                  Hrs /
+                  {{ sprint["sprintTasksAssignment"][assignee].actualHours }}
+                  Hrs
+                </ion-label>
+              </ion-chip>
+            </div>
+          </div>
+
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #b1907f;
+              margin-right: 1px;
+            "
+            *ngIf="holdPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ holdPercentage }}% OnHold</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="font-weight: 400; margin-right: 1px"
+            *ngIf="pendingPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ pendingPercentage }}% Pending</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #e67e22;
+              margin-right: 1px;
+            "
+            *ngIf="inProgressPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ inProgressPercentage }}% InProgress</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="
+              font-weight: 400;
+              background-color: #2ecc71;
+              margin-right: 1px;
+            "
+            *ngIf="donePercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ donePercentage }}% Done</small></ion-label
+            >
+          </ion-chip>
+          <ion-chip
+            slot="end"
+            style="font-weight: 400; background-color: #3498db"
+            *ngIf="testingPercentage !== '0.00'"
+          >
+            <ion-label
+              ><small>{{ testingPercentage }}% Testing</small></ion-label
+            >
+          </ion-chip>
+        </ion-item>
+        <!-- to  show actual hours  -->
+      </div>
+      <div style="padding: 0px; padding-top: 0px">
+        <table class="tg">
+          <thead>
+            <tr style="background-color: var(--ion-color-light)">
+              <th class="tg-hpky">Task Id</th>
+              <th class="tg-hpky">Epic</th>
+              <th class="tg-hpky">Story</th>
+              <th class="tg-hpky">Task</th>
+              <!-- <th class="tg-hpky">Reporter</th> -->
+              <th class="tg-hpky">Assignee</th>
+              <th class="tg-hpky">Estimated Hours</th>
+              <th class="tg-hpky">Status</th>
+              <th class="tg-hpky">Priority</th>
+              <!-- <th class="tg-hpky">Planned Start Date</th> -->
+              <!-- <th class="tg-hpky">Created On</th> -->
+              <th class="tg-hpky">Planned End Date</th>
+              <th class="tg-hpky">Task Status %</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="projectMembers.length > 0">
+            <tr *ngFor="let epic of getTasks(sprint); index as i">
+              <td
+                class="tg-0pky"
+                (click)="viewTaskDetails(epic, null)"
+                [style.background]="
+                  getTeamBoardColumns(epic.columnId) === 'Done'
+                    ? '#2ecc71'
+                    : getTeamBoardColumns(epic.columnId) === 'In Progress'
+                    ? '#e67e22'
+                    : getTeamBoardColumns(epic.columnId) === 'Testing'
+                    ? '#3498db'
+                    : getTeamBoardColumns(epic.columnId) === 'Hold'
+                    ? '#B1907F'
+                    : ''
+                "
+              >
+                {{ epic.taskId }}
+              </td>
+              <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+                {{ epic.epicName }}
+              </td>
+              <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+                {{ epic.storyName }}
+              </td>
+              <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+                {{ epic.taskName }}
+              </td>
+              <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{getListAssigneeDetails(epic, 'reporter', 'firstName')}}</td> -->
+              <td
+                class="tg-0pky"
+                (click)="viewTaskDetails(epic, null)"
+                style="font-weight: bold"
+              >
+                {{ getListAssigneeDetails(epic, "assignee", "firstName") }}
+              </td>
+              <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+                {{ epic.estimatedHours }}
+              </td>
+              <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+                {{ getTeamBoardColumns(epic.columnId) }}
+              </td>
+              <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.startDate}}</td> -->
+              <td
+                class="tg-0pky"
+                (click)="viewTaskDetails(epic, null)"
+                style="text-align: center; padding: 0px !important"
+              >
+                <ion-chip *ngIf="epic.priority === 2">
+                  <ion-icon
+                    name="radio-button-on-outline"
+                    color="danger"
+                  ></ion-icon>
+                  <ion-label>High</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="epic.priority === 1">
+                  <ion-icon
+                    name="radio-button-on-outline"
+                    color="warning"
+                  ></ion-icon>
+                  <ion-label>Medium</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="epic.priority === 0">
+                  <ion-icon
+                    name="radio-button-on-outline"
+                    color="secondary"
+                  ></ion-icon>
+                  <ion-label>Low</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="epic.priority === 3">
+                  <ion-icon
+                    name="radio-button-on-outline"
+                    color="primary"
+                  ></ion-icon>
+                  <ion-label>Hold</ion-label>
+                </ion-chip>
+              </td>
+              <!-- <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">{{epic.createdAt | date:'dd MMM'}}</td> -->
+              <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+                {{ epic.dueDate }}
+              </td>
+              <td class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+                <ng-container
+                  *ngIf="getTeamBoardColumns(epic.columnId) === 'Done'"
+                >
+                  100%
+                </ng-container>
+                <ng-container
+                  *ngIf="getTeamBoardColumns(epic.columnId) === 'Testing'"
+                >
+                  100%
+                </ng-container>
+                <ng-container
+                  *ngIf="getTeamBoardColumns(epic.columnId) === 'To Do'"
+                >
+                  0%
+                </ng-container>
+                <ng-container
+                  *ngIf="getTeamBoardColumns(epic.columnId) === 'In Progress'"
+                >
+                  {{
+                    (
+                      (epic.totalHoursSpent / epic.estimatedHours) *
+                      100
+                    ).toFixed(2)
+                  }}%
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Active Sprints -->
+<ion-toolbar
+  color="tertiary"
+  style="position: fixed; z-index: 999999999999; bottom: 0"
+>
+  <ion-segment [(ngModel)]="segment" (ngModelChange)="sprintSegmentChanged()">
+    <ion-segment-button value="ongoing">
+      <ion-text> On Going </ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="upcoming">
+      <ion-text> Upcoming </ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="past">
+      <ion-text> Past </ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="new">
+      <ion-text> New </ion-text>
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>

@@ -1,0 +1,32 @@
+{
+  "hosting": [{
+    "target": "dev.timesofpeople.com",
+    "public": "www",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  {
+    "target": "timesofpeople.com",
+    "public": "www",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }]
+}

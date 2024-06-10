@@ -1,0 +1,1340 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{projectName}} </ion-title>
+  </ion-toolbar>
+  <ion-toolbar
+    *ngIf="sprintTasksAssignmentIds.length > 0 && segment === 'list'"
+  >
+    <ion-buttons slot="end">
+      <ion-chip *ngFor="let assignee of sprintTasksAssignmentIds">
+        <ion-avatar>
+          <img
+            [src]="authService.apiUrl+'images/'+assignee+'.png' || authService.apiUrl+'images/0.png'"
+          />
+        </ion-avatar>
+        <ion-label> {{sprintTasksAssignment[assignee]}} Hrs</ion-label>
+      </ion-chip>
+      <ion-button
+        slot="end"
+        size="small"
+        fill="outline"
+        color="success"
+        *ngIf="sprintTasksAssignmentIds.length > 0"
+        (click)="gotoCreateSprint()"
+      >
+        Create Sprint
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-row style="width: 100%">
+      <ion-col size="12" sizeMd="8" style="padding: 8px 0px">
+        <ion-segment
+          [(ngModel)]="segment"
+          (ngModelChange)="segmentChanged()"
+          style="margin-left: 0px"
+        >
+          <ion-segment-button value="dashboard">
+            <ion-text> Dashboard </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="roadmap">
+            <ion-text> Roadmap </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="backlog">
+            <ion-text> Backlog </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="board">
+            <ion-text> Board </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="list">
+            <ion-text> List </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="sprints">
+            <ion-text> Sprints </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="notes">
+            <ion-text> Notes </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="docs">
+            <ion-text> Docs </ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="members">
+            <ion-text> Members </ion-text>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+      <ion-col size="12" sizeMd="4" *ngIf="segment == 'list'">
+        <!-- <ion-searchbar
+          (ionChange)="searchTasks($event)"
+          debounce="100"
+          placeholder="Search Tasks"
+        ></ion-searchbar> -->
+
+        <ion-searchbar [(ngModel)]="searchTask" debounce="100" placeholder="Search Tasks"></ion-searchbar>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="segment === 'dashboard'">
+    <!-- <ion-row style="margin-top: 10px; margin-bottom: 0">
+      <ion-col size="12" sizeMd="6">
+        <div
+          echarts
+          [options]="chartOption"
+          style="height: 300px"
+          (chartInit)="onChartInit($event)"  
+        ></div>
+      </ion-col>
+      <ion-col size="12" sizeMd="6">
+        <div
+          echarts
+          [options]="chartOptionToday"
+          style="height: 300px"
+          (chartInit)="onChartInit($event)"
+        ></div>
+      </ion-col>
+      <ion-col sizeLg="6" size="12">
+        <ion-row>
+          <ion-col
+            size="6"
+            style="height: 35px; display: flex; align-items: center"
+          >
+            <ion-label style="font-size: 12px; font-weight: 700"
+              >Start Date</ion-label
+            >&nbsp;&nbsp;
+            <ion-input
+              type="date"
+              (ionChange)="filterEffortDate($event)"
+              [(ngModel)]="sDateEffort"
+            ></ion-input>
+          </ion-col>
+          <ion-col
+            size="6"
+            style="height: 35px; display: flex; align-items: center"
+          >
+            <ion-label style="font-size: 12px; font-weight: 700"
+              >End Date</ion-label
+            >&nbsp;&nbsp;
+            <ion-input
+              type="date"
+              (ionChange)="filterEffortDate($event)"
+              [(ngModel)]="eDateEffort"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
+        <div
+          echarts
+          [options]="chartOptionHours"
+          style="height: 300px; margin-top: 10px"
+        ></div>
+      </ion-col>
+      <ion-col sizeLg="6" size="12">
+        <div
+          echarts
+          [options]="chartOptionUser"
+          style="height: 300px; margin-top: 40px"
+        ></div>
+      </ion-col>
+    </ion-row> -->
+
+    <!-- new code for charts -->
+    <ion-row style="margin-top: 10px; margin-bottom: 0">
+      <ion-col size="12" sizeMd="6">
+        <div
+          echarts
+          [options]="chartOption"
+          style="height: 300px"
+ 
+        ></div>
+      </ion-col>
+      <ion-col size="12" sizeMd="6">
+        <div
+          echarts
+          [options]="chartOptionToday"
+          style="height: 300px"
+        ></div>
+      </ion-col>
+      <ion-col sizeLg="6" size="12">
+        <ion-row>
+          <ion-col
+            size="6"
+            style="height: 35px; display: flex; align-items: center"
+          >
+            <ion-label style="font-size: 12px; font-weight: 700"
+              >Start Date</ion-label
+            >&nbsp;&nbsp;
+            <ion-input
+              type="date"
+              (ionChange)="filterEffortDate($event)"
+              [(ngModel)]="sDateEffort"
+            ></ion-input>
+          </ion-col>
+
+          <ion-col
+            size="6"
+            style="height: 35px; display: flex; align-items: center"
+          >
+            <ion-label style="font-size: 12px; font-weight: 700"
+              >End Date</ion-label
+            >&nbsp;&nbsp;
+            <ion-input
+              type="date"
+              (ionChange)="filterEffortDate($event)"
+              [(ngModel)]="eDateEffort"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
+        <div
+          echarts
+          [options]="chartOptionHours"
+          style="height: 300px; margin-top: 10px"
+        ></div>
+      </ion-col>
+      <ion-col sizeLg="6" size="12">
+        <div
+          echarts
+          [options]="chartOptionUser"
+          style="height: 300px; margin-top: 40px"
+        ></div>
+      </ion-col>
+    </ion-row>
+
+    <app-project-dashboard
+      *ngIf="epicTasksList.length > 0"
+      [teamBoardColumns]="teamBoardColumns"
+      [epicTasksListOriginal]="epicTasksListOriginal"
+      [sprintTasks]="sprintTasks"
+      [projectMembers]="projectMembers"
+      [storyTasks]="storyTasks"
+      [selectedStory]="selectedStory"
+      [epicStories]="epicStories"
+      [selectedTasks]="selectedTasks"
+      [projectId]="projectId"
+    >
+    </app-project-dashboard>
+  </div>
+
+  <div
+    style="height: 100%"
+    [style.display]="segment === 'roadmap' ? 'block' : 'none'"
+  >
+    <ion-row style="height: 100%">
+      <ion-col
+        size="2.5"
+        style="padding-right: 0px; border-right: 0.5px solid #747474"
+      >
+        <div class="colHeader">
+          <ion-item lines="none">
+            <ion-label style="color: #ccc"> Epics Timeline </ion-label>
+            <ion-icon (click)="addEpic()" slot="end" name="add"> </ion-icon>
+            <!-- <ion-icon slot="end" name="options"> </ion-icon> -->
+          </ion-item>
+        </div>
+        <div class="box" *ngFor="let epic of projectEpics">
+          <ion-item lines="none">
+            <ion-icon
+              slot="start"
+              name="flash"
+              style="color: #575fcf; margin-left: -20px"
+            >
+            </ion-icon>
+            <ion-label
+              style="
+                color: var(--ion-color-dark);
+                height: 30px;
+                line-height: 30px;
+                cursor: pointer;
+              "
+              (click)="viewEpicDetails(epic)"
+            >
+              {{epic.name}}
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-col>
+      <ion-col size="9.5" style="padding-left: 0px">
+        <div class="wrapper1" id="topScroller">
+          <div class="div1" [style.width]="ganttWidth+'px'"></div>
+        </div>
+        <svg
+          id="gantt"
+          style="min-height: 100%; overflow-x: scroll; overflow-y: hidden"
+          [ngClass]="1 === 1 ? 'ganttTest': 'null'"
+        ></svg>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div *ngIf="segment === 'backlog'">
+    <ion-row style="height: 100%">
+      <ion-col size="2.5">
+        <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label style="color: var(--ion-color-dark)">
+                Epics
+              </ion-label>
+              <ion-button (click)="addEpic()" slot="end" fill="clear">
+                <ion-icon name="add" color="dark"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="2.5">
+        <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label style="color: #ccc"> Stories </ion-label>
+              <ion-button (click)="addStory()" slot="end" fill="clear">
+                <ion-icon name="add" color="dark"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="7">
+        <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label style="color: #ccc"> Tasks </ion-label>
+              <ion-button (click)="addStoryTask()" slot="end" fill="clear">
+                <ion-icon name="add" color="dark"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+      <ion-col
+        size="2.5"
+        style="
+          padding-right: 0px;
+          border-right: 0.5px solid #747474;
+          overflow-y: scroll;
+        "
+        [style.height]="windowHeight1"
+        class="scroll"
+      >
+        <!-- [style.overflow-y]="windowHeight > 0? 'scroll': 'hidden'"  -->
+        <!-- <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label style="color: var(--ion-color-dark)">
+                Epics
+              </ion-label>
+              <ion-button (click)="addEpic()" slot="end" fill="clear">
+                <ion-icon name="add" color="dark"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+        </ion-row> -->
+        <ion-row
+          *ngFor="let epic of projectEpics; index as i"
+          style="margin-left: 10px"
+        >
+          <ion-col
+            size="12"
+            style="padding: 0px"
+            [ngClass]="(i === selectedEpicIndex ) ? 'selected' : 'notSelected'"
+          >
+            <ion-item lines="none" (click)="selectEpic(epic, i)">
+              <ion-icon
+                slot="start"
+                name="flash"
+                style="margin-left: -10px; margin-right: 5px"
+                color="dark"
+                (click)="selectEpic(epic, i)"
+              >
+              </ion-icon>
+              <ion-label
+                class="ion-text-wrap"
+                style="color: var()"
+                (click)="selectEpic(epic, i)"
+              >
+                {{epic.name}}
+              </ion-label>
+              <ion-icon
+                slot="end"
+                name="ellipsis-vertical-outline"
+                style="margin-right: -5px; font-size: 20px"
+                (click)="viewEpicDetails(epic)"
+              >
+              </ion-icon>
+            </ion-item>
+            <ion-progress-bar
+              [value]="getEpicProgress(epic)"
+              color="tertiary"
+            ></ion-progress-bar>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col
+        size="2.5"
+        style="
+          padding-right: 0px;
+          border-right: 0.5px solid #747474;
+          overflow-y: scroll;
+        "
+        [style.height]="windowHeight1"
+        class="scroll"
+      >
+        <!-- [style.overflow-y]="windowHeight > 0? 'scroll': 'hidden'"  -->
+        <!-- <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label style="color: #ccc"> Stories </ion-label>
+              <ion-button (click)="addStory()" slot="end" fill="clear">
+                <ion-icon name="add" color="dark"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+        </ion-row> -->
+        <ion-row
+          *ngFor="let story of epicStories; index as i"
+          style="margin: 0px 10px"
+        >
+          <ion-col
+            size="12"
+            style="padding: 0px"
+            [ngClass]="(i === selectedStoryIndex) ? 'selected' : 'notSelected'"
+          >
+            <ion-item lines="none" (click)="selectStory(story, i)">
+              <ion-icon
+                slot="start"
+                name="bookmark"
+                style="margin-left: -10px; margin-right: 5px"
+                color="success"
+              >
+              </ion-icon>
+              <ion-label class="ion-text-wrap" style="color: var()">
+                {{story.name}}
+              </ion-label>
+              <ion-icon
+                slot="end"
+                name="ellipsis-vertical-outline"
+                style="margin-right: -5px; font-size: 20px"
+                (click)="viewStoryDetails(story)"
+              >
+              </ion-icon>
+            </ion-item>
+            <ion-progress-bar
+              [value]="getStoryProgress(story)"
+              color="success"
+            ></ion-progress-bar>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col
+        size="7"
+        style="
+          padding-right: 0px;
+          border-right: 0.5px solid #747474;
+          overflow-y: scroll;
+        "
+        [style.height]="windowHeight1"
+        class="scroll"
+      >
+        <!-- [style.overflow-y]="windowHeight > 0? 'scroll': 'hidden'"  -->
+        <!-- <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label style="color: #ccc"> Tasks </ion-label>
+              <ion-button (click)="addStoryTask()" slot="end" fill="clear">
+                <ion-icon name="add" color="dark"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+        </ion-row> -->
+        <ion-row
+          *ngFor="let task of storyTasks; index as i"
+          style="margin: 0px 10px"
+        >
+          <ion-col size="12" style="padding: 0px">
+            <ion-item
+              lines="none"
+              style="
+                border-bottom: 0.5px solid rgb(102, 102, 102);
+                cursor: pointer;
+              "
+              (click)="viewTaskDetails(task, null)"
+            >
+              <ion-icon
+                slot="start"
+                name="checkmark-done-circle"
+                style="margin-left: -10px; margin-right: 5px"
+                [style.color]="getTeamBoardColumns(task.columnId) === 'Done'? '#2ecc71': getTeamBoardColumns(task.columnId) === 'In Progress'? '#e67e22': getTeamBoardColumns(task.columnId) === 'Unit Testing'? '#3498db':getTeamBoardColumns(task.columnId) === 'Hold'? '#B1907F':''"
+              >
+              </ion-icon>
+              <ion-label
+                class="ion-text-wrap"
+                style="color: var(); font-weight: 600"
+              >
+                {{task.projectTaskNumber}} - {{task.taskName}}
+              </ion-label>
+              <ion-avatar slot="end">
+                <img
+                  [src]="getAssigneeDetails(task, 'image') || 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'"
+                />
+              </ion-avatar>
+              <!-- <ion-icon slot="end" name="ellipsis-vertical-outline" style="margin-right: -5px;font-size: 20px;">
+              </ion-icon> -->
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <!-- <ion-col size="7.5" style="padding-left: 0px;">
+
+      </ion-col> -->
+    </ion-row>
+  </div>
+  <div
+    *ngIf="segment === 'list'"
+    style="padding-bottom: 0px; overflow: auto; padding-top: 0"
+    [style.height]="windowHeight1"
+  >
+    <table class="tg">
+      <thead>
+        <tr
+          style="
+            background-color: var(--ion-color-light);
+            position: sticky;
+            top: 0px;
+            z-index: 9999999999999;
+          "
+        >
+          <th class="tg-hpky" style="width: 50px">
+            <!-- <input type="checkbox" (click)="selectAllForCreateSprint($event,epicTasksList)" color="dark"> -->
+            <ion-checkbox
+              id="checkbox"
+              (click)="selectAllForCreateSprint($event,epicTasksList)"
+              color="dark"
+            >
+            </ion-checkbox>
+          </th>
+          <th class="tg-hpky" style="width: 70px">Id</th>
+          <th class="tg-hpky" style="width: 70px">Task Id</th>
+          <th class="tg-hpky" style="width: 200px">
+            Epic
+            <ion-icon
+              style="font-size: 14px; cursor: pointer"
+              name="filter-outline"
+              (click)="filterChanged('epic')"
+            ></ion-icon>
+          </th>
+          <th class="tg-hpky" style="width: 200px">
+            Story
+            <ion-icon
+              style="font-size: 14px; cursor: pointer"
+              name="filter-outline"
+              (click)="filterChanged('story')"
+            ></ion-icon>
+          </th>
+          <th class="tg-hpky" style="width: 300px">Task</th>
+          <th class="tg-hpky" style="width: 100px">Attachment</th>
+          <th class="tg-hpky" style="width: 100px">
+            Assignee
+            <ion-icon
+              style="font-size: 14px; cursor: pointer"
+              name="filter-outline"
+              (click)="filterChanged('assignee')"
+            ></ion-icon>
+          </th>
+          <th class="tg-hpky" style="width: 100px">Created By <ion-icon
+            style="font-size: 14px; cursor: pointer"
+            name="filter-outline"
+            (click)="filterChanged('createdBy')"
+          ></ion-icon></th>
+          <th class="tg-hpky" style="width: 90px">Estimated Hours Total:{{totalEstimatedHours}}</th>
+          <th class="tg-hpky" style="width: 90px">Actual Hours Total:{{totalActualHours}}</th>
+          <th class="tg-hpky" style="width: 100px">
+            Status
+            <ion-icon
+              style="font-size: 14px; cursor: pointer"
+              name="filter-outline"
+              (click)="filterChanged('status')"
+            ></ion-icon>
+          </th>
+          <th class="tg-hpky" style="width: 150px">Priority<ion-icon
+            style="font-size: 14px; cursor: pointer"
+            name="filter-outline"
+            (click)="filterChanged('priority')"
+          ></ion-icon></th>
+          <th class="tg-hpky" style="width: 100px">
+            Type
+            <ion-icon
+              style="font-size: 14px; cursor: pointer"
+              name="filter-outline"
+              (click)="filterChanged('type')"
+            ></ion-icon>
+          </th>
+          <th class="tg-hpky" style="width: 100px">Created Date</th>
+          <th class="tg-hpky" style="width: 100px">Last Updated On</th>
+          <th class="tg-hpky" style="width: 100px">Planned Start Date</th>
+          <th class="tg-hpky" style="width: 100px">Planned End Date</th>
+          <th class="tg-hpky" style="width: 100px">Actual Start Date</th>
+          <th class="tg-hpky" style="width: 100px">Actual End Date</th>
+          <th class="tg-hpky" style="width: 100px">Completion Date</th>
+          <th class="tg-hpky" style="width: 100px">
+            Tester
+            <ion-icon
+              style="font-size: 14px; cursor: pointer"
+              name="filter-outline"
+              (click)="filterChanged('tester')"
+            ></ion-icon>
+          </th>
+          <th class="tg-hpky" style="width: 70px">Tester EHours</th>
+          <th class="tg-hpky" style="width: 70px">Tester AHours</th>
+          <th class="tg-hpky" style="width: 100px">TestingS. Date</th>
+          <th class="tg-hpky" style="width: 100px">TestingE. Date</th>
+          <th class="tg-hpky" style="width: 70px">Total Estimated Hours</th>
+          <th class="tg-hpky" style="width: 70px">Total Actual Hours</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="projectMembers.length > 0">
+        <tr *ngFor="let epic of epicTasksList | filter:searchTask; index as i">
+          <td class="tg-0pky" style="width: 50px">
+            <ion-checkbox
+              [(ngModel)]="epic['checkedForSprint']"
+              (ngModelChange)="createSprint()"
+              color="dark"
+            >
+            </ion-checkbox>
+          </td>
+          <td
+            style="width: 70px"
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            [style.background]="getTeamBoardColumns(epic.columnId) === 'Done'? '#2ecc71': getTeamBoardColumns(epic.columnId) === 'In Progress'? '#e67e22': getTeamBoardColumns(epic.columnId) === 'Unit Testing'? '#3498db': getTeamBoardColumns(epic.columnId) === 'Hold'? '#B1907F':''"
+          >
+            <!-- {{epic.projectTaskNumber}} -->
+            {{i+1}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 200px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.taskId}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 200px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.epicName}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 200px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.storyName}}
+          </td>
+          <td class="tg-0pky truncate-text" style="width: 300px;">
+            <span (click)="viewTaskDetails(epic, null)">
+              {{epic.taskName}}
+            </span>
+          </td>
+          <td class="tg-0pky" style="width: 70px">
+            <span (click)="viewFile(epic.fileName)" *ngIf="epic.fileName!='' && epic.fileName!=null" style="cursor: pointer;text-decoration: underline;">View</span>
+            <span *ngIf="epic.fileName == ''" style="cursor: pointer;text-decoration: underline;"></span>
+          </td>
+          <td
+            style="width: 100px"
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            style="font-weight: bold"
+          >
+            {{getListAssigneeDetails(epic, 'assignee', 'firstName')}}
+          </td>
+          <td
+            style="width: 100px"
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            style="font-weight: bold"
+          >
+          {{getListReporterDetails(epic, 'reporter', 'firstName')}}
+
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 70px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.estimatedHours}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 70px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.actualHours}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{getTeamBoardColumns(epic.columnId)}}
+          </td>
+          <td
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            style="text-align: center; padding: 0px !important; width: 150px"
+          >
+          <ion-chip *ngIf="epic.priority === 0">
+            <ion-icon
+            name="radio-button-on-outline"
+            color="secondary"
+            ></ion-icon>
+            <ion-label>Low</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 1">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="warning"
+              ></ion-icon>
+              <ion-label>Medium</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 2">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="danger"
+              ></ion-icon>
+              <ion-label>High</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 3">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="tertiary"
+              ></ion-icon>
+              <ion-label>Hold</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 4">
+              <ion-icon
+                name="radio-button-on-outline"
+                color="danger"
+              ></ion-icon>
+              <ion-label>Show Stopper</ion-label>
+            </ion-chip>
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.taskType == 0 ? 'Feature' : 'Bug'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.createdAt | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.updatedAt | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.startDate | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.dueDate | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.actualStartDate | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.actualDueDate | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.completionDate | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            style="width: 100px"
+            class="tg-0pky"
+            (click)="viewTaskDetails(epic, null)"
+            style="font-weight: bold"
+          >
+            {{getListAssigneeDetails(epic, 'tester', 'firstName')}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 70px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.testingEstimatedHours}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 70px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.testingActualHours}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.testingStartDate | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 100px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic.testingDueDate | date:'dd-MM-yyyy'}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 70px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic?.estimatedHours + epic?.testingEstimatedHours}}
+          </td>
+          <td
+            class="tg-0pky"
+            style="width: 70px"
+            (click)="viewTaskDetails(epic, null)"
+          >
+            {{epic?.actualHours + epic?.testingActualHours}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ion-modal [isOpen]="isModalOpen">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Modal</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="setOpen(false)">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-datetime
+            displayFormat="DD.MM.YYYY"
+            presentation="date"
+            [(ngModel)]="date"
+          ></ion-datetime>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </div>
+  <div *ngIf="segment === 'board'" style="padding-bottom: 200px">
+    <app-project-board
+      [teamBoardColumns]="teamBoardColumns"
+      [epicTasksListOriginal]="epicTasksListOriginal"
+      [projectMembers]="projectMembers"
+      [storyTasks]="storyTasks"
+      [selectedSprint]="selectedSprint"
+      [selectedStory]="selectedStory"
+      [epicTasksList]="epicTasksList"
+      [epicStories]="epicStories" 
+      [selectedTasks]="selectedTasks"
+      [projectId]="projectId"
+    >
+    </app-project-board>
+  </div>
+  <div *ngIf="segment === 'sprints'">
+    <app-project-sprints
+      [teamBoardColumns]="teamBoardColumns"
+      [epicTasksListOriginal]="epicTasksListOriginal"
+      [sprintTasks]="sprintTasks"
+      [projectMembers]="projectMembers"
+      [storyTasks]="storyTasks"
+      [selectedStory]="selectedStory"
+      [epicTasksList]="epicTasksList"
+      [epicStories]="epicStories"
+      [selectedTasks]="selectedTasks"
+      [projectId]="projectId"
+      [sprintSegment]="sprintSegment"
+    >
+    </app-project-sprints>
+  </div>
+
+  <!-- Project's Notes (Sonali)-->
+
+  <div *ngIf="segment === 'notes'" style="padding-bottom: 0px">
+    <table class="tg" style="width: 100%">
+      <thead>
+        <tr
+          style="
+            background-color: var(--ion-color-light);
+            position: sticky;
+            top: 0px;
+            z-index: 9999999999999;
+          "
+        >
+          <th class="tg-hpky" style="width: 70%">Title</th>
+          <th class="tg-hpky">Updated Date</th>
+          <th class="tg-hpky">Created Date</th>
+          <th class="tg-hpky" *ngIf="employeeType == 'reportingManager'"></th>
+        </tr>
+      </thead>
+      <tbody *ngIf="responseLength == 0" style="text-align: center">
+        <h6>No Note Added</h6>
+      </tbody>
+      <tbody>
+        <tr *ngFor="let Note of allNotes; index as i">
+          <td class="tg-0pky" (click)="editNote(Note)">{{Note.title}}</td>
+          <td class="tg-0pky" (click)="editNote(Note)">
+            {{Note.updatedAt | date:'dd MMM, yyyy'}}
+          </td>
+          <td class="tg-0pky" (click)="editNote(Note)">
+            {{Note.createdAt | date:'dd MMM, yyyy'}}
+          </td>
+          <td class="tg-0pky" *ngIf="employeeType == 'reportingManager'">
+            <ion-icon
+              name="trash-outline"
+              style="cursor: pointer"
+              (click)="deleteNote(Note.NoteId)"
+            ></ion-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="segment === 'members'">
+    <ion-row>
+      <ion-col sizeLg="10" offsetLg="1" *ngIf="segment==='members'">
+        <div>
+          <ion-row
+            style="
+              z-index: 999999999;
+              background-color: transparent;
+              color: var(--ion-color-light);
+              margin: 0px;
+            "
+          >
+            <ion-col size="12" style="background: transparent">
+              <ion-toolbar color="gray">
+                <ion-searchbar
+                  placeholder="Search Employee"
+                  debounce="500"
+                  (ionChange)="searchEmployee($event)"
+                >
+                </ion-searchbar>
+              </ion-toolbar>
+            </ion-col>
+          </ion-row>
+          <ion-row
+            *ngFor="let user of projectMembers; index as i"
+            [ngClass]="(i % 2 === 0) ? 'odd' : 'even'"
+            style="
+              background: var(--ion-color-light);
+              border-radius: 10px;
+              margin: 10px;
+            "
+          >
+            <ion-col size="3" style="border-right: 1px solid rgb(63 68 73)">
+              <ion-item lines="none" style="width: 100%">
+                <ion-avatar slot="start">
+                  <img
+                    [src]="user.imageExists ? authService.apiUrl+'images/'+user.employeeId+'.png' : authService.apiUrl+'images/0.png'"
+                  />
+                </ion-avatar>
+                <ion-label style="color: var()">
+                  {{user.firstName}} {{user.lastName}}
+                </ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="2" style="border-right: 1px solid rgb(63 68 73)">
+              <ion-item lines="none" style="width: 100%">
+                <ion-checkbox
+                  style="color: var()"
+                  [(ngModel)]="user.billable"
+                  (ionChange)="selectBillable(user)"
+                  [disabled]="enableFields"
+                ></ion-checkbox>
+                <ion-label style="color: var()">Billable</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="2" style="border-right: 1px solid rgb(63 68 73)">
+              <ion-item lines="none" style="width: 100%">
+                <ion-input
+                  type="number"
+                  placeholder="Hrs Assigned"
+                  [(ngModel)]="user.hoursAssign"
+                  style="border: none; background: var(--ion-color-light)"
+                  (ionChange)="selectHours(user)"
+                  [disabled]="enableFields"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="4" style="border-right: 1px solid rgb(63 68 73)">
+              <ion-select
+                *ngIf="!checkInTeam(user)"
+                style="color: var(--ion-color-dark)"
+                interface="popover"
+                [(ngModel)]="user.type"
+                placeholder="Select Role"
+                (ionChange)="selectRole(user)"
+                [disabled]="enableFields"
+              >
+                <ion-select-option value="Frontend"
+                  >Frontend Developer</ion-select-option
+                >
+                <ion-select-option value="Backend"
+                  >Backend Developer</ion-select-option
+                >
+                <ion-select-option value="Functional"
+                  >Functional Consultant</ion-select-option
+                >
+                <ion-select-option value="Tester">Tester/QA</ion-select-option>
+                <ion-select-option value="Manager"
+                  >Project Manager</ion-select-option
+                >
+                <!-- <ion-select-option value="SolutionArchitect"
+                  >Solution Architect</ion-select-option
+                > -->
+                
+                <!-- <ion-select-option value="Designer">Designer</ion-select-option> -->
+              </ion-select>
+            </ion-col>
+            <ion-col size="1">
+              <ion-item lines="none" style="width: 100%">
+                <ion-button
+                  *ngIf="checkInTeam(user)"
+                  slot="end"
+                  fill="clear"
+                  (click)="addEmployeeTeam(user)"
+                  [disabled]="enableFields"
+                >
+                  <ion-icon color="success" name="add"></ion-icon>
+                </ion-button>
+                <ion-button
+                  *ngIf="!checkInTeam(user)"
+                  slot="end"
+                  fill="clear"
+                  (click)="removeProjectMember(user)"
+                  [disabled]="enableFields"
+                >
+                  <ion-icon color="danger" name="close"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <!-- </ion-item> -->
+          <!-- </ion-row> -->
+        </div>
+      </ion-col>
+    </ion-row>
+
+   
+  </div>
+
+  <!-- Project's Docs (Sonali)-->
+
+  <div *ngIf="segment === 'docs'" style="padding-bottom: 0px">
+    <table class="tg" style="width: 100%">
+      <thead>
+        <tr
+          style="
+            background-color: var(--ion-color-light);
+            position: sticky;
+            top: 0px;
+            z-index: 9999999999999;
+          "
+        >
+          <th class="tg-hpky" style="width: 40%">Original Name</th>
+          <!-- <th class="tg-hpky" style="width: 10%">File Type</th> -->
+          <th class="tg-hpky" style="width: 15%">Created By</th>
+          <th class="tg-hpky" style="width: 15%">Size</th>
+          <th class="tg-hpky" style="width: 15%">Created At</th>
+          <th
+            class="tg-hpky"
+            style="width: 15%"
+            *ngIf="employeeType == 'reportingManager'"
+          ></th>
+          <!-- <th class="tg-hpky">Date</th> -->
+        </tr>
+      </thead>
+      <!-- <tbody *ngIf="allDocs.length === 0" style="text-align: center"> 
+        <h6>No Document Added</h6>
+      </tbody> -->
+      <tbody>
+        <tr *ngFor="let document of allDocs; index as i">
+          <td
+            class="tg-0pky"
+            style="cursor: pointer"
+            (click)="openDocument(document)"
+          >
+            <a>{{document.originalname}}</a>
+          </td>
+          <td class="tg-0pky">{{document.createdBy}}</td>
+          <td class="tg-0pky">{{document.size/1000}} kb</td>
+          <td class="tg-0pky">{{document.createdAt | date:'dd MMM, yyyy'}}</td>
+          <td class="tg-0pky" *ngIf="employeeType == 'reportingManager'">
+            <ion-icon
+              name="trash-outline"
+              color="danger"
+              style="cursor: pointer"
+              (click)="deleteDocs(document.documentId)"
+            ></ion-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="segment === 'list'">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="toggleMenuButton()">
+        <ion-icon
+          *ngIf="toggleMenu"
+          name="arrow-back-circle-outline"
+        ></ion-icon>
+        <ion-icon
+          *ngIf="!toggleMenu"
+          name="arrow-forward-circle-outline"
+        ></ion-icon>
+      </ion-button>
+      <ion-button color="dark" (click)="downloadExcel()">
+        <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+        Download Excel
+      </ion-button>
+      <ion-button
+        color="danger"
+        fill="outline"
+        (click)="resetList()"
+        style="
+          margin-left: 20px;
+          height: 25px;
+          display: flex;
+          align-items: center;
+        "
+      >
+        Reset
+      </ion-button>
+      <ion-col
+        style="
+          border: 2px solid var(--ion-color-light);
+          height: 35px;
+          display: flex;
+          align-items: center;
+          font-weight: bold;
+          width: 150px;
+          margin-left: 20px;
+        "
+      >
+        <ion-input type="date" (ionChange)="dateFilter($event)"></ion-input>
+      </ion-col>
+    </ion-buttons>
+
+    <ion-avatar
+      slot="end"
+      style="
+        height: 40px;
+        width: 40px;
+        padding: 2px;
+        margin: 2px;
+        cursor: pointer;
+        position: relative;
+      "
+      *ngFor="let member of projectMembers"
+      (click)="selectMemberTasks(member)"
+      [style.border]="member.selected ? '2px solid red': '0px solid red'"
+    >
+      <!-- <span style="position: absolute;
+      top: 0;
+      z-index: 9999999999;
+      left: 0;
+      padding: 11px;
+      margin: 3px;
+      background: var(--ion-color-dark);
+      color: var(--ion-color-light);
+      text-transform: uppercase;
+      font-size: 14px;
+      border-radius: 50%;">{{member.firstName[0]}}{{member.lastName[0]}}</span> -->
+      <img
+        style="position: absolute; top: 0; left: 0"
+        [src]="member.image"
+        [title]="member.firstName"
+      />
+    </ion-avatar>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-footer *ngIf="segment === 'board'">
+  <ion-toolbar color="tertiary">
+    <ion-row>
+      <ion-col size="12">
+        <ion-item lines="none">
+          <ion-select
+            style="font-size: 16px"
+            value="all"
+            [(ngModel)]="selectedSprint"
+            (ionChange)="selectBoardSprint($event)"
+          >
+            <ion-select-option
+              *ngFor="let sprint of activeSprints; index as i"
+              [value]="sprint.sprintId"
+            >
+              {{sprint.sprintName}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- Project's notes (Sonali)-->
+
+<ion-footer *ngIf="segment === 'notes'">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="toggleMenuButton()">
+        <ion-icon
+          *ngIf="toggleMenu"
+          name="arrow-back-circle-outline"
+        ></ion-icon>
+        <ion-icon
+          *ngIf="!toggleMenu"
+          name="arrow-forward-circle-outline"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button
+        size="small"
+        slot="end"
+        fill="outline"
+        color="dark"
+        (click)="addNote()"
+      >
+        <ion-icon name="add-outline"></ion-icon>Add Note
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- Project's Docs (Sonali)-->
+
+<ion-footer *ngIf="segment === 'docs'">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="toggleMenuButton()">
+        <ion-icon
+          *ngIf="toggleMenu"
+          name="arrow-back-circle-outline"
+        ></ion-icon>
+        <ion-icon
+          *ngIf="!toggleMenu"
+          name="arrow-forward-circle-outline"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button color="dark">
+        <input
+          id="file"
+          type="file"
+          (change)="handleFileSelect($event)"
+          multiple
+        />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-footer *ngIf="segment === 'roadmap'">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="toggleMenuButton()">
+        <ion-icon
+          *ngIf="toggleMenu"
+          name="arrow-back-circle-outline"
+        ></ion-icon>
+        <ion-icon
+          *ngIf="!toggleMenu"
+          name="arrow-forward-circle-outline"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button color="gray">
+        <ion-icon name="arrow-back-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-segment
+      [(ngModel)]="ganttMode"
+      (ngModelChange)="change_view_mode(ganttMode)"
+    >
+      <ion-segment-button value="Day">
+        <ion-text> Day </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="Week">
+        <ion-text> Week </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="Month">
+        <ion-text> Month </ion-text>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- <ion-button (click)="change_view_mode('Day')" size="small" slot="end" fill="outline" color="dark">
+      Day
+    </ion-button>
+    <ion-button (click)="change_view_mode('Week')" size="small" slot="end" fill="outline" color="dark">
+      Week
+    </ion-button>
+    <ion-button (click)="change_view_mode('Month')" size="small" slot="end" fill="outline" color="dark">
+      Month
+    </ion-button> -->
+  </ion-toolbar>
+</ion-footer>
+
+<!--changes by Ankit 27 Feb, 24  -->
+
+<!-- <ion-footer *ngIf="segment === 'members'">
+  <ion-toolbar color="light">
+    <ion-button
+      color="success"
+      style="margin-right: 20px"
+
+      fill="clear"
+      (click)="addMember()"
+      [disabled]="enableFields"
+      slot="end"
+      >Update</ion-button
+    >
+  </ion-toolbar>
+</ion-footer> -->
+
+<!--changes by Ankit 27 Feb, 24  -->

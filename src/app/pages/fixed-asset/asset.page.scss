@@ -1,0 +1,32 @@
+.interactive-card {
+    transition: transform 0.3s;
+    cursor: pointer;
+  }
+  
+  .interactive-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .interactive-card ion-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .interactive-card ion-card-content ion-icon {
+    font-size: 24px;
+    color: var(--ion-color-primary);
+  }
+  
+  .interactive-card ion-card-content p {
+    margin-left: 10px;
+    color: var(--ion-color-dark);
+  }
+  .rounded-input {
+    --border-radius: 20px; /* Adjust the value as needed */
+  }
+  
+  .rounded-input::part(text-input) {
+    border-radius: var(--border-radius);
+  }

@@ -1,0 +1,623 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-label
+      slot="end"
+      style="
+        padding: 0px 10px;
+        font-weight: bold;
+        font-size: 17px;
+        color: var(--ion-color-dark);
+      "
+    >
+      {{getDayOfWeek(today)}} {{today | date:'d MMMM, yyyy'}}
+    </ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentPopover()" color="dark">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+      </ion-button>
+
+      <!-- Notifications on dashboard (Sonali) -->
+
+      <ion-button (click)="presentPopoverNotification()" color="dark">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge color="danger">{{notificationItems}}</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment
+      slot="start"
+      [scrollable]="true"
+      [(ngModel)]="segment"
+      style="margin: 0"
+      value="home"
+    >
+      <ion-segment-button value="Home">
+        <ion-text> Home </ion-text>
+      </ion-segment-button>
+      <ion-segment-button
+        style="min-width: auto"
+        *ngFor="let tab of tabs"
+        [value]="tab"
+      >
+        <ion-text> {{tab}} </ion-text>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+  <ion-toolbar color="white" *ngIf="segment === 'WeeklySummary'">
+    <ion-row style="padding: 0px 10px">
+      <ion-col sizeMd="7" size="12" style="padding: 0px">
+        <ion-item lines="none">
+          <ion-label>
+            {{selectedWeek.fdate.date | date:'dd MMMM, yyyy'}} to
+            {{selectedWeek.ldate.date | date:'dd MMMM, yyyy'}}
+          </ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col
+        sizeMd="3"
+        size="12"
+        style="background-color: transparent; padding: 0px"
+      >
+        <ion-item (click)="openSelector(selector)" lines="none">
+          <ion-select
+            #selector
+            [(ngModel)]="selectedTeam"
+            [value]="selectedTeam"
+            style="pointer-events: none"
+            [interfaceOptions]="customAlertOptions"
+            multiple="true"
+          >
+            <ion-select-option *ngFor="let team of teams" [value]="team.teamId"
+              >{{team.teamName}}</ion-select-option
+            >
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col sizeMd="2" size="12">
+        <ion-button (click)="exportexcel()" fill="outline" style="height: 35px"
+          >Export to Excel</ion-button
+        >
+      </ion-col>
+      <ion-col
+        *ngFor="let date of previousDays"
+        [size]="12/5"
+        style="
+          border-right: 0px solid rgb(37 38 40);
+          background-color: transparent;
+        "
+      >
+        <div
+          disabled
+          (click)="selectBoxWeek(date)"
+          style="
+            text-align: center;
+            line-height: 35px;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 0px;
+            border-radius: 10px;
+            cursor: pointer;
+          "
+          [ngClass]="date.selected? 'selected': 'notSelected'"
+        >
+          {{date.fdate.date | date:'dd MMM '}} - {{date.ldate.date | date:'dd
+          MMM'}}
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div *ngIf="segment === 'Home'">
+    <ion-row style="margin: 5px">
+      <ion-col sizeMd="6" size="12">
+        <div
+          style="
+            font-size: 25px;
+            padding-top: 10px !important;
+            margin-bottom: 5px;
+            margin-top: -10px;
+          "
+          class="newPost"
+        >
+          <ion-item
+            class="messageBox"
+            lines="none"
+            style="padding-bottom: 0px"
+            (click)="createNewPost()"
+          >
+            <ion-label
+              style="
+                padding: 10px 20px;
+                border: 1px solid var(--ion-color-dark);
+                border-radius: 20px;
+              "
+            >
+              <h2 style="color: var(--ion-color-dark); font-size: 16px">
+                Create new post..
+              </h2>
+            </ion-label>
+            <ion-icon slot="end" name="images-outline" color="dark"></ion-icon>
+          </ion-item>
+        </div>
+        <ion-row *ngIf="posts.length === 0 && loaderDismiss">
+          <div id="container">
+            <img
+              width="100px"
+              style="margin-top: 70%; margin-right: 5%"
+              src="assets/loader.gif"
+              alt=""
+            />
+          </div>
+        </ion-row>
+        <ion-card
+          class="POST"
+          *ngFor="let post of posts"
+          style="padding-top: 10px; margin-bottom: 10px"
+        >
+          <ion-item
+            class="messageBox"
+            lines="none"
+            style="padding: 0px; border-bottom: 0px solid #394351"
+          >
+          <!-- <ion-button (click)="deletePost(post.postId)" >Delete</ion-button> -->
+            <!-- <ion-avatar slot="start" style="
+                height: 50px;
+                width: 50px;
+                padding: 0px;
+                margin-left: -10px;
+                margin-right: 12px;
+              ">
+              <img
+                [src]="post.imageExists ? authService.apiUrl+'images/'+post.employeeId+'.png' : authService.apiUrl+'images/0.png'" />
+            </ion-avatar> -->
+            <ion-label>
+              <h2
+                style="
+                  color: var(--ion-color-dark);
+                  font-weight: bold;
+                  text-transform: capitalize;
+                "
+              >
+                {{post.firstName}} {{post.lastName}}
+              </h2>
+              <p style="color: #848484; font-size: 14px">
+                {{post.designation}}
+              </p>
+            </ion-label>
+            <ion-note
+              slot="end"
+              style="
+                text-align: right;
+                font-size: 14px;
+                color: var(--ion-color-dark-tint) !important;
+              "
+            >
+              {{post.createdAt | date:'hh:mm a dd MMM'}}</ion-note
+            >
+            <ion-icon
+              slot="end"
+              name="ellipsis-vertical-outline"
+              style="font-size: 14px"
+            ></ion-icon>
+          </ion-item>
+          <div [innerHTML]="post.postDescription" class="postDescription"></div>
+          <!-- <ion-row style="border-top: 0.5px solid #394351;">
+            <ion-col size="12" style="padding: 0px;">
+              <ion-item lines="none">
+                <ion-label style="text-align: right;font-size: 14px;color: var(--ion-color-dark-tint) !important;">
+                  {{post.createdAt | date:'hh:mm a dd MMM'}}</ion-label>
+                <ion-icon slot="start" *ngIf="!post.userLiked" name="heart-outline"></ion-icon>
+                <ion-chip slot="start">
+                  <ion-label>2</ion-label>
+                  <ion-icon name="heart-outline" color="dark"></ion-icon>
+                </ion-chip>
+                <ion-chip slot="start">
+                  <ion-label>4</ion-label>
+                  <ion-icon name="chatbox-outline" color="dark"></ion-icon>
+                </ion-chip>
+              </ion-item>
+              <ion-button (click)="toggleLike(post)" expand="block" fill="clear" style="height: 25px;">
+                    <ion-icon *ngIf="!post.userLiked" name="thumbs-up-outline" color="dark"></ion-icon>
+                    <ion-icon *ngIf="post.userLiked" name="thumbs-up" color="danger"></ion-icon>
+                    <div style="color: #ccc;text-align: center;margin-top: -3px; padding-left: 5px;padding-top: 3px;">{{post.likesCount}}</div>
+                  </ion-button>
+            </ion-col>
+          </ion-row> -->
+        </ion-card>
+        <!-- <ion-card>
+          <img src="https://edit.org/img/blog/yli-templates-employee-month-certificates-editable-online.jpg" />
+        </ion-card> -->
+
+        
+      <!-- infinite scroll -->
+    <ion-infinite-scroll *ngIf="!disablePagination" (ionInfinite)="getMoreData($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <!-- infinite scroll -->
+      </ion-col>
+
+
+      <!-- col to display pending tasks -->
+      <ion-col sizeMd="6" size="12">
+        <ion-item>
+          <ion-label style="padding: 10px 20px">
+            <h2
+              style="
+                color: var(--ion-color-light);
+                font-size: 16px;
+                font-weight: bolder;
+              "
+            >
+              Pending Tasks ({{allTasks.length + testingTasks.length}})
+            </h2>
+          </ion-label>
+        </ion-item>
+
+        <div
+          *ngFor="let task of allTasks"
+          style="margin-bottom: 5px; border-radius: 5px"
+        >
+          <ion-item
+            style="background-color: transparent !important"
+            (click)="viewTaskDetails(task, null)"
+          >
+            <ion-label class="ion-text-wrap">
+              <div style="display: flex; align-items: center;">
+                
+                <ion-text>
+                  <p
+                    style="
+                      font-size: 1rem;
+                      font-weight: bold;
+                      margin-bottom: 0.4rem;
+                    "
+                  >
+                    {{task.projectName}} | {{task.epicName}} |
+                    {{task.storyName}}
+                  </p>
+                </ion-text>
+             
+                              </div>
+              <ion-text>
+                <p
+                  style="font-weight: 100; font-size: 14px; text-align: justify"
+                >
+                  #{{task.taskId}} - {{task.taskName}}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+          
+
+
+
+          <div
+
+            style="
+              text-align: right;
+              padding: 5px;
+              font-size: 14px;
+              padding-top: 0px;
+            "
+          >
+          <ion-chip *ngIf="task.priority === 0" >
+            <ion-icon
+              name="radio-button-on-outline"
+              color="secondary"
+            ></ion-icon>
+            <ion-label>Low</ion-label>
+          </ion-chip>
+          <ion-chip *ngIf="task.priority === 1" >
+            <ion-icon
+              name="radio-button-on-outline"
+              color="warning"
+            ></ion-icon>
+            <ion-label>Medium</ion-label>
+          </ion-chip>
+          <ion-chip *ngIf="task.priority === 2" >
+            <ion-icon
+              name="radio-button-on-outline"
+              color="danger"
+            ></ion-icon>
+            <ion-label>High</ion-label>
+          </ion-chip>
+          <ion-chip *ngIf="task.priority === 3" >
+            <ion-icon
+              name="radio-button-on-outline"
+              color="tertiary"
+            ></ion-icon>
+            <ion-label>Hold</ion-label>
+          </ion-chip>
+          <ion-chip *ngIf="task.priority === 4">
+            <ion-icon
+              name="radio-button-on-outline"
+              color="danger"
+            ></ion-icon>
+            <ion-label>Show Stopper</ion-label>
+          </ion-chip>
+            Due Date : {{task.dueDate}}
+          </div>
+        </div>
+
+        <!-- display testing tasks -->
+        <div
+          *ngFor="let task of testingTasks"
+          style="
+            margin-bottom: 5px;
+            background-color: var(--ion-color-light);
+            border-radius: 5px;
+          "
+        >
+          <ion-item
+            style="background-color: transparent !important"
+            lines="none"
+            (click)="viewTaskDetails(task, null)"
+          >
+            <ion-label class="ion-text-wrap">
+              <ion-text>
+                <h2>
+                  Testing - #{{task.projectTaskNumber}} - {{task.projectName}}
+                </h2>
+              </ion-text>
+              <ion-text color="dark">
+                <p style="font-size: 14px; text-align: justify">
+                  #{{task.projectTaskNumber}} {{task.taskName}}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+          <div
+            *ngIf="task.dueDate"
+            style="
+              text-align: right;
+              padding: 5px;
+              font-size: 14px;
+              padding-top: 0px;
+            "
+          >
+            Due Date : {{task.dueDate}}
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- col to display pending tasks -->
+      
+
+      <!-- <ion-col sizeMd="3" size="12">
+        <ion-card style="margin: 0px !important;" routerLink="/organization-structure"
+          style="background-color: var(--ion-color-light);">
+          <img src="assets\Organizational-Structure.png" alt="">
+          <ion-card-content>
+            <h1 style="color: var(--ion-color-dark);">Organizational Structure</h1>
+          </ion-card-content>
+        </ion-card>
+        <ion-item>
+          <ion-label style="padding: 10px 20px">
+            <h2 style="color: var(--ion-color-light); font-size: 16px">
+              Latest News Headlines
+            </h2>
+          </ion-label>
+        </ion-item>
+        <div *ngFor="let news of newsFeed">
+          <ion-item>
+            <ion-thumbnail slot="start" style="
+                height: 50px;
+                width: 50px;
+                padding: 0px;
+                margin-left: -10px;
+                margin-right: 12px;
+              ">
+              <img [src]="news['media:thumbnail']['0']['$']['url']" /> 
+            </ion-thumbnail>
+            <ion-label class="ion-text-wrap" (click)="openNews(news['link'][0])" style="cursor: pointer">
+              <ion-text>
+                <h2>{{news.title[0]}}</h2>
+              </ion-text>
+              <ion-text color="dark">
+                <p style="font-size: 12px; text-align: right">
+                  {{news['pubDate'] | date:'hh:mm a dd MMM'}}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-col> -->
+    </ion-row>
+  </div>
+  <div *ngIf="segment === 'Projects'">
+    <ion-grid>
+      <div *ngIf="subSegment === 'projectList'">
+        <ion-row>
+          <ion-col
+            sizeLg="12"
+            sizeMd="12"
+            sizeSm="12"
+            sizeXs="12"
+            *ngFor="let project of allProjects"
+          >
+            <ion-list
+              class="projects"
+              routerLink="/project-manage/{{project.projectId}}"
+              style="background-color: var(--ion-color-light)"
+            >
+              <ion-item class="item" lines="none">
+                <ion-avatar slot="start">
+                  <ion-icon
+                    name="globe-outline"
+                    style="font-size: 35px; color: rgb(160, 158, 158)"
+                  ></ion-icon>
+                </ion-avatar>
+                <ion-label
+                  style="
+                    color: var(--ion-color-light);
+                    font-size: 14px;
+                    font-weight: 500;
+                  "
+                  >{{project.projectName}}
+                </ion-label>
+                <ion-note slot="end">
+                  <div style="font-size: 14px">Total Hours</div>
+                  <div style="font-size: 15px; font-weight: bold">
+                    {{project.totalHours | number : '.2-2' || "0"}}
+                  </div>
+                </ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="subSegment === 'raisedTicket'">
+        <!-- <ion-card style="margin: 10px;"> -->
+        <ion-row class="ticket">
+          <ion-col size="1">ProjectId</ion-col>
+          <ion-col size="2">ProjectName</ion-col>
+          <ion-col size="1">TaskId</ion-col>
+          <ion-col size="3">TaskName</ion-col>
+          <ion-col size="2">Comment</ion-col>
+          <ion-col siz="1">CreatedDate</ion-col>
+          <ion-col siz="1">ApproverName</ion-col>
+          <ion-col siz="1">ApprovedDate</ion-col>
+        </ion-row>
+        <ion-row
+          *ngIf="raisedTicket.length <= 0"
+          style="display: flex; justify-content: center"
+        >
+          <h6>No Raised Ticket</h6>
+        </ion-row>
+        <ion-row
+          *ngFor="let request of raisedTicket; index as i"
+          [ngClass]="(i % 2 == 0) ? 'odd' : 'even'"
+        >
+          <ion-col size="1">{{request?.projectId}}</ion-col>
+          <ion-col size="2">{{request?.projectName}}</ion-col>
+          <ion-col size="1">{{request?.taskId}}</ion-col>
+          <ion-col size="3">{{request?.taskName}}</ion-col>
+          <ion-col size="2">{{request?.requestComment}}</ion-col>
+          <ion-col siz="1"
+            >{{request?.createdAt | date:'dd MMM, yyyy'}}</ion-col
+          >
+          <ion-col siz="1">{{request?.approverName}}</ion-col>
+          <ion-col siz="1"
+            >{{request?.updatedAt | date:'dd MMM, yyyy'}}</ion-col
+          >
+        </ion-row>
+        <!-- </ion-card> -->
+      </div>
+    </ion-grid>
+  </div>
+  <div
+    *ngIf="segment === 'Ticket'"
+    [style.height]="windowHeight"
+    style="overflow: auto"
+  >
+    <table class="tg">
+      <thead>
+        <tr
+          style="
+            background-color: var(--ion-color-light);
+            position: sticky;
+            top: 0px;
+            z-index: 9999999999999;
+          "
+        >
+          <th class="tg-hpky" style="width: 100px">ProjectId</th>
+          <th class="tg-hpky" style="width: 200px">ProjectName</th>
+          <th class="tg-hpky" style="width: 100px">Task Id</th>
+          <th class="tg-hpky" style="width: 300px">Task Name</th>
+          <th class="tg-hpky" style="width: 300px">Comment</th>
+          <th class="tg-hpky" style="width: 100px">Created By</th>
+          <th class="tg-hpky" style="width: 100px">Created Date</th>
+          <th class="tg-hpky" style="width: 100px">Approved By</th>
+          <th class="tg-hpky" style="width: 100px">Approved Date</th>
+          <th class="tg-hpky" style="width: 100px">Extra Hours</th>
+          <th class="tg-hpky" style="width: 150px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ticket of raisedTicketManager; index as i">
+          <td class="tg-0pky" style="width: 100px">{{ticket?.projectId}}</td>
+          <td class="tg-0pky" style="width: 200px">{{ticket?.projectName}}</td>
+          <td class="tg-0pky" style="width: 100px">{{ticket?.taskId}}</td>
+          <td class="tg-0pky" style="width: 300px">{{ticket?.taskName}}</td>
+          <td class="tg-0pky" style="width: 300px">
+            {{ticket?.requestComment}}
+          </td>
+          <td class="tg-0pky" style="width: 100px">
+            {{ticket?.firstName + ' ' + ticket?.lastName}}
+          </td>
+          <td class="tg-0pky" style="width: 100px">
+            {{ticket?.createdAt | date:'dd MMM, yyyy'}}
+          </td>
+          <td class="tg-0pky" style="width: 100px">{{ticket?.approverName}}</td>
+          <td class="tg-0pky" style="width: 100px">
+            {{ticket?.updatedAt | date:'dd MMM, yyyy'}}
+          </td>
+          <th
+            class="tg-hpky"
+            style="width: 100px; text-align: center; padding: 0"
+          >
+            <input
+              type="number"
+              min="0"
+              style="width: 80px; height: 30px; margin: 0"
+              [(ngModel)]="ticket.extraHours"
+            />
+          </th>
+          <td class="tg-0pky" style="width: 150px">
+            <!-- <ion-button slot="start" fill="clear" style="font-size: 14px;">
+              <ion-icon [color]="ticket.status == 2 ? 'danger' : 'dark'" name="close-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button> -->
+            <ion-button
+              slot="end"
+              fill="clear"
+              style="font-size: 14px"
+              (click)="approveTicket(ticket)"
+            >
+              <ion-icon
+                [color]="ticket.status == 1 ? 'success' : 'dark'"
+                name="checkmark-circle-outline"
+                slot="icon-only"
+              ></ion-icon>
+            </ion-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</ion-content>
+<ion-footer>
+  <ion-toolbar color="tertiary">
+    <ion-row>
+      <ion-col size="12" sizeMd="3" style="display: flex; align-items: center">
+        <ion-buttons>
+          <ion-button color="dark" *ngIf="attendanceData">
+            Punch In Time: {{attendanceData.punchIn | date:'hh:mm a'}}
+          </ion-button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col
+        size="12"
+        sizeMd="9"
+        style="
+          padding-right: 20px;
+          font-weight: 900;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        "
+      >
+        <div style="text-align: right">{{quote.content}}</div>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

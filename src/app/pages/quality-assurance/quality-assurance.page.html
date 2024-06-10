@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Quality Assurance</ion-title>
+  </ion-toolbar>
+  <ion-row>
+     <!-- Filters Row -->
+    <!-- Category Selection -->
+    <ion-col size="4" size-md="3">
+      <ion-item class="rounded-item">
+        <ion-label>Substation</ion-label>
+        <ion-select [(ngModel)]="selectedCategory" (ionChange)="selectCategory($event)" class="responsive-filter filter-select" placeholder="Select Category" interface="popover">
+          <ion-select-option *ngFor="let category of data2" [value]="category.name">
+            {{ category.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    
+  <!-- OEM Selection -->
+  <ion-col size="6" size-md="3">
+    <ion-item class="rounded-item">
+      <ion-label>OEM</ion-label>
+      <ion-select [(ngModel)]="selectedOEM" class="responsive-filter filter-select" placeholder="Select OEM" placeholder-color="black" style="width: 100%;" interface="popover;">
+        <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">
+          {{ oem.oemName }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-col>
+    <!-- Engineer Details -->
+    <ion-col size="12" size-md="3" class="fixed-card">
+            <ion-item class="rounded-item">
+              <ion-label>Select Engineer</ion-label>
+              <ion-select [(ngModel)]="selectedEngineer" name="engineer" placeholder="Select Enginner" interface="popover">
+                <ion-select-option *ngFor="let engineer of engineers" [value]="engineer">
+                  {{ engineer.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+    </ion-col>
+    <ion-col size="6" size-md="3">
+      <ion-button expand="ion-button" type="button" (click)="submitSelectedProducts()">Submit</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+  
+    <!-- Main Content Row -->
+    <ion-row>
+      <!-- Products List -->
+      <ion-col size="12" size-md="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Products</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-searchbar [(ngModel)]="searchQuery" placeholder="Search Products"></ion-searchbar>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="2.4"><strong>Serial Number</strong></ion-col>
+                <ion-col size="2.4"><strong>Product Name</strong></ion-col>
+                <ion-col size="2.4"><strong>Category</strong></ion-col>
+                <ion-col size="2.4"><strong>Status</strong></ion-col>
+
+                <ion-col size="2.4"><strong>Select</strong></ion-col>
+              </ion-row>
+              <ion-row *ngFor="let product of filteredProducts()">
+                <ion-col size="2.4">{{ product.serialNumber }}</ion-col>
+                <ion-col size="2.4">{{ product.productName }}</ion-col>
+                <ion-col size="2.4">{{ product.categoryName }}</ion-col>
+                <ion-col size="2.4">{{ product.status }}</ion-col>
+                <ion-col size="2.4">
+                  <ion-select [(ngModel)]="product.selection" placeholder="Select">
+                    <ion-select-option value="PASS">PASS</ion-select-option>
+                    <ion-select-option value="FAIL">FAIL</ion-select-option>
+                  </ion-select>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <!-- Pagination Controls -->
+            <div class="pagination-controls">
+              <ion-button [disabled]="currentPage === 1" (click)="changePage(-1)">Previous</ion-button>
+              <ion-button [disabled]="filteredProducts().length < itemsPerPage" (click)="changePage(1)">Next</ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

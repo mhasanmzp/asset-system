@@ -1,0 +1,44 @@
+<div>
+  <ion-row>
+    <ion-col sizeMd="3" size="12">
+      <div style="text-align: center;padding: 10px 0;">
+        <ion-label>Project Health</ion-label><br>
+      </div>
+      <div style="border: 1px solid var(--ion-color-light);text-align: center;padding: 10px 0;">
+        <span>Project</span><br>
+        <ion-label>{{allProjects?.length}}</ion-label>
+      </div>
+      <div style="border: 1px solid var(--ion-color-light);text-align: center;padding: 10px 0;">
+        <span>Efforts&nbsp;<small>(Hours)</small></span><br>
+        <ion-label>{{totalEst.toFixed(2)}}</ion-label>
+      </div>
+      <div style="border: 1px solid var(--ion-color-light);text-align: center;padding: 10px 0;">
+        <span>Efforts Completed&nbsp;<small>(Hours)</small></span><br>
+        <ion-label>{{totalActual.toFixed(2)}}</ion-label>
+      </div>
+      <div style="border: 1px solid var(--ion-color-light);text-align: center;padding: 10px 0;">
+        <span>Efforts Remaining&nbsp;<small>(Hours)</small></span><br>
+        <ion-label>{{(totalEst - totalActual).toFixed(2)}}</ion-label>
+      </div>
+    </ion-col>
+
+    <ion-col sizeMd="4.5" size="12">
+      <div echarts [options]="chartOption" style="height: 300px;margin-top: 10px;"></div>
+    </ion-col>
+    <ion-col sizeMd="4.5" size="12">
+      <div echarts [options]="chartOptionProjectType" (click)="setOpen()" (chartInit)="onChartInit($event)" style="height: 300px;margin-top: 10px;"></div>
+    </ion-col>
+
+    <ion-col sizeMd="12" size="12">
+      <div echarts [options]="chartOptionHours" style="height: 500px;"></div>
+    </ion-col>
+
+    <ion-col sizeMd="12" size="12">
+      <div echarts [options]="chartOptionProject" style="height: 500px;"></div>
+    </ion-col>
+
+    <ion-col sizeMd="12" size="12">
+      <div echarts [options]="chartOptionProjectHrs" style="height: 500px;margin-top: 10px;"></div>
+    </ion-col>
+  </ion-row>
+</div>

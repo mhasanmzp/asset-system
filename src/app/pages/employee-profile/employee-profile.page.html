@@ -1,0 +1,189 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="dark" fill="clear" (click)="changePassword()">Change Password</ion-button>
+      <ion-button color="success" fill="outline" style="padding: 0px 20px;" (click)="updateEmployee()">Update Profile</ion-button>
+      <ion-button (click)="modalController.dismiss()">
+        <ion-icon color="danger" name="arrow-down"></ion-icon>
+      </ion-button>
+      <!-- <ion-button>
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- <div style="margin: 20px;
+  background-color: #3c40c6;
+  color: var(--ion-color-dark);
+  font-size: 16px;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 10px;">
+    The Add Employee wizard guides you through the process of adding a new employee. You have the flexibility to enter
+    comprehensive information about a new employee as soon as the person joins or first add salient details and update
+    remaining details later.
+  </div> -->
+
+  <div>
+
+  </div>
+
+
+  <div>
+    <ion-row>
+      <ion-col sizeLg="2" offsetLg="0.5">
+        <!-- <ion-avatar> -->
+        <img class="profileImage" [src]="croppedImage || employeeDetails.image" />
+        <!-- <ion-img class="profileImage" [src]=croppedImage || employeeDetails.image"></ion-img> -->
+        <form>
+          <input id="file" type="file" (change)="fileChangeEvent($event)" />
+        </form>
+        <image-cropper *ngIf="imageChangedEvent" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+          [resizeToWidth]="200" [resizeToHeight]="200" [aspectRatio]="4 / 4" format="png"
+          (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady()"
+          (loadImageFailed)="loadImageFailed()"></image-cropper>
+
+
+        <!-- </ion-avatar> -->
+      </ion-col>
+      <ion-col sizeLg="9.5" *ngIf="segment==='user'">
+        <!-- <ion-card> -->
+        <!-- <ion-card-header>
+        User Info
+      </ion-card-header>
+      <ion-card-content> -->
+        <form [formGroup]="basic">
+          <!-- <ion-card> -->
+          <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 20px;">
+            <ion-row style="padding-bottom: 10px;">
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">First Name*</ion-label>
+                  <ion-input readonly formControlName="firstName"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Middle name</ion-label>
+                  <ion-input formControlName="middleName"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Last name*</ion-label>
+                  <ion-input readonly formControlName="lastName"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="8">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Designation</ion-label>
+                  <ion-input readonly formControlName="designation"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Gender*</ion-label>
+                  <select [disabled] formControlName="gender"
+                    style="width: 100%;
+                      background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Others</option>
+                  </select>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Phone Number*</ion-label>
+                  <ion-input formControlName="phoneNo"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Personal Email*</ion-label>
+                  <ion-input readonly formControlName="personalEmail"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row style="padding-bottom: 10px;">
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Spouse Name</ion-label>
+                  <ion-input formControlName="spouseName"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Father Name*</ion-label>
+                  <ion-input type="text" formControlName="fatherName"></ion-input>
+                </ion-item>
+              </ion-col>
+              <!-- <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Date of Birth*</ion-label>
+                  <ion-input type="date" formControlName="DOB"></ion-input>
+                </ion-item>
+              </ion-col> -->
+              <!-- <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Emergency Contact Name*</ion-label>
+                  <ion-input formControlName="emergencyContactName"></ion-input>
+                </ion-item>
+              </ion-col> -->
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Emergency Contact Number*
+                  </ion-label>
+                  <ion-input formControlName="emergencyContactNumber"></ion-input>
+                </ion-item>
+              </ion-col>
+              <!-- <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Pan Number*</ion-label>
+                  <ion-input formControlName="panNumber"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Aadhar Number*</ion-label>
+                  <ion-input formControlName="adharNumber"></ion-input>
+                </ion-item>
+              </ion-col> -->
+            </ion-row>
+            <ion-row style="padding-bottom: 10px;">
+              <ion-col size="12">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Present Address*</ion-label>
+                  <ion-input formControlName="presentAddress"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="12">
+                <ion-item>
+                  <ion-label position="stacked" style="color: var(--ion-color-dark);">Permanent Address*</ion-label>
+                  <ion-input formControlName="permanentAddress"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row style="padding-bottom: 10px;">
+            </ion-row>
+          </ion-list>
+          <!-- </ion-card-content> -->
+        </form>
+        <!-- </ion-card> -->
+      </ion-col>
+    </ion-row>
+
+  </div>
+</ion-content>
+<ion-footer class="ion-no-border" color="gray">
+  <ion-toolbar color="gray">
+    <ion-buttons slot="end">
+      <ion-button *ngIf="segment==='card' && updateFlag" expand="block" fill="solid" color="success"
+        style="font-weight: 300;width: 150px;" (click)="updateEmployee()">Update</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

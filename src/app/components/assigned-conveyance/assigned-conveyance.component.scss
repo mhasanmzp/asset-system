@@ -1,0 +1,39 @@
+.ion-col-header {
+  border: solid 1px #757070;
+  text-align: center;
+}
+.ion-col-item {
+  border: solid 1px #757070;
+  text-align: center;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-wrap: anywhere;
+
+}
+
+ion-input {
+  margin-top: 10px;
+  border: 0.5px solid var(--ion-color-dark) !important;
+  background: var(--ion-color-light) !important;
+  border-radius: 10px;
+  padding: 10px !important;
+  color: var(--ion-color-dark) !important;
+  font-weight: 400;
+  font-size: 14px;
+  width: 100%;
+}
+ .ion-modal{
+  --width: 90%;
+}
+.detailInput
+{
+  border: 1px solid rgb(170, 167, 167);
+  text-align: center;
+  width:100%;
+  
+}
+.checkbox{
+  pointer-events: none;
+}

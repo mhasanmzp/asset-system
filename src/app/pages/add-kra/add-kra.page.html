@@ -1,0 +1,361 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/performance"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Create KRA
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 20px;">
+    <ion-row style="padding-bottom: 10px;">
+      <ion-col size="4" *ngFor="let item of KAR_header">
+        <ion-item>
+          <ion-label position="stacked" style="color: #fff;">{{item.title}}</ion-label>
+          <ion-input [(ngModel)]="designation[item.index]"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label position="stacked" style="color: var(--ion-color-dark);">Year</ion-label>
+          <select [(ngModel)]="year" (change)="selectYear($event)">
+            <option value="{{data}}" *ngFor="let data of years">{{data}}</option>
+          </select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label position="stacked" style="color: var(--ion-color-dark);">Month</ion-label>
+          <select [(ngModel)]="month">
+            <option value="{{data.value}}" *ngFor="let data of monthNew">{{data.name}}</option>
+          </select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label position="stacked" style="color: #fff;">Total Overall
+            Score : (Out of 100 points)</ion-label>
+          <ion-input type="number" min="0" [(ngModel)]="totalScore"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-list>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 30px;">
+    <ion-accordion-group value="first" style="margin-bottom: 10px;border-radius: 10px;">
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label slot="start">{{skill}}</ion-label>
+          <ion-label slot="end">{{technicalRating}}/100</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-row class="rowCss" style="font-size: 15px;">
+            <ion-col size="0.5" style="font-weight:900;" (click)="addSkill()">
+              <ion-icon name="add-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+              </ion-icon>
+            </ion-col>
+            <ion-col size="4.5" style="border-right: 1px solid #fff;">KRA/KPI</ion-col>
+            <ion-col size="1" *ngFor="let item of KRA_Rating" style="border-right: 1px solid #fff;">{{item.title}}
+              <span *ngIf="item.required">*</span>
+            </ion-col>
+            <ion-col size="2">R1 Review</ion-col>
+          </ion-row>
+
+          <form [formGroup]="kraForm">
+            <ion-row style="background: var(--ion-color-light);border: 1px solid #fff;font-size: 14px;"
+              formArrayName="tasks" *ngFor="let kraFormGroups of kraGroups; let i = index;">
+              <ion-col size="12" [formGroupName]="i">
+                <ion-col size="0.5" style="float: left;margin-top: 5px;">{{i + 1}})</ion-col>
+                <ion-col size="4.5" style="float: left;border-right: 1px solid #fff;">
+                  <ion-input class="inputText" formControlName="kra"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kraScore"
+                    (keyup)="TechnicalRating($event)"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="tScore"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kpiScore"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="aScore"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="fRating"></ion-input>
+                </ion-col>
+                <ion-col size="1.5" style="float: left;text-align: center;">
+                  <ion-input type="text" class="inputText" formControlName="review"></ion-input>
+                </ion-col>
+                <ion-col size="0.5" style="font-weight:900;" (click)="removeSkill(i)">
+                  <ion-icon name="remove-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+                  </ion-icon>
+                </ion-col>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ion-list>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 30px;">
+    <ion-accordion-group value="first" style="margin-bottom: 10px;border-radius: 10px;">
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label slot="start">ADMINISTRATION</ion-label>
+          <ion-label slot="end">{{administratRating}}/100</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-row class="rowCss">
+            <ion-col size="0.5" style="font-weight:900;" (click)="addAdministratSkill()">
+              <ion-icon name="add-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+              </ion-icon>
+            </ion-col>
+            <ion-col size="4.5" style="border-right: 1px solid #fff;">KRA/KPI</ion-col>
+            <ion-col size="1" *ngFor="let item of KRA_Rating" style="border-right: 1px solid #fff;">{{item.title}}
+              <span *ngIf="item.required">*</span>
+            </ion-col>
+            <ion-col size="2">R1 Review</ion-col>
+          </ion-row>
+
+          <form [formGroup]="kraAdministratForm">
+            <ion-row style="background: var(--ion-color-light);border: 1px solid #fff;font-size: 14px;"
+              formArrayName="administratTasks"
+              *ngFor="let kraAdministratFormGroups of kraAdministratGroups; let i = index;">
+              <ion-col size="12" [formGroupName]="i">
+                <ion-col size="0.5" style="float: left;margin-top: 5px;">{{i + 1}})</ion-col>
+                <ion-col size="4.5" style="float: left;border-right: 1px solid #fff;">
+                  <ion-input class="inputText" formControlName="kraAdministrat"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kraScoreAdministrat"
+                    (keyup)="AdministratRating($event)"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="tScoreAdministrat"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kpiScoreAdministrat"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="aScoreAdministrat"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="fRatingAdministrat"></ion-input>
+                </ion-col>
+                <ion-col size="1.5" style="float: left;text-align: center;">
+                  <ion-input type="text" class="inputText" formControlName="reviewAdministrat"></ion-input>
+                </ion-col>
+                <ion-col size="0.5" style="font-weight:900;" (click)="removeAdministratSkill(i)">
+                  <ion-icon name="remove-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+                  </ion-icon>
+                </ion-col>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ion-list>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 30px;">
+    <ion-accordion-group value="first" style="margin-bottom: 10px;border-radius: 10px;">
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label slot="start">MANAGERIAL SKILLS</ion-label>
+          <ion-label slot="end">{{managerialRating}}/100</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-row class="rowCss">
+            <ion-col size="0.5" style="font-weight:900;" (click)="addManagerialSkill()">
+              <ion-icon name="add-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+              </ion-icon>
+            </ion-col>
+            <ion-col size="4.5" style="border-right: 1px solid #fff;">KRA/KPI</ion-col>
+            <ion-col size="1" *ngFor="let item of KRA_Rating" style="border-right: 1px solid #fff;">{{item.title}}
+              <span *ngIf="item.required">*</span>
+            </ion-col>
+            <ion-col size="2">R1 Review</ion-col>
+          </ion-row>
+
+          <form [formGroup]="kraManagerialForm">
+            <ion-row style="background: var(--ion-color-light);border: 1px solid #fff;font-size: 14px;"
+              formArrayName="managerialTasks"
+              *ngFor="let kraManagerialFormGroups of kraManagerialGroups; let i = index;">
+              <ion-col size="12" [formGroupName]="i">
+                <ion-col size="0.5" style="float: left;margin-top: 5px;">{{i + 1}})</ion-col>
+                <ion-col size="4.5" style="float: left;border-right: 1px solid #fff;">
+                  <ion-input class="inputText" formControlName="kraManagerial"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kraScoreManagerial"
+                    (keyup)="ManagerialRating($event)"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="tScoreManagerial"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kpiScoreManagerial"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="aScoreManagerial"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="fRatingManagerial"></ion-input>
+                </ion-col>
+                <ion-col size="1.5" style="float: left;text-align: center;">
+                  <ion-input type="text" class="inputText" formControlName="reviewManagerial"></ion-input>
+                </ion-col>
+                <ion-col size="0.5" style="font-weight:900;" (click)="removeManagerialSkill(i)">
+                  <ion-icon name="remove-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+                  </ion-icon>
+                </ion-col>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ion-list>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 30px;">
+    <ion-accordion-group value="first" style="margin-bottom: 10px;border-radius: 10px;">
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label slot="start">OVERALL PROGRESS</ion-label>
+          <ion-label slot="end">{{allProgressRating}}/100</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-row class="rowCss">
+            <ion-col size="0.5" style="font-weight:900;" (click)="addAllProgressSkill()">
+              <ion-icon name="add-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+              </ion-icon>
+            </ion-col>
+            <ion-col size="4.5" style="border-right: 1px solid #fff;">KRA/KPI</ion-col>
+            <ion-col size="1" *ngFor="let item of KRA_Rating" style="border-right: 1px solid #fff;">{{item.title}}
+              <span *ngIf="item.required">*</span>
+            </ion-col>
+            <ion-col size="2">R1 Review</ion-col>
+          </ion-row>
+
+          <form [formGroup]="kraAllProgressForm">
+            <ion-row style="background: var(--ion-color-light);border: 1px solid #fff;font-size: 14px;"
+              formArrayName="allProgressTasks"
+              *ngFor="let kraAllProgressFormGroups of kraAllProgressGroups; let i = index;">
+              <ion-col size="12" [formGroupName]="i">
+                <ion-col size="0.5" style="float: left;margin-top: 5px;">{{i + 1}})</ion-col>
+                <ion-col size="4.5" style="float: left;border-right: 1px solid #fff;">
+                  <ion-input class="inputText" formControlName="kraAllProgress"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kraScoreAllProgress"
+                    (keyup)="AllProgressRating($event)"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="tScoreAllProgress"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="kpiScoreAllProgress"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="aScoreAllProgress"></ion-input>
+                </ion-col>
+                <ion-col size="1" class="ratingColumn">
+                  <ion-input type="number" min="0" class="inputText" formControlName="fRatingAllProgress"></ion-input>
+                </ion-col>
+                <ion-col size="1.5" style="float: left;text-align: center;">
+                  <ion-input type="text" class="inputText" formControlName="reviewAllProgress"></ion-input>
+                </ion-col>
+                <ion-col size="0.5" style="font-weight:900;" (click)="removeAllProgressSkill(i)">
+                  <ion-icon name="remove-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+                  </ion-icon>
+                </ion-col>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ion-list>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 30px;">
+    <ion-accordion-group value="first" style="margin-bottom: 10px;border-radius: 10px;">
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label slot="start">SCORING SYSTEM</ion-label>
+          <ion-label slot="end">{{scoringRating}}/10</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-row class="rowCss">
+            <ion-col size="0.5" style="font-weight:900;" (click)="addScoringSkill()">
+              <ion-icon name="add-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+              </ion-icon>
+            </ion-col>
+            <ion-col size="7.5" style="float:left;border-right: 1px solid #fff;">Attribute</ion-col>
+            <ion-col size="4" style="float:right;">Score</ion-col>
+          </ion-row>
+
+          <form [formGroup]="kraScoringForm">
+            <ion-row style="background: var(--ion-color-light);border: 1px solid #fff;font-size: 14px;"
+              formArrayName="scoringTasks" *ngFor="let kraScoringFormGroups of kraScoringGroups; let i = index;">
+              <ion-col [formGroupName]="i">
+                <ion-col size="0.5" style="float: left;margin-top: 5px;">{{i + 1}})</ion-col>
+                <ion-col size="7.5" style="float: left;border-right: 1px solid #fff;">
+                  <ion-input class="inputText" formControlName="attribute"></ion-input>
+                </ion-col>
+                <ion-col size="3.5" style="float: left;text-align: center;">
+                  <ion-input type="number" min="0" class="inputText" formControlName="score" (keyup)="ScoringRating($event)"></ion-input>
+                </ion-col>
+                <ion-col size="0.5" style="font-weight:900;" (click)="removeScoringSkill(i)">
+                  <ion-icon name="remove-circle" style="font-size:20px;font-weight:900;cursor:pointer;margin-top: 5px;">
+                  </ion-icon>
+                </ion-col>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ion-list>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 20px;">
+    <ion-row>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked">Your Opinion</ion-label>
+          <ion-textarea [(ngModel)]="recommendation" style="font-size: 15px;font-weight:400;"></ion-textarea>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked">Comment</ion-label>
+          <ion-textarea [(ngModel)]="comment" style="font-size: 15px;font-weight:400;"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-list>
+
+  <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 20px;">
+    <ion-row style="padding-bottom: 10px;">
+      <ion-col size="6" *ngFor="let item of KRA_Footer">
+        <ion-item>
+          <ion-label position="stacked" style="color: #fff;">{{item.title}}</ion-label>
+          <ion-input [(ngModel)]="evaluation[item.index]"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-list>
+</ion-content>
+
+<ion-footer style="display: flex;justify-content:flex-end;">
+  <!-- <ion-button size="default" fill="outline" color="success" type="submit" style="height: 35px;">
+    Save</ion-button>&nbsp; -->
+  <ion-button size="default" fill="outline" color="success" type="submit" style="height: 35px;" (click)="submitKRA()">
+    Submit</ion-button>
+</ion-footer>

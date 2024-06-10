@@ -1,0 +1,109 @@
+<div class="root">
+  <div class="board">
+    <div class="board-wrapper">
+      <div class="board-columns" cdkDropListGroup>
+        <div class="board-column" *ngFor="let column of teamBoardColumns; let c = index;" #boards id="boards"
+          style="background: transparent">
+          <div class="column-title" style="position: sticky; top: 0px">
+            <ion-item lines="none" style="background: var(--ion-color-white)">
+              <ion-label style="color: var(); font-size: 16px">
+                {{ column.columnName }}
+              </ion-label>
+            </ion-item>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ion-accordion-group [value]="k" [multiple]="true" style="margin-bottom: 0px"
+  *ngFor="let story of sprintStories;let k = index">
+  <ion-accordion [value]="k">
+    <ion-item slot="header" lines="none">
+      <ion-icon slot="start" name="bookmark" style="margin-left: -10px; margin-right: 5px" color="success">
+      </ion-icon>
+      <ion-label style="font-size: 18px !important">{{story.name}}</ion-label>
+    </ion-item>
+    <div slot="content" style="margin-bottom: 20px; margin-top: 20px;">
+      <div class="root">
+        <div class="board">
+          <div class="board-wrapper">
+            <div class="board-columns" cdkDropListGroup>
+              <div class="board-column" *ngFor="let column of story.columnTasks; let c = index;">
+                <div class="tasks-container" cdkDropList id="{{column.columnId}}" [cdkDropListData]="column.tasks"
+                  (cdkDropListDropped)="drop($event)">
+                  <div class="task" *ngFor="let item of column.tasks; let i = index;" cdkDrag
+                    [style.border]="item.status === 1 ? '1px solid green': ''">
+                    <ion-item lines="none" style="
+                        background: var(--ion-color-white);
+                        border-radius: 0px;
+                        padding-top: 5px;">
+                      <ion-avatar slot="start" (click)="assignTaskOverlay(item,i)" cdkOverlayOrigin
+                        #trigger="cdkOverlayOrigin">
+                        <img
+                          [src]="getAssigneeDetails(item, 'image') || 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'" />
+                      </ion-avatar>
+                      <ng-template *ngIf="i === item.index" cdkConnectedOverlay
+                        [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="item.isOpen"
+                        (overlayOutsideClick)="item.isOpen = false">
+                        <div class="example-overlay">
+                          <ion-item lines="none">
+                            <ion-label style="color: #ccc">
+                              Assignee
+                            </ion-label>
+                            <ion-icon name="close" (click)="item.isOpen = !item.isOpen">
+                            </ion-icon>
+                          </ion-item>
+                          <ion-toolbar>
+                            <ion-searchbar placeholder="Search Name" debounce="1000"
+                              style="padding: 0px 5px !important" (ionChange)="assignMember($event)">
+                            </ion-searchbar>
+                          </ion-toolbar>
+                          <!-- <ion-row *ngFor="let user of projectMembers1; index as i"
+                            [ngClass]="(i % 2 === 0) ? 'odd' : 'even'" style="
+                              background: var(--ion-color-light);
+                              border-radius: 10px;
+                              margin: 10px;
+                            " (click)="assignTask(item, user)">
+                            <ion-item lines="none" style="width: 100%; cursor: pointer">
+                              <ion-avatar slot="start">
+                                <img [src]="user.image" />
+                              </ion-avatar>
+                              <ion-label style="color: var()">
+                                {{user.firstName || ''}} {{user.lastName ||
+                                ''}}
+                              </ion-label>
+                            </ion-item>
+                          </ion-row> -->
+                        </div>
+                      </ng-template>
+
+                      <ion-label style="color: #4bcffa" cdkDragHandle>
+                        {{getAssigneeDetails(item, 'firstName')}}
+                      </ion-label>
+                      <ion-note slot="end" style="font-size: 12px; font-weight: bold" color="warning">
+                        {{item.dueDate | date:'dd MMM'}}
+                      </ion-note>
+                    </ion-item>
+
+                    <div style="
+                        width: 100%;
+                        padding: 10px;
+                        font-size: 16px;
+                        color: var();
+                        font-weight: 200;
+                      " (click)="viewTaskDetails(item,story)" cdkDragHandle>
+                      <span style="font-weight: bold">{{item.projectTaskNumber}}</span>
+                      - {{item.taskName}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-accordion>
+</ion-accordion-group>

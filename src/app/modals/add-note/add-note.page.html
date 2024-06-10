@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title *ngIf="!DATA">Add Note</ion-title>
+    <ion-title *ngIf="DATA">Edit Note</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="createNote">
+    <ion-col size="12">
+      <ion-item>
+        <ion-input formControlName="title" placeholder="Enter Title" *ngIf="!DATA"></ion-input>
+        <ion-input formControlName="title" placeholder="Enter Title" *ngIf="DATA" [disabled]="true"></ion-input>
+      </ion-item>
+    </ion-col>
+    <quill-editor [styles]="{height: '100%'}" placeholder="Enter Text" [modules]="quillConfig" formControlName="description"></quill-editor>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!DATA" size="default" fill="outline" color="success" type="submit" style="height: 35px;" (click)="submit()">
+        Submit
+      </ion-button>
+      <ion-button *ngIf="DATA" size="default" fill="outline" color="success" type="submit" style="height: 35px;" (click)="updateNote()">
+        Update
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+

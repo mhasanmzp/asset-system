@@ -1,0 +1,134 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Employee List</ion-title>
+    <ion-buttons slot="end" class="hidden-sm-down">
+      <ion-button [routerLink]="['/employee-onboarding/null']" color="dark" style="font-weight: 300;width: 100px;">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-row style="width: 100%">
+      <ion-col size="3">
+        <ion-item lines="none">
+          <select style="width: 100%;background: var(--ion-color-light); color: var(--ion-color-dark);font-weight:300;border: 0.5px solid rgb(83, 83, 83);border-radius: 5px;padding: 7px;"
+          (change)="searchEmployeeType($event)" [(ngModel)]="employeeType">
+            <option value="search" disabled>Search Employee Type</option>
+            <option value="0">All</option>
+            <option value="4">Intern</option>
+            <option value="1">Full Time</option>
+            <option value="2">Part Time</option>
+            <option value="3">Contractor(Off-Site)</option>
+            <option value="5">Contractor(On-Site)</option>
+          </select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+        <ion-item lines="none">
+          <select style="width: 100%;background: var(--ion-color-light); color: var(--ion-color-dark);font-weight:300;border: 0.5px solid rgb(83, 83, 83);border-radius: 5px;padding: 7px;"
+          (change)="searchTeam($event)">
+            <option value="search">All Team</option>
+            <option value="{{team.teamId}}" *ngFor="let team of allTeam">{{team.teamName}}</option>
+          </select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6">
+        <ion-searchbar (ionChange)="searchEmployee($event)" debounce="100" placeholder="Search Employee"></ion-searchbar>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Desktop View -->
+
+    <ion-grid class="ion-margin hidden-sm-down">      
+      <ion-row style="
+      position: sticky;
+      top: 0px;
+      background: var(--ion-color-light);
+      border-radius: 10px;
+      z-index: 999999999;
+      margin: 0px;
+    ">
+        <ion-col size="3">Employee Name</ion-col>
+        <ion-col size="3">Designation</ion-col>
+        <ion-col size="2.5">Official Mail Id</ion-col>
+        <ion-col size="2">Contact No.</ion-col>
+        <ion-col size="1.5">Date of Joining</ion-col>
+        <!-- <ion-col size="0.5"></ion-col> -->
+      </ion-row>
+      <ion-row *ngIf="allEmployees.length === 0 && loader === false">
+        <!-- <ion-row> -->
+        <div id="container" style="text-align: center;">
+          <p>No data found!</p>
+          <!-- <img width="100px" src="assets/loader.gif" alt=""> -->
+        </div>
+      </ion-row>
+      <ion-row *ngFor="let user of allEmployees; index as i" [ngClass]="(i % 2 == 0) ? 'odd' : 'even'"  (click)="updateEmployee(user)">
+  
+        <ion-col size="3" style="padding: 0px">
+          <ion-item lines="none">
+            <ion-avatar slot="start">
+              <ion-img [src]="user.imageExists ? authService.apiUrl+'images/'+user.employeeId+'.png' : authService.apiUrl+'images/0.png'"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              {{user.firstName}} {{user.lastName}}
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col style="padding: 0px" size="3">
+          <ion-item lines="none">
+            <ion-label>
+              {{user.designation}}
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col style="padding: 0px" size="2.5">
+          <ion-item lines="none">
+            <ion-label>
+              {{user.officialEmail}}
+              </ion-label>
+              </ion-item>
+            </ion-col>
+        <ion-col style="padding: 0px" size="2">
+          <ion-item lines="none">
+            <ion-label>
+              {{user.phoneNo}}
+              </ion-label>
+              </ion-item>
+            </ion-col>
+        <ion-col style="padding: 0px" size="1.5">
+          <ion-item lines="none">
+            <ion-label>
+              {{user.DOJ | date:'dd MMM, yyyy'}}
+            </ion-label>
+            </ion-item>
+            </ion-col>
+        <!-- <ion-col style="padding: 0px;text-align: center;" size="0.5">
+          <ion-button style="text-align: center;" size="small" fill="clear"
+            color="primary">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+        </ion-col> -->
+      </ion-row>
+    </ion-grid>
+
+  <!-- <ion-infinite-scroll>
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="downloadList()" fill="outline" color="dark" expand="block" style="font-weight: 300;width: 80px;">
+        Download
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+

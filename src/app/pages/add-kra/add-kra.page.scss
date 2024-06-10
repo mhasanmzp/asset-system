@@ -1,0 +1,42 @@
+.inputText{
+    background-color: transparent;
+    padding: 0px;
+    height: 30px;
+}
+.ratingColumn{
+    float: left;
+    border-right: 1px solid #fff;
+    text-align: center;
+}
+.rowCss{
+    border: 1px solid #fff;
+    text-align: center;
+    background: var(--ion-color-light)
+}
+
+ion-input {
+    border: 0.5px solid var(--ion-color-dark) !important;
+    background: var(--ion-color-light) !important;
+    border-radius: 10px;
+    padding: 0px 10px !important;
+    color: var(--ion-color-dark) !important;
+    font-weight: 400;
+  }
+
+  ion-textarea {
+    border: 0.5px solid var(--ion-color-dark) !important;
+    background: var(--ion-color-light) !important;
+    border-radius: 10px;
+    padding: 0px 10px !important;
+    color: var(--ion-color-dark) !important;
+  }
+
+  select{
+    width: 100%;
+    background: var(--ion-color-light); 
+    color: var(--ion-color-dark); 
+    padding: 7px;
+    font-weight:300;
+    border: 0.5px solid var(--ion-color-dark);
+    border-radius: 10px;
+  }

@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Scrap Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <!-- Filters -->
+    <ion-row>
+      <ion-col size="4">
+        <ion-item class="rounded-item">
+          <ion-label position="floating">Substation</ion-label>
+          <ion-select [(ngModel)]="selectedSubstation" (ionChange)="filterAssets()" class="responsive-filter filter-select" placeholder="">
+            <ion-select-option *ngFor="let substation of substations" [value]="substation">
+              {{ substation }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-item class="rounded-item">
+          <ion-label position="floating">Category</ion-label>
+          <ion-select [(ngModel)]="selectedCategory" (ionChange)="filterAssets()" class="responsive-filter filter-select" placeholder="">
+            <ion-select-option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>      
+      <ion-col size="4">
+        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterAssets()" placeholder="Search Products" class="responsive-searchbar"></ion-searchbar>
+      </ion-col>
+    </ion-row>
+
+    <!-- Main Content Area -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Scrap Management</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="3"><strong>Serial Number</strong></ion-col>
+                <ion-col size="3"><strong>Product Name</strong></ion-col>
+                <ion-col size="3"><strong>Status</strong></ion-col>
+                <ion-col size="3"><strong>Actions</strong></ion-col>
+              </ion-row>
+              <ion-row *ngFor="let product of filteredProductsList">
+                <ion-col size="3">{{ product.serialNumber }}</ion-col>
+                <ion-col size="3">{{ product.name }}</ion-col>
+                <ion-col size="3">{{ product.status }}</ion-col>
+                <ion-col size="3">
+                  <ion-button *ngIf="product.status !== 'Scrap'" (click)="markAsScrap(product)" color="danger">Mark as Scrap</ion-button>
+                  <ion-button *ngIf="product.status === 'Scrap'" (click)="unmarkAsScrap(product)" color="secondary">Unmark as Scrap</ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

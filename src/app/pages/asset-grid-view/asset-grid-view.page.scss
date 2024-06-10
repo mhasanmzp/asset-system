@@ -1,0 +1,85 @@
+/* Scrollable container for the asset grid */
+.scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Minimum width for the grid to ensure horizontal scrolling */
+  .scroll-container ion-grid {
+    min-width: 1200px; /* Adjust based on your needs */
+  }
+  
+  /* Column settings to prevent shrinking and ensure consistent padding */
+  ion-col {
+    flex: 0 0 auto;
+    padding: 8px;
+  }
+  
+  /* Styling for column headers */
+  .column-header {
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 8px;
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
+  }
+  
+  /* Row styling for better alignment and borders */
+  ion-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Hover effect for rows to improve usability */
+  ion-row:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Remove padding from the card content */
+  ion-card-content {
+    padding: 0;
+  }
+  
+  /* Styling for the substation selection item */
+  ion-item {
+    --inner-padding-end: 0;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --inner-padding-start: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Styling for the substation dropdown label */
+  ion-label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    margin-right: 8px;
+  }
+  
+  /* Styling for the substation dropdown */
+  ion-select {
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --color-focused: #3880ff; /* Color when the dropdown is focused */
+    --placeholder-color: #999; /* Placeholder text color */
+    --background: #fff; /* Background color of the dropdown */
+    --border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for better visibility */
+    width: 100%; /* Ensure it takes up full width for alignment */
+  }
+  
+  /* Optional: Additional styling for the search bar */
+  ion-searchbar {
+    --background: #f1f1f1; /* Background color */
+    --icon-color: #666; /* Icon color */
+    --placeholder-color: #999; /* Placeholder text color */
+    --color: #333; /* Text color */
+    margin-bottom: 15px;
+  }
+  

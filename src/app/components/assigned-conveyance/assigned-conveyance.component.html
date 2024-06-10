@@ -1,0 +1,181 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Conveyance and Allowance</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- form code to Create the Convayance -->
+<div style="padding-bottom: 0px; overflow: auto; padding-top: 10px">
+  <ion-grid>
+    <ion-row style="text-align: center; font-weight: bold">
+      <ion-col class="ion-col-header" size=".5"> Id</ion-col>
+      <ion-col class="ion-col-header" size="2">Employee Name</ion-col>
+      <ion-col class="ion-col-header" size="1">Date</ion-col>
+      <ion-col class="ion-col-header" size="1">Total Amount</ion-col>
+      <ion-col class="ion-col-header" size="1.5">Status</ion-col>
+      <ion-col class="ion-col-header" size="2.5">Status Level Wise</ion-col>
+      <ion-col class="ion-col-header" size="1.7">Reason</ion-col>
+      <ion-col class="ion-col-header" size="1.8" *ngIf = 'accountId'>Update</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let item of allConveyance" style="text-align: center">
+      <ion-col class="ion-col-item" size=".5"
+        ><a style="cursor: pointer" (click)="displayData(item)">{{
+          item.convinceAndCalm_Id
+        }}</a></ion-col
+      >
+      <ion-col class="ion-col-item" size="2">{{ item.employeeName }}</ion-col>
+      <ion-col class="ion-col-item" size="1">{{ item.cdate | date : "dd MMM, yyyy" }}</ion-col>
+      <ion-col class="ion-col-item" size="1"> {{ item.totalAmount }}</ion-col>
+      <ion-col class="ion-col-item" size="1.5" [ngStyle]="getStatusColor(item.status)">{{
+        item.status
+      }}</ion-col>
+
+      <ion-col class="ion-col-item" size="2.5">
+        <ion-row radio-group  >
+          <ion-col>
+               <ion-item>
+                  <ion-label>Reporting Manager</ion-label>
+                 
+                  <ion-checkbox class="checkbox" [color]="item.isApprovedByReportingManagercolor" [checked]="item.isApprovedByReportingManager" ></ion-checkbox>
+             </ion-item>
+           </ion-col>
+          <ion-col>
+              <ion-item>
+                  <ion-label>AVP</ion-label>
+                  <ion-checkbox  class="checkbox" [color]="item.isApprovedByAvpcolor"  [checked]="item.isApprovedByAvp" ></ion-checkbox>
+
+             </ion-item>
+          </ion-col>
+         
+      </ion-row>
+      </ion-col>
+      <ion-col class="ion-col-item" size="1.7">{{ item.reason }}</ion-col>
+      <ion-col class="ion-col-item" size="1.8" *ngIf = 'accountId'>
+        <ion-button
+          fill="outline"
+          size="small"
+          color="success"
+          [disabled]="item.status !== 'New' && item.status !== 'In-progress'"
+          (click)="onApproveClick(item)"
+          
+          >Approve</ion-button
+        >
+        <ion-button
+          fill="outline"
+          size="small"
+          color="danger"
+          [disabled]="item.status !== 'New' && item.status !== 'In-progress'"
+          (click)="onRejectClick(item)"
+          >Reject</ion-button
+        ></ion-col
+      >
+    </ion-row>
+  </ion-grid>
+
+  <ion-modal [isOpen]="isModalOpen" backdropDismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Modal</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="close()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="reasonForm">
+          <ion-item>
+            <ion-label position="stacked"> Reason </ion-label>
+            <ion-input
+              type="text"
+              min-length="20"
+              max-length="100"
+              placeholder="Enter Valid Reason"
+              formControlName="reason"
+              
+            ></ion-input>
+          </ion-item>
+        </form>
+      </ion-content>
+      <ion-footer style="display: flex; justify-content: flex-end">
+        <ion-button
+          type="submit"
+          (click)="onReasonSubmit(reasonForm.value)"
+          style="margin-right: 20px"
+          [disabled]="reasonForm.invalid"
+        
+          >Submit</ion-button
+        >
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+
+  <ion-modal class="ion-modal" [isOpen]="isDisplayOpen" backdropDismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Conveyance Details </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="displayClose()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-grid>
+          <ion-row style=" text-align: center; font-weight: bold">
+            <ion-col class="ion-col-header" size="1.5">Date</ion-col>
+            <ion-col class="ion-col-header" size="1.5">Comment</ion-col>
+            <ion-col class="ion-col-header" size="1.5">Vehicle Type </ion-col>
+            <ion-col class="ion-col-header" size="1.5">From </ion-col>
+            <ion-col class="ion-col-header" size="1.5">To</ion-col>
+            <ion-col class="ion-col-header" size="1.5">Distance</ion-col>
+            <ion-col class="ion-col-header" size="1.5">Claim Amount</ion-col>
+            <ion-col class="ion-col-header" size="1.5">Approved Amount</ion-col>
+          </ion-row>
+          <ion-row
+            *ngFor="let data of singleConveyanceData; index as i"
+            style="text-align: center"
+          >
+            <ion-col class="ion-col-item" size="1.5">{{
+              data.travelDate | date : "dd MMM, yyyy"
+            }}</ion-col>
+            <ion-col class="ion-col-item" size="1.5">{{
+              data.comment
+            }}</ion-col>
+            <ion-col class="ion-col-item" size="1.5">{{
+              data.vehicleType
+            }}</ion-col>
+
+            <ion-col class="ion-col-item" size="1.5">{{ data.from }}</ion-col>
+            <ion-col class="ion-col-item" size="1.5">{{
+              data.whereTo
+            }}</ion-col>
+            <ion-col class="ion-col-item" size="1.5">{{ data.km }}</ion-col>
+            <ion-col class="ion-col-item" size="1.5"
+              ><a>{{ data.amount }}</a></ion-col
+            >
+            <ion-col class="ion-col-item" size="1.5"
+              ><input
+                class="detailInput"
+                onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                maxlength="5"
+                [(ngModel)]="data.approvedAmount"
+                (change)="onAmountChange(data)"
+            /></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-content>
+      <ion-footer style="display: flex; justify-content: flex-end">
+        <ion-button
+          type="submit"
+          style="margin-right: 20px"
+          (click)="onSubmit()"
+          [disabled]="enabled"
+          *ngIf = 'accountId'
+          >Submit</ion-button
+        >
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+</div>

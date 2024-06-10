@@ -1,0 +1,180 @@
+<ion-header>
+  <ion-toolbar color="white">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>My Tasks</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+       <ion-icon name="repeat-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="white">
+    <ion-row style="padding: 0px;">
+      <!-- <ion-col size="2" style="padding: 0px;border-right: 1px solid #ccc;;">
+        <ion-item lines="none" style="color:#fff !important;">
+          <ion-input [(ngModel)]="taskDate" (change)="changeDate($event)" type="date"
+            style="color: var(--ion-color-dark) !important;font-weight: bold;"></ion-input>
+        </ion-item>
+      </ion-col> -->
+      <ion-col size="6" style="padding: 0px;">
+        <ion-item lines="none">
+          <ion-label>
+            {{getDayOfWeek(taskDate)}} - {{this.taskDate | date:'dd MMMM, yyyy'}}
+          </ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6" style="padding: 0px;">
+        <ion-item lines="none" style="text-align: right;">
+          <ion-note slot="end">
+            {{taskHours ? (taskHours).toFixed(2) : 0}} Hours
+          </ion-note>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  <ion-toolbar color="white">
+    <ion-row style="padding: 0px 10px;">
+      <ion-col *ngFor="let date of previousDays" [size]="12/14" style="border-right: 0px solid rgb(37 38 40);
+      background-color: transparent;">
+        <div disabled (click)="selectBoxDate(date)"
+          style="text-align: center;line-height: 35px;font-size: 15px;font-weight:bold;padding: 0px;border-radius: 10px;cursor: pointer;"
+          [ngClass]="date.selected ? 'selected': 'notSelected'">
+          {{date.day}}
+        </div>
+      </ion-col>
+      <!-- <ion-col size="2" style="border: 0px solid rgb(37 38 40);
+      background-color: transparent;
+      padding: 0px;">
+        <ion-item lines="none">
+          <ion-input [(ngModel)]="taskDate" (change)="changeDate($event)" type="date"
+            style="color: #ccc;font-weight: bold;"></ion-input>
+        </ion-item>
+      </ion-col> -->
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="root">
+
+    <div class="board">
+
+      <!-- <div class="board-bar">
+        <p class="board-name">{{ board.taskName }}</p>
+      </div> -->
+
+      <div class="board-wrapper">
+
+        <div class="board-columns" cdkDropListGroup>
+          <div class="board-column" *ngFor="let column of teamBoardColumns; let c = index;" #boards id="boards">
+
+            <div class="column-title">
+              <ion-item lines="none" (click)="addTask()">
+                <ion-label>
+                  {{ column.columnName }}
+                </ion-label>
+                <ion-icon name="add-outline" *ngIf="c === 0 && creationIcon" class="newTask" color="dark">Add task</ion-icon>
+
+              </ion-item>
+            </div>
+
+            <div class="tasks-container" cdkDropList id="{{column.columnId}}" [cdkDropListData]="column.tasks"
+              (cdkDropListDropped)="drop($event)">
+              <div class="task" id="taskBorder" *ngFor="let item of column.tasks; let i = index;" cdkDrag
+                (mousedown)="disableBox($event, item)" [style.border]="item.status === 1 ? '1.75px solid #1fc91f': item.status === 2 ?'1px solid red':''" (click)="item.status==2?getData(item):''">
+                <ion-item lines="none" style="border-radius: 0px;margin-top: -5px;height: 50px;">
+                  <ion-icon slot="start" color="dark" style="font-size:20px" cdkDragHandle name="apps-outline">
+                  </ion-icon>
+                  <ion-label style="color: #4bcffa;" cdkDragHandle>
+                    <select [disabled]="item.status === 1 || item.disableTaskBox" [(ngModel)]="item.projectId" (change)="updateProject(item, c)">
+
+                      <option value="0" disabled selected>Select project</option>
+                      <option *ngFor="let project of memberProjects" [value]="project.projectId">{{project.projectName}}
+                      </option>
+                    </select>
+                    <!-- <select [disabled]="item.status === 1 || item.disableTaskBox "          
+                      [(ngModel)]="item.projectTaskId"  (change)="updateProject(item,c)">
+                      <option value="select" disabled selected>Select task</option>
+                      <option value="69">Others</option>
+                      <option *ngFor="let task of projectTask" [value]="task.projectTaskId">
+                        {{task.projectName}} - {{task.taskName}}
+                      </option>
+                    </select> -->
+                  </ion-label>
+                  <ion-icon *ngIf="item.status !== 1" slot="end" color="danger" style="font-size:20px;text-align: right;" name="close-outline" (click)="deleteTask(item, c, i)">
+                  </ion-icon>
+                </ion-item>
+                
+                <div style="width: 100%;padding: 10px 5px;" (click)="editTask(item, c, i)">
+                  <textarea [disabled]="item.status === 1 || item.disableTaskBox" [autofocus]="item.focus" *ngIf="item.edit" [attr.id]="'task' + c + i"
+                    placeholder="Enter new task!" [rows]="3" auto-grow type="text" [value]="item.taskName"
+                    (blur)='onBlur($event, item, c, i)' (change)="taskNameUpdated($event, item, c, i)">
+                  </textarea>
+                  <span *ngIf="!item.edit" style="padding: 0px;font-size: 15px;">{{item.taskName}}<br>
+                    <!-- <b style="font-size: 13px;">Planned Hours : {{item.estimatedHours}}</b><br>
+                    <b style="font-size: 13px;">Actual Hours : {{item.hours}}</b> -->
+                  </span>
+                </div>
+                <div style="border-top: 1px solid #4e4e4e;color: var(--ion-color-dark) !important;font-size: 13px;">
+                  <ion-row>
+                    <ion-col size="5">
+                      <ion-input [disabled]="item.status === 1 || item.disableTaskBox" type="time" [name]="'from'+i" [value]="item.fromDisplay"
+                        (change)="taskFromUpdated($event, item)"></ion-input>
+                    </ion-col>
+                    <ion-col size="2" style="color: var(--ion-color-dark) !important;;font-size: 40px;line-height: 38px;">
+                      -
+                    </ion-col>
+                    <ion-col size="5">
+                      <ion-input [disabled]="item.status === 1 || item.disableTaskBox" type="time" [name]="'to'+i" [value]="item.toDisplay"
+                        (change)="taskToUpdated($event, item)"></ion-input>
+                    </ion-col>
+                  </ion-row>
+                </div>
+
+               
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar color="white">
+    <ion-row style="padding: 0px;" style="text-align: right;">
+      <ion-col size="2" style="background-color: transparent;padding: 0px;">
+        <ion-item lines="none">
+          <ion-input [(ngModel)]="fromDate" type="date"
+            style="color: var(--ion-color-dark);font-weight: bold;">
+          </ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="0.5" style="text-align: center;line-height: 34px;">
+        <div>
+          to
+        </div>
+      </ion-col>
+      <ion-col size="2" style="background-color: transparent;padding: 0px;">
+        <ion-item lines="none">
+          <ion-input [(ngModel)]="toDate" type="date"
+            style="color: var(--ion-color-dark);;font-weight: bold;">
+          </ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="7" style="padding: 0px;">
+        <ion-item lines="none">
+          <ion-buttons slot="end">
+            <ion-button (click)="downloadDSR()" color="dark">
+              <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+              Download DSR
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

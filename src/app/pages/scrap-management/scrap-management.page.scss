@@ -1,0 +1,45 @@
+// General styles
+ion-content {
+    --background: #f9f9f9;
+  }
+  
+  // Rounded filters
+  .rounded-item {
+    border-radius: 50px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    height: 50px; /* Adjust the height as needed */
+  }
+  
+  // Responsive search bar and select boxes
+  .responsive-filter {
+    --background: #fff;
+    --border-radius: 50px;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+  }
+  
+  // Adjust the height of the input field and select boxes
+//   .filter-input,
+//   .filter-select {
+//     height: 100%; /* Adjust the height as needed */
+//   }
+  
+  // Adjust the font size and position of the placeholder text
+  .filter-input::placeholder,
+  .filter-select::placeholder {
+    font-size: 16px; /* Adjust the font size as needed */
+    padding-top: 5px; /* Adjust the top padding to position the placeholder at the top */
+    text-align: center; /* Align the placeholder text to the center horizontally */
+  }
+// Adjust the position of the placeholder text
+.filter-select {
+    // Center the placeholder vertically
+    --padding-top: calc((50px - 16px) / 2); // Assuming the input field height is 50px and font size is 16px
+    --padding-bottom: calc((50px - 16px) / 2); // Assuming the input field height is 50px and font size is 16px
+  
+    // Center the placeholder horizontally
+    // --padding-start: 16px; // Assuming the default padding
+  }
+    

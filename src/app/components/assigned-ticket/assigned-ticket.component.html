@@ -1,0 +1,203 @@
+<ion-toolbar>
+  <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="All">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="New">
+      <ion-label>New</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="In-Progress">
+      <ion-label>In Progress</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="Completed">
+      <ion-label>Completed</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
+<div style="padding-bottom: 0px; padding-top: 10px">
+ 
+  <ion-grid>
+    <ion-row style="text-align: center; font-weight: bold;">
+      <ion-col class="ion-col-header" size="1"> Ticket Number </ion-col>
+      <ion-col class="ion-col-header" size="2.5">Category</ion-col>
+      <ion-col class="ion-col-header" size="2.5">Employee Name</ion-col>
+      <ion-col class="ion-col-header" size="2">Status</ion-col>
+      <ion-col class="ion-col-header" size="2">Raised On</ion-col>
+      <ion-col class="ion-col-header" size="2">Updated On</ion-col>
+    </ion-row>
+    <ion-row *ngIf="allTicketData.length == 0 ">
+      <div style="text-align: center; margin: auto">
+        <p style="top: 50%; left: 40%; position: absolute">No data found!</p>
+      </div>
+    </ion-row>
+
+    <ion-row *ngFor="let ticket of allTicketData">
+      <ion-col class="ion-col-item" size="1">
+        <a
+        style="text-decoration: none"
+        href="javascript:void(0)"
+        (click)="onTableClick(ticket)"
+        >{{ ticket.ticketId }}</a
+      ></ion-col
+      >
+      <ion-col class="ion-col-item" size="2.5">
+        {{ticket.ticket_category}}</ion-col
+      >
+      <ion-col class="ion-col-item" size="2.5">{{ ticket.employeeName }}</ion-col>
+      <ion-col class="ion-col-item" size="2">
+        {{ ticket.status }}</ion-col
+      >
+      <ion-col class="ion-col-item" size="2">
+        {{ ticket.sdate | date }}</ion-col
+      >
+      <ion-col class="ion-col-item" size="2"
+        >{{ ticket.edate | date }}</ion-col
+      >
+    </ion-row>
+  </ion-grid>
+
+</div>
+<ion-infinite-scroll (ionInfinite)="getMoreData($event)">
+  <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Loading more data..."
+  >
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="model">
+        <ion-title>Ticket View</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="setOpen(false)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding" style="border: 1px solid !important">
+      <ion-list id="inbox-list" lines="none" style="background: transparent">
+        <ion-row>
+          <ion-col sizeMd="6" sizeSm="12" sizeXs="12">
+            <ion-item>
+              <ion-label
+                position="stacked"
+                style="color: #fff; font-weight: 300"
+                >Employee Name</ion-label
+              >
+              <input
+                type="text"
+                [(ngModel)]="selectedRowData.employeeName"
+                disabled
+              />
+            </ion-item>
+          </ion-col>
+         
+          <ion-col sizeMd="6" sizeSm="12" sizeXs="12">
+            <ion-item>
+              <ion-label
+                position="stacked"
+                style="color: #fff; font-weight: 300"
+                >Date</ion-label
+              >
+              <ion-text>{{ selectedRowData.sdate | date }}</ion-text>
+            </ion-item>
+          </ion-col>
+          <ion-col sizeMd="6" sizeSm="12" sizeXs="12">
+            <ion-item>
+              <ion-label
+                position="stacked"
+                style="color: #fff; font-weight: 300"
+                >Ticket Number</ion-label
+              >
+              <input
+                type="text"
+                [(ngModel)]="selectedRowData.ticketId"
+                disabled
+              />
+            </ion-item>
+          </ion-col>
+          <ion-col sizeMd="6" sizeSm="12" sizeXs="12">
+            <ion-item>
+              <ion-label
+                position="stacked"
+                style="color: #fff; font-weight: 300"
+                >Category</ion-label
+              >
+              <input
+                type="text"
+                [(ngModel)]="selectedRowData.ticket_category"
+                disabled
+              />
+            </ion-item>
+          </ion-col>
+          
+          <ion-col sizeSm="12" sizeXs="12">
+            <ion-item>
+              <ion-label
+                position="stacked"
+                style="color: #fff; font-weight: 300"
+                >Description</ion-label
+              >
+              <textarea
+                name="comments"
+                id="comments"
+                rows="3"
+                [(ngModel)]="selectedRowData.description"
+                disabled
+              ></textarea>
+            </ion-item>
+          </ion-col>
+
+          <ion-col>
+            <ion-accordion-group>
+              <ion-accordion value="first">
+                <ion-item slot="header" color="light">
+                  <ion-label>View Comments</ion-label>
+                </ion-item>
+                <div
+                  class="ion-padding"
+                  slot="content"
+                  *ngFor="let message of commentArray"
+                >
+                  {{ message.empName }}: {{ message.comment }}
+                </div>
+              </ion-accordion>
+            </ion-accordion-group>
+          </ion-col>
+
+          <ion-col sizeSm="12" sizeXs="12">
+            <ion-item>
+              <ion-label
+                position="stacked"
+                style="color: #fff; font-weight: 300"
+                >Add Comment</ion-label
+              >
+              <textarea
+                name="comments"
+                id="comments"
+                rows="3"
+                [(ngModel)]="selectedRowData.more_comment"
+              ></textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-list>
+    </ion-content>
+    <ion-footer class="modelF">
+      <ion-button
+        size="default"
+        fill="outline"
+        color="success"
+        type="submit"
+        style="height: 35px"
+        (click)="onSubmit()"
+        *ngIf="selectedRowData.status != 'Completed'"
+      >
+        Submit</ion-button
+      >
+     
+    </ion-footer>
+  </ng-template>
+</ion-modal>

@@ -1,0 +1,44 @@
+ion-button {
+    --color: #f6f6f6;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+ion-input {
+    color: #fff;
+}
+
+ion-row {
+    padding: 0px !important;
+}
+
+ion-item {
+    box-shadow: none !important;
+    border: 1px solid rgb(122, 120, 120);
+    border-radius: 8px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    --background: transparent;
+    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 480px) {
+    .box {
+        border-radius: 20px;
+    }
+
+    .container {
+        height: auto !important;
+    }
+}
+
+.container {
+    background: linear-gradient(55deg, #000, rgba(129, 128, 128, 0.3)), url(https://www.applaudhr.com/hubfs/images/blog-images/Office.png);
+    background-size: cover;
+    background-position: fixed;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}

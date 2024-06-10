@@ -1,0 +1,45 @@
+ion-modal {
+  --width: 80%;
+}
+
+ion-modal ion-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.borderArea {
+  border: 0.5px solid var(--ion-color-dark) !important;
+  background: var(--ion-color-light) !important;
+  border-radius: 10px;
+  height: 40px;
+  color: var(--ion-color-dark) !important;
+  font-weight: 400;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  margin-top: 5px;
+  text-align: center;
+}
+.disableInput
+{
+  pointer-events: none;
+}
+
+.ion-col-item {
+  border: solid 1px #757070;
+  text-align: center;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-wrap: anywhere;
+}
+.ion-col-header {
+  border: solid 1px #757070;
+  text-align: center;
+  font-weight: 800;
+}
+#fieldDisable
+{
+  pointer-events: none;
+}

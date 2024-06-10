@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{projectName}} Project</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid style="overflow: auto;height: 380px;">
+    <ion-row style="color: var(--ion-color-dark);position: sticky;top: 0;z-index: 9999999999;">
+      <ion-col size="1">Id</ion-col>
+      <ion-col size="4">Project Name</ion-col>
+      <ion-col size="2">Status</ion-col>
+      <ion-col size="2">Type</ion-col>
+      <ion-col size="1.5">EstimitateHrs</ion-col>
+      <ion-col size="1.5">ActualHrs</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let project of projectList; index as i" [ngClass]="(i % 2 == 0) ? 'odd' : 'even'">
+      <ion-col size="1">{{project.projectId}}</ion-col>
+      <ion-col size="4">{{project.projectName}}</ion-col>
+      <ion-col size="2">{{project.projectStatus}}</ion-col>
+      <ion-col size="2">{{project.projectType}}</ion-col>
+      <ion-col size="1.5">{{project.estHours}}</ion-col>
+      <ion-col size="1.5">{{project.actHurs}}</ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

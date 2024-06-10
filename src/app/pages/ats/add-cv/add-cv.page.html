@@ -1,0 +1,598 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{cvData ? 'Update' : 'Add'}} CV</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/ats"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-accordion-group [value]="['first']">
+          <ion-accordion value="first" style="margin-bottom: 5px;">
+            <ion-item slot="header" lines="none" style="background: var(--ion-color-light) !important;color:var(--ion-color-dark) !important">Personal
+              Details</ion-item>
+            <div class="ion-padding" slot="content">
+              <form [formGroup]="personalDetailsForm">
+                <ion-list id="inbox-list" lines="none" style="background: transparent;">
+                  <ion-row style="padding-bottom: 10px;">
+
+                    <ion-col sizeMd="3" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">First Name</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" (ionChange)="changeTitle($event)" placeholder="Title"
+                          value="Mr." slot="start" style="width:70px;" class="select">
+                          <ion-select-option value="Mr.">Mr.</ion-select-option>
+                          <ion-select-option value="Mrs.">Mrs.</ion-select-option>
+                          <ion-select-option value="Miss">Miss</ion-select-option>
+                        </ion-select>
+                        <ion-input type="text" formControlName="fname"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Last Name</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="lname"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="6" sizeXs="12">
+                      <ion-label position="stacked">Contact No.</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" value="+91" (ionChange)="countryCode($event,'')"
+                          placeholder="CountryCode" slot="start" style="width:80px;" class="select">
+                          <ion-select-option value="+1">USA(+1)</ion-select-option>
+                          <ion-select-option value="+91">IND(+91)</ion-select-option>
+                          <ion-select-option value="+92">PAK(+92)</ion-select-option>
+                          <ion-select-option value="+7">RUS(+7)</ion-select-option>
+                          <ion-select-option value="+86">CHN(+86)</ion-select-option>
+                        </ion-select>
+                        <ion-input type="number" formControlName="phone"></ion-input>
+                      </ion-item>
+                      <!-- <span *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="alertPara">
+                        <div *ngIf="phone.errors?.['required']"><span class="alert">Contact number is required.</span></div>
+                        <div *ngIf="phone.errors?.['pattern']"><span class="alert">Please enter valid contact number.</span></div>
+                      </span> -->
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="6" sizeXs="12">
+                      <ion-label position="stacked">Other Contact No.</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" value="+91" (ionChange)="countryCode($event,'other')"
+                          placeholder="CountryCode" slot="start" style="width:80px;" class="select">
+                          <ion-select-option value="+1">USA(+1)</ion-select-option>
+                          <ion-select-option value="+91">IND(+91)</ion-select-option>
+                          <ion-select-option value="+92">PAK(+92)</ion-select-option>
+                          <ion-select-option value="+7">RUS(+7)</ion-select-option>
+                          <ion-select-option value="+86">CHN(+86)</ion-select-option>
+                        </ion-select>
+                        <ion-input type="number" formControlName="otherPhone" required></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Email</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="email" formControlName="email"></ion-input>
+                      </ion-item>
+                      <!-- <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alertPara">
+                        <div *ngIf="email.errors?.['required']"><span class="alert">Email is required.</span></div>
+                        <div *ngIf="email.errors?.['pattern']"><span class="alert">Please enter valid email.</span></div>
+                      </div> -->
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Alternate Email</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="email" formControlName="alternateEmail"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">DOB</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="date" formControlName="dob"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Gender</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" value="" formControlName="gender" placeholder="Gender"
+                          slot="start" style="width:100%;" class="select">
+                          <ion-select-option value="male">Male</ion-select-option>
+                          <ion-select-option value="female">Female</ion-select-option>
+                          <ion-select-option value="other">Other</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Country</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="country"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">City</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="city"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">State</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="state"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Zip Code</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="zipCode"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Work Authorization</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" formControlName="workAuth" placeholder="Select"
+                          value="no" class="select">
+                          <ion-select-option value="{{data.id}}" *ngFor="let data of workAuth">{{data.name}}</ion-select-option>
+                        </ion-select>
+                        <!-- <ion-input type="text" formControlName="workAuth"></ion-input> -->
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Expiry</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="expiry"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Clearance</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" (ionChange)="changeClearance($event)" placeholder="Select"
+                          value="no" slot="start" style="width:100%;" class="select">
+                          <ion-select-option value="yes">Yes</ion-select-option>
+                          <ion-select-option value="no">No</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Experience(Year)</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="number" formControlName="yearExp"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Experience(Month)</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="number" formControlName="monthExp"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Primary Skill</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="primarySkill"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Secondary Skill</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="secondarySkill"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Job Title</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="jobTitle"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Tax Term</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" value="" formControlName="taxTerm" placeholder="TaxTerm"
+                          slot="start" style="width:100%;" class="select">
+                          <ion-select-option value="1099">1099</ion-select-option>
+                          <ion-select-option value="C2C">C2C</ion-select-option>
+                          <ion-select-option value="W2">W2</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Current Company</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="currentCompany"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Linked Profile URL</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="linkedURL"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                      <ion-label position="stacked">Source</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="source"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="6" sizeSm="12" sizeXs="12">
+                      <ion-label position="stacked">Current Salary</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" value="$" (ionChange)="currencyCode($event)"
+                          placeholder="CurrencyCode" slot="start" style="width:60px;" class="select">
+                          <ion-select-option value="&#8377;">INR(&#8377;)</ion-select-option>
+                          <ion-select-option value="$">USD($)</ion-select-option>
+                        </ion-select>
+                        <ion-input type="number" formControlName="currentSalary" placeholder="Current Salary"></ion-input>
+
+                        <ion-select interface="popover" value="hour" (ionChange)="changeSalary($event)"
+                          placeholder="SalarySlap" slot="end" style="width:60px;margin-right:8px;" class="select">
+                          <ion-select-option value="hour">Per Hour</ion-select-option>
+                          <ion-select-option value="annum">Per Annum</ion-select-option>
+                          <ion-select-option value="day">Per Day</ion-select-option>
+                        </ion-select>
+
+                        <ion-select interface="popover" value="" (ionChange)="changeTax($event)" placeholder="TaxTerm"
+                          slot="end" style="width:60px" class="select">
+                          <ion-select-option value="1099">1099</ion-select-option>
+                          <ion-select-option value="C2C">C2C</ion-select-option>
+                          <ion-select-option value="W2">W2</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="6" sizeSm="12" sizeXs="12">
+                      <ion-label position="stacked">Excepted Salary</ion-label>
+                      <ion-item class="input">
+                        <ion-select interface="popover" value="$" (ionChange)="currencyCode($event)"
+                          placeholder="CurrencyCode" slot="start" style="width:60px;" class="select">
+                          <ion-select-option value="&#8377;">INR(&#8377;)</ion-select-option>
+                          <ion-select-option value="$">USD($)</ion-select-option>
+                        </ion-select>
+                        <ion-input type="number" formControlName="exceptedSalary" placeholder="Excepted Salary"></ion-input>
+
+                        <ion-select interface="popover" value="hour" (ionChange)="changeSalary($event)"
+                          placeholder="SalarySlap" slot="end" style="width:60px;margin-right: 8px;" class="select">
+                          <ion-select-option value="hour">Per Hour</ion-select-option>
+                          <ion-select-option value="annum">Per Annum</ion-select-option>
+                          <ion-select-option value="day">Per Day</ion-select-option>
+                        </ion-select>
+
+                        <ion-select interface="popover" value="" (ionChange)="changeTax($event)" placeholder="TaxTerm"
+                          slot="end" style="width:60px;" class="select">
+                          <ion-select-option value="1099">1099</ion-select-option>
+                          <ion-select-option value="C2C">C2C</ion-select-option>
+                          <ion-select-option value="W2">W2</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                </ion-list>
+              </form>
+            </div>
+            <hr>
+            <!-- <ion-accordion value="sixth" style="margin-bottom: 5px;"> -->
+
+            <div class="ion-padding" slot="content">
+              <ion-item lines="none" style="background: var(--ion-color-light) !important;color:var(--ion-color-dark) !important">Employer
+                Details</ion-item>
+              <form [formGroup]="employeerDetailsForm">
+                <ion-row>
+                  <ion-col sizeMd="3" sizeSm="6" sizeXs="6">
+                    <ion-label position="stacked">First Name</ion-label>
+                    <ion-item class="input">
+                      <ion-select interface="popover" value="Mr." (ionChange)="changeTitle($event)" slot="start"
+                        style="width:70px;" class="select">
+                        <ion-select-option value="Mr.">Mr.</ion-select-option>
+                        <ion-select-option value="Mrs.">Mrs.</ion-select-option>
+                        <ion-select-option value="Miss">Miss</ion-select-option>
+                      </ion-select>
+                      <ion-input type="text" formControlName="fname"></ion-input>
+                    </ion-item>
+                  </ion-col>
+
+                  <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                    <ion-label position="stacked">Last Name</ion-label>
+                    <ion-item class="input">
+                      <ion-input type="text" formControlName="lname"></ion-input>
+                    </ion-item>
+                  </ion-col>
+
+                  <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                    <ion-label position="stacked">Current Company</ion-label>
+                    <ion-item class="input">
+                      <ion-input type="text" formControlName="currentCompany"></ion-input>
+                    </ion-item>
+                  </ion-col>
+
+                  <ion-col sizeMd="3" sizeSm="4" sizeXs="6">
+                    <ion-label position="stacked">Email</ion-label>
+                    <ion-item class="input">
+                      <ion-input type="email" formControlName="email"></ion-input>
+                    </ion-item>
+                    <!-- <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alertPara">
+                        <div *ngIf="email.errors?.['required']"><span class="alert">Email is required.</span></div>
+                        <div *ngIf="email.errors?.['pattern']"><span class="alert">Please enter valid email.</span></div>
+                      </div> -->
+                  </ion-col>
+
+                  <ion-col sizeMd="3" sizeSm="6" sizeXs="12">
+                    <ion-label position="stacked">Contact No.</ion-label>
+                    <ion-item class="input">
+                      <ion-select interface="popover" value="+91" (ionChange)="countryCode($event,'')" slot="start"
+                        style="width:80px;" class="select">
+                        <ion-select-option value="+1">USA(+1)</ion-select-option>
+                        <ion-select-option value="+91">IND(+91)</ion-select-option>
+                        <ion-select-option value="+92">PAK(+92)</ion-select-option>
+                        <ion-select-option value="+7">RUS(+7)</ion-select-option>
+                        <ion-select-option value="+86">CHN(+86)</ion-select-option>
+                      </ion-select>
+                      <ion-input type="number" formControlName="phone" required></ion-input>
+                    </ion-item>
+                    <!-- <span *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="alertPara">
+                        <div *ngIf="phone.errors?.['required']"><span class="alert">Contact number is required.</span></div>
+                        <div *ngIf="phone.errors?.['pattern']"><span class="alert">Please enter valid contact number.</span></div>
+                      </span> -->
+                  </ion-col>
+
+                  <ion-col sizeMd="3" sizeSm="6" sizeXs="12">
+                    <ion-label position="stacked">Employement Type</ion-label>
+                    <ion-item class="input">
+                      <ion-select interface="popover" placeholder="Employee Type" formControlName="employeeType" value="fullTime" class="select">
+                        <ion-select-option value="fullTime">Full Time</ion-select-option>
+                        <ion-select-option value="partTime">Part Time</ion-select-option>
+                        <ion-select-option value="contrct">Contract</ion-select-option>
+                        <ion-select-option value="perDiem">Per diem</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </ion-col>
+
+                  <ion-col sizeMd="3" sizeSm="6" sizeXs="12">
+                    <ion-label position="stacked">Comments</ion-label>
+                    <ion-item class="input">
+                      <ion-input type="text" formControlName="comment"></ion-input>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </form>
+
+              <ion-button slot="end" fill="solid" color="success" type="submit" style="height: 30px;width: 150px;"
+              (click)="savePersonalDetails()">
+              Save</ion-button>
+            </div>
+            <!-- </ion-accordion> -->
+          </ion-accordion>
+
+          <ion-accordion value="third" style="margin-bottom: 5px;">
+            <ion-item slot="header" lines="none" style="background: var(--ion-color-light) !important;color:var(--ion-color-dark) !important">Education
+              Details</ion-item>
+            <div class="ion-padding" slot="content">
+              <form [formGroup]="educationDetailsForm">
+                <ion-row formArrayName="tasks" *ngFor="let eduFormGroups of eduGroups; let i = index;">
+                  <ion-row [formGroupName]="i">
+                    <ion-col sizeMd="1.9" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Degree</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="degree"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1.9" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Major</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="major"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1.9" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">University/College</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="college"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1.9" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Location</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="location"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1.9" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Passing Year</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="number" formControlName="passYear"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1.5" sizeSm="4" sizeXs="4">
+                      <ion-label position="stacked">Percent(%)</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="number" formControlName="percent"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1" sizeSm="2" sizeXs="2"
+                      style="display: flex;align-items: center;padding-top: 15px;">
+                      <ion-icon name="add-circle-outline" style="font-size: 30px;cursor: pointer;"
+                        (click)="addEdu()"></ion-icon>&nbsp;
+                      <ion-icon name="remove-circle-outline" style="font-size: 30px;cursor: pointer;"
+                        (click)="removeEdu(i)"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                </ion-row>
+              </form>
+              <ion-button fill="solid" color="success" type="submit" style="height: 30px;width: 150px;"
+              (click)="saveEducationDetails()">
+              Save</ion-button>
+            </div>
+          </ion-accordion>
+
+          <ion-accordion value="fourth" style="margin-bottom: 5px;">
+            <ion-item slot="header" lines="none" style="background: var(--ion-color-light) !important;color:var(--ion-color-dark) !important">Work
+              Experience</ion-item>
+            <div class="ion-padding" slot="content">
+              <form [formGroup]="workExpDetailForm">
+                <ion-row formArrayName="tasksExp" *ngFor="let expGroups of workExpGroups; let i = index;">
+                  <ion-row [formGroupName]="i">
+                    <ion-col sizeMd="3" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Company Name</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="companyName"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Job Title</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="jobTitle"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="2.5" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">Start Date</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="month" formControlName="sDate"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="2.5" sizeSm="6" sizeXs="6">
+                      <ion-label position="stacked">End Date</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="month" formControlName="eDate"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1" sizeSm="2" sizeXs="2"
+                      style="display: flex;align-items: center;padding-top: 15px;">
+                      <ion-icon name="add-circle-outline" style="font-size: 30px;cursor: pointer;"
+                        (click)="addWorkExp()"></ion-icon>&nbsp;
+                      <ion-icon name="remove-circle-outline" style="font-size: 30px;cursor: pointer;"
+                        (click)="removeWorkExp(i)"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                </ion-row>
+              </form>
+
+              <ion-button slot="end" fill="solid" color="success" type="submit" style="height: 30px;width: 150px;"
+              (click)="saveWorkExpDetails()">
+              Save</ion-button>
+            </div>
+          </ion-accordion>
+
+          <ion-accordion value="second" style="margin-bottom: 5px;">
+            <ion-item slot="header" lines="none"
+              style="background: var(--ion-color-light) !important;color:var(--ion-color-dark) !important">Document(Only PDF)</ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-row style="padding-bottom: 10px;">
+                <ion-col sizeMd="4" sizeSm="6" sizeXs="12">
+                  <ion-label position="stacked">DL(Driving License)</ion-label>
+                  <ion-item class="input">
+                    <ion-input type="file" accept=".pdf" (ionChange)="uploadDocument($event,'DL')"></ion-input>
+                    <ion-icon slot="end" name="checkmark-outline" style="color: var(--ion-color-dark) !important;font-weight: 900;" *ngIf="uploadDL"></ion-icon>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeMd="4" sizeSm="6" sizeXs="12">
+                  <ion-label position="stacked">Visa</ion-label>
+                  <ion-item class="input">
+                    <ion-input type="file" accept=".pdf" (ionChange)="uploadDocument($event,'Visa')"></ion-input>
+                    <ion-icon slot="end" name="checkmark-outline" style="color: var(--ion-color-dark) !important;font-weight: 900;" *ngIf="uploadVisa"></ion-icon>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeMd="4" sizeSm="6" sizeXs="12">
+                  <ion-label position="stacked">Resume</ion-label>
+                  <ion-item class="input">
+                    <ion-input type="file" accept=".pdf" (ionChange)="uploadDocument($event,'Resume')"></ion-input>
+                    <ion-icon slot="end" name="checkmark-outline" style="color: var(--ion-color-dark) !important;font-weight: 900;" *ngIf="uploadResume"></ion-icon>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeMd="4" sizeSm="6" sizeXs="12">
+                  <ion-label position="stacked">Other Documnet</ion-label>
+                  <ion-item class="input">
+                    <ion-input type="file" accept=".pdf" (ionChange)="uploadDocument($event,'Other')"></ion-input>
+                    <ion-icon slot="end" name="checkmark-outline" style="color: var(--ion-color-dark) !important;font-weight: 900;" *ngIf="uploadFile"></ion-icon>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-accordion>
+
+          <ion-accordion value="fifth" style="margin-bottom: 5px;">
+            <ion-item slot="header" lines="none"
+              style="background: var(--ion-color-light) !important;color:var(--ion-color-dark) !important">Certification</ion-item>
+            <div class="ion-padding" slot="content">
+              <form [formGroup]="certificateDetailForm">
+                <ion-row formArrayName="tasksCertificate" *ngFor="let certGroups of certificateGroups; let i = index;">
+                  <ion-row [formGroupName]="i">
+
+                    <ion-col sizeMd="3.5" sizeSm="6" sizeXs="12">
+                      <ion-label position="stacked">Certification Name</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="text" formControlName="certificateName"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="3" sizeSm="6" sizeXs="12">
+                      <ion-label position="stacked">Year of Completion</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="number" formControlName="completionYear"></ion-input>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="4.5" sizeSm="6" sizeXs="12">
+                      <ion-label position="stacked">Upload Certificate</ion-label>
+                      <ion-item class="input">
+                        <ion-input type="file" formControlName="upload" accept=".pdf,.jpg,.jpeg,.png" (ionChange)="uploadCertificate($event,i)"></ion-input>
+                        <ion-icon slot="end" name="checkmark-outline" style="color: var(--ion-color-dark) !important;font-weight: 900;" *ngIf="uploadC[i]"></ion-icon>
+                      </ion-item>
+                    </ion-col>
+
+                    <ion-col sizeMd="1" sizeSm="3" sizeXs="6"
+                      style="display: flex;align-items: center;padding-top: 15px;">
+                      <ion-icon name="add-circle-outline" style="font-size: 30px;cursor: pointer;"
+                        (click)="addCertificate()"></ion-icon>&nbsp;
+                      <ion-icon name="remove-circle-outline" style="font-size: 30px;cursor: pointer;"
+                        (click)="removeCertificate(i)"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                </ion-row>
+              </form>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer style="display: flex;justify-content:flex-end;">
+  <ion-button size="default" fill="outline" color="success" type="submit" style="height: 35px;" (click)="addNew()">
+    Add New CV</ion-button>&nbsp;
+
+  <ion-button size="default" fill="outline" color="success" type="submit" style="height: 35px;" (click)="finalSubmit()">
+    Final Submit</ion-button>
+</ion-footer>

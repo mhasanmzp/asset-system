@@ -1,0 +1,213 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" *ngIf="flag != 'addTask'">
+      <ion-back-button color="dark" defaultHref="/project-manage/{{id}}"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="flag != 'addTask'">{{listName}} Report</ion-title>
+    <ion-title *ngIf="flag == 'addTask'">TaskList</ion-title>
+    <ion-buttons slot="end" *ngIf="flag == 'addTask'">
+      <ion-button (click)="close()">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="height:95%;overflow: auto;">
+    <table class="tg" style="width:100%; table-layout:fixed">
+      <thead>
+        <tr style="
+            background-color: var(--ion-color-light);
+            position: sticky;
+            top: 0px;
+            z-index: 9999999999999;
+          ">
+          <th class="tg-hpky" style="width: 50px;" *ngIf="flag == 'addTask'">
+            <ion-checkbox id="checkbox" (click)="selectAllForCreateSprint($event,projectList)" color="dark">
+            </ion-checkbox>
+          </th>
+          <th class="tg-hpky" style="width: 70px;">Task Id</th>
+          <th class="tg-hpky" style="width: 200px;">Epic</th>
+          <th class="tg-hpky" style="width: 200px;">Story</th>
+          <th class="tg-hpky" style="width: 300px;">Task</th>
+          <th class="tg-hpky" style="width: 100px;">Assignee</th>
+          <th class="tg-hpky" style="width: 100px;">Created By</th>
+
+          <th class="tg-hpky" style="width: 70px;">Estimated Hours</th>
+          <th class="tg-hpky" style="width: 70px;">Actual Hours</th>
+          <th class="tg-hpky" style="width: 100px;">Status</th>
+          <th class="tg-hpky" style="width: 100px;">Priority</th>
+          <th class="tg-hpky" style="width: 100px;">StartDate</th>
+          <th class="tg-hpky" style="width: 100px;">EndDate</th>
+          <th class="tg-hpky" style="width: 100px;">Completion Date</th>
+          <th class="tg-hpky" style="width: 100px;">Tester</th>
+          <th class="tg-hpky" style="width: 70px;">TesterEHours</th>
+          <th class="tg-hpky" style="width: 70px;">TesterAHours</th>
+          <th class="tg-hpky" style="width: 100px;">TestingSDate</th>
+          <th class="tg-hpky" style="width: 100px;">TestingEDate</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="projectList.length <= 0">
+          <td colspan="8" style="text-align: center;">Data not found.</td>
+        </tr>
+        <tr *ngFor="let epic of projectList; index as i">
+          <td class="tg-0pky" style="width: 50px;" *ngIf="flag == 'addTask'">
+            <ion-checkbox [(ngModel)]="epic['checkedForSprint']" (ngModelChange)="addSprintTask()" color="dark">
+            </ion-checkbox>
+          </td>
+          <td style="width: 70px;" class="tg-0pky"
+            [style.background]="getTeamBoardColumns(epic.columnId) === 'Done'? '#2ecc71': getTeamBoardColumns(epic.columnId) === 'In Progress'? '#e67e22': getTeamBoardColumns(epic.columnId) === 'Testing'? '#3498db': getTeamBoardColumns(epic.columnId) === 'Hold'? '#B1907F':''">
+            {{epic.taskId}}
+          </td>
+          <td class="tg-0pky" style="width: 200px;">
+            {{epic.epicName}}
+          </td>
+          <td class="tg-0pky" style="width: 200px;">
+            {{epic.storyName}}
+          </td>
+          <td class="tg-0pky" style="width: 300px;">
+            {{epic.taskName}}
+          </td>
+          <td style="width: 100px;" class="tg-0pky" style="font-weight: bold">
+            {{getListAssigneeDetails(epic, 'assignee', 'firstName')}}
+          </td>
+
+
+          <td style="width: 100px;" class="tg-0pky" style="font-weight: bold">
+            {{getListAssigneeDetails(epic, 'reporter', 'firstName')}}
+          </td>
+
+
+          <td class="tg-0pky" style="width: 70px;">
+            {{epic.estimatedHours}}
+          </td>
+          <td class="tg-0pky" style="width: 70px;">
+            {{epic.actualHours}}
+          </td>
+          <td class="tg-0pky" style="width: 100px;">
+            {{getTeamBoardColumns(epic.columnId)}}
+          </td>
+          <td class="tg-0pky" style="text-align: center; padding: 0px !important;width:100px;">
+            <ion-chip *ngIf="epic.priority === 2">
+              <ion-icon name="radio-button-on-outline" color="danger"></ion-icon>
+              <ion-label>High</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 1">
+              <ion-icon name="radio-button-on-outline" color="warning"></ion-icon>
+              <ion-label>Medium</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 0">
+              <ion-icon name="radio-button-on-outline" color="secondary"></ion-icon>
+              <ion-label>Low</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="epic.priority === 3">
+              <ion-icon name="radio-button-on-outline" color="tertiary"></ion-icon>
+              <ion-label>Hold</ion-label>
+            </ion-chip>
+          </td>
+          <td class="tg-0pky" style="width: 100px;">
+            {{epic.startDate | date:'yyyy-MM-dd'}}
+          </td>
+          <td class="tg-0pky" style="width: 100px;">
+            {{epic.dueDate | date:'yyyy-MM-dd'}}
+          </td>
+          <td class="tg-0pky" style="width: 100px;">
+            {{epic.completionDate | date:'yyyy-MM-dd'}}
+          </td>
+          <td style="width: 100px;" class="tg-0pky" style="font-weight: bold">
+            {{getListAssigneeDetails(epic, 'tester', 'firstName')}}
+          </td>
+          <td class="tg-0pky" style="width: 70px;">
+            {{epic.testingEstimatedHours}}
+          </td>
+          <td class="tg-0pky" style="width: 70px;">
+            {{epic.testingActualHours}}
+          </td>
+          <td class="tg-0pky" style="width: 100px;">
+            {{epic.testingStartDate | date:'yyyy-MM-dd'}}
+          </td>
+          <td class="tg-0pky" style="width: 100px;">
+            {{epic.testingDueDate | date:'yyyy-MM-dd'}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-row style="height: 35px;">
+
+      <ion-col size="2"
+        style="border: 2px solid var(--ion-color-light);height: 35px;display: flex;align-items: center;">
+        <ion-item lines="none">
+          <ion-select style="font-size: 16px" value="all" (ionChange)="selectEpicTasks($event)">
+            <ion-select-option value="all">All Epics</ion-select-option>
+            <ion-select-option *ngFor="let epic of epicList; index as i" [value]="epic.id">{{epic.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="2"
+        style="border: 2px solid var(--ion-color-light);height: 35px;display: flex;align-items: center;font-weight: bold;">
+        <ion-input type="date" (ionChange)="dateFilter($event)"></ion-input>
+      </ion-col>
+
+      <ion-col size="2"
+        style="border: 2px solid var(--ion-color-light);height: 35px;display: flex;align-items: center;">
+        <ion-item lines="none">
+          <ion-select style="font-size: 16px" value="all" (ionChange)="selectType($event)">
+            <ion-select-option value="all">All Types</ion-select-option>
+            <ion-select-option *ngFor="let type of taskType; index as i" [value]="type.id">
+              {{type.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="2"
+        style="border: 2px solid var(--ion-color-light);height: 35px;display: flex;align-items: center;">
+        <ion-item lines="none">
+          <ion-select style="font-size: 16px" value="all" (ionChange)="selectTester($event)"
+            placeholder="Select Tester">
+            <ion-select-option value="all">All Tester</ion-select-option>
+            <ion-select-option *ngFor="let member of projectMembers; index as i" [value]="member.employeeId">
+              {{member.firstName}} {{member.middleName?member.middleName:member.lastName}}
+              {{member.middleName?member.lastName:''}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="2" style="height: 35px;display: flex;align-items: center;" *ngIf="flag == 'addTask'">
+        <ion-item lines="none">
+          <ion-button color="success" fill="outline" (click)="updateSprint()" style="height: 35px;">Update Sprint</ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="downloadExcel()">
+        <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+        Download Excel
+      </ion-button>
+    </ion-buttons>
+
+    <ion-avatar slot="end" style="
+        height: 40px;
+        width: 40px;
+        padding: 2px;
+        margin: 2px;
+        cursor: pointer;
+        position: relative;
+      " *ngFor="let member of projectMembers" (click)="selectMemberTasks(member)"
+      [style.border]="member.selected ? '2px solid red': '0px solid red'">
+      <img style="position: absolute;top:0;left:0;" [src]="member.image" [title]="member.firstName" />
+    </ion-avatar>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,142 @@
+ion-menu {
+  border: none;
+  --background: var(--ion-color-gray);
+  overflow: hidden;
+}
+
+ion-menu ion-content {
+  --background: var(--ion-color-light);
+}
+
+ion-menu ion-content {
+  --padding-bottom: 20px;
+}
+
+ion-menu ion-list {
+  --background: transparent !important;
+  background: transparent;
+}
+
+ion-menu ion-note {
+  line-height: 24px;
+  margin-bottom: 20px;
+}
+
+ion-menu ion-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 50px;
+  font-size: 14px;
+}
+
+ion-menu ion-item.selected ion-icon {
+  color: var(--ion-color-light);
+}
+
+ion-menu ion-item ion-icon {
+  font-size: 24px;
+}
+
+ion-menu ion-list#labels-list ion-list-header {
+  margin-bottom: 8px;
+}
+
+ion-menu ion-list-header,
+ion-menu ion-note {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+ion-menu ion-note {
+  margin-bottom: 8px;
+}
+
+ion-note {
+  display: inline-block;
+  font-size: 16px;
+}
+
+ion-item {
+  --color: var(--ion-color-dark);
+  --background: transparent;
+
+  ion-label {
+    color: var(--ion-color-dark) !important;
+  }
+}
+
+ion-item.selected {
+  --background: var(--ion-color-tertiary) !important;
+
+  ion-label {
+    font-weight: bold !important;
+    color: var(--ion-color-light) !important;
+  }
+}
+
+.rightSidebar ion-menu {
+  --side-width: 40px;
+}
+
+.rightSidebar ion-list {
+  --background: var(--ion-color-gray);
+  background: var(--ion-color-gray);
+}
+
+ion-split-pane {
+  --side-width: 150px;
+}
+
+ion-header {
+  --background: var(--ion-color-gray);
+  background: var(--ion-color-gray);
+}
+
+ion-footer {
+  ion-toolbar {
+    background: var(--ion-color-light) !important;
+    --background: var(--ion-color-light) !important;
+  }
+
+  ion-item {
+    --background: transparent;
+
+    ion-label {
+      div,
+      p {
+        color: var(--ion-color-dark) !important;
+        --color: var(--ion-color-dark) !important;
+      }
+    }
+  }
+}
+
+ion-list {
+  background: var(--ion-color-gray);
+}
+
+
+.list-ios .item-lines-none {
+  --border-width: 0;
+  --inner-border-width: 0;
+  --min-height: auto !important;
+}
+.notification-section {
+  margin-right: 10px;
+}
+.notification {
+  min-height: 20px;
+  background-color: red;
+  min-width: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.logOut{
+  border-radius: 10px;
+  margin: auto;
+  text-align: center;
+  border: 1px solid red;
+  width: 100%;
+  height: 33px;
+}

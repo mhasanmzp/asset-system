@@ -1,0 +1,17 @@
+ion-modal {
+    --width: 70%;
+  }
+
+  .ion-col-header {
+    border: solid 1px #757070;
+    text-align: center;
+  }
+  .ion-col-item {
+    border: solid 1px #757070;
+    text-align: center;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-wrap: anywhere;
+  }

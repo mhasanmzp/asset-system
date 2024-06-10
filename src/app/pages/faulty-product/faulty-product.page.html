@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Asset Grid View</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <!-- Substation Selection Dropdown -->
+      <ion-col size="4">
+        <ion-item>
+          <ion-label size="2">Substation</ion-label>
+          <ion-select [(ngModel)]="selectedSubstation" (ionChange)="selectSubstation($event)">
+            <ion-select-option *ngFor="let substation of substations" [value]="substation">
+              {{ substation }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <!-- Main Content Area -->
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Assets Delivered</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <!-- Search Bar -->
+            <ion-searchbar [(ngModel)]="searchQuery" placeholder="Search Assets"></ion-searchbar>
+            <div class="scroll-container">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="1.4" class="column-header"><strong>Serial Number</strong></ion-col>
+                  <ion-col size="1.4" class="column-header"><strong>Product Name</strong></ion-col>
+                  <ion-col size="1.4" class="column-header"><strong>Warranty Start Date</strong></ion-col>
+                  <ion-col size="1.4" class="column-header"><strong>Warranty End Date</strong></ion-col>
+                  <ion-col size="1.4" class="column-header"><strong>Delivered Date</strong></ion-col>
+                  <ion-col size="1.4" class="column-header"><strong>Site Name</strong></ion-col>
+                  <ion-col size="1.4" class="column-header"><strong>Status</strong></ion-col>
+                  <ion-col size="2.2" class="column-header"><strong>Action</strong></ion-col>
+                </ion-row>
+                <ion-row *ngFor="let asset of filteredAssets()">
+                  <ion-col size="1.4">{{ asset.serialNumber }}</ion-col>
+                  <ion-col size="1.4">{{ asset.productName }}</ion-col>
+                  <ion-col size="1.4">{{ asset.warrantyStartDate }}</ion-col>
+                  <ion-col size="1.4">{{ asset.warrantyEndDate }}</ion-col>
+                  <ion-col size="1.4">{{ asset.deliveredDate }}</ion-col>
+                  <ion-col size="1.4">{{ asset.siteName }}</ion-col>
+                  <ion-col size="1.4">{{ asset.status }}</ion-col>
+                  <ion-col size="2.2">
+                    <ion-item>
+                      <ion-select [(ngModel)]="asset.action" class="action-select" placeholder="Select Action">
+                        <ion-select-option value="Sent Back to the OEM">Sent Back to the OEM</ion-select-option>
+                        <ion-select-option value="Sent Back to the Site">Sent Back to the Site</ion-select-option>
+                        <ion-select-option value="Mark as Scrap">Mark as Scrap</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

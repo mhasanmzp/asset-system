@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Comments</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(null)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <!-- Display existing comments -->
+    <ion-item *ngFor="let comment of taskCommentsArr">
+      <ion-label>
+        <h2>{{ comment.firstName }} {{comment.lastName}}</h2>
+        <p>{{ comment.taskComment }}</p>
+        <p style="font-style: italic; margin-top: 5px;">{{ comment.createdAt | date }}</p> <!-- Format date using Angular's date pipe -->
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-item>
+      <ion-input [(ngModel)]="newComment" placeholder="Add a comment"></ion-input>
+      <ion-buttons slot="end">
+        <ion-button (click)="update()">
+          <ion-icon name="send-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

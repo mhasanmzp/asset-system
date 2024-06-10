@@ -1,0 +1,556 @@
+<ion-header>
+  <ion-toolbar color="gray">
+    <ion-buttons slot="start">
+      <ion-back-button color="dark" defaultHref="/org-info"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Employee Onboarding</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="tertiary">
+    <ion-segment [(ngModel)]="segment" style="margin: 0;">
+      <ion-segment-button value="user" disabled="false">
+        <ion-text>
+          Basic Details
+        </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="card" disabled="false" *ngIf="!contract">
+        <ion-text>
+          Company Details
+        </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="contract" disabled="false" *ngIf="contract">
+        <ion-text>
+          Contractor Details
+        </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="docs" disabled="{{data}}">
+        <ion-text>
+          Documents
+        </ion-text>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- <div style="margin: 20px;
+  background-color: #3c40c6;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 10px;">
+    The Add Employee wizard guides you through the process of adding a new employee. You have the flexibility to enter
+    comprehensive information about a new employee as soon as the person joins or first add salient details and update
+    remaining details later.
+  </div> -->
+  <div>
+    <ion-row>
+      <ion-col sizeLg="10" offsetLg="1" *ngIf="segment==='user'">
+        <form [formGroup]="basic">
+          <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 20px;">
+            <ion-row style="padding-bottom: 10px;">
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">First Name<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="firstName"></ion-input>
+                  <div *ngIf="basic.get('firstName').invalid && basic.get('firstName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter First Name.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Middle Name</ion-label>
+                  <ion-input formControlName="middleName"></ion-input>
+                  
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Last Name<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="lastName"></ion-input>
+                  <div *ngIf="basic.get('lastName').invalid && basic.get('lastName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter last Name.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Designation</ion-label>
+                  <ion-input formControlName="designation"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Employee Type<span style="color: red;"> *</span></ion-label>
+                  <select formControlName="employeeType" (change)="selectEmployeeType($event)"
+                    style="width: 100%;background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option value="1">Full Time</option>
+                    <option value="2">Part Time</option>
+                    <option value="3">Contractor(Off-Site)</option>
+                    <option value="4">Intern</option>
+                    <option value="5">Contractor(On-Site)</option>
+                    <option value="6">Application User</option>
+                    <option value="7">Epic User</option>
+                  </select>
+                  <div *ngIf="basic.get('employeeType').invalid && basic.get('employeeType').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Select employeeType.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Gender<span style="color: red;"> *</span></ion-label>
+                  <select formControlName="gender"
+                    style="width: 100%;
+                  background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Others</option>
+                  </select>
+                  <div *ngIf="basic.get('gender').invalid && basic.get('gender').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Select Gender.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Phone Number <span style="color: red;"> *</span></ion-label>
+                  <ion-input type="number" formControlName="phoneNo"></ion-input>                  
+                  <div *ngIf="basic.get('phoneNo').hasError('pattern') && basic.get('phoneNo').touched">
+                    <span style="color:red;font-size:   13px;">
+                  Please enter a valid 10-digit phone number.
+                    </span>
+                  </div>              
+                  
+                </ion-item>
+               
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Emergency Contact Number<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="number" formControlName="emergencyContactNumber" ></ion-input>
+                  <div *ngIf="basic.get('emergencyContactNumber').invalid && basic.get('emergencyContactNumber').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please enter a valid 10-digit phone number.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <!-- <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Personal Email<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="personalEmail"></ion-input>
+                  <div *ngIf="basic.get('personalEmail').invalid && basic.get('personalEmail').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter  Valid Email.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col> -->
+
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Father Name<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="text" formControlName="fatherName"></ion-input>
+                  <div *ngIf="basic.get('fatherName').invalid && basic.get('fatherName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter Father Name.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row style="padding-bottom: 10px;">
+              <!-- <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Spouse Name</ion-label>
+                  <ion-input formControlName="spouseName"></ion-input>
+                </ion-item>
+              </ion-col> -->
+             
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Cost/Hour<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="text" formControlName="constHour" ></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Hours/Day<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="text" formControlName="hoursDay" ></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row style="padding-bottom: 10px;">
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Present Address<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="presentAddress"></ion-input>
+                  <div *ngIf="basic.get('presentAddress').invalid && basic.get('presentAddress').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter Present Address.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Permanent Address<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="permanentAddress" ></ion-input>
+                  <div *ngIf="basic.get('permanentAddress').invalid && basic.get('permanentAddress').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter Permanent Address.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row style="padding-bottom: 10px;">
+            </ion-row>
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col sizeLg="10" offsetLg="1" *ngIf="segment==='card'">
+        <form [formGroup]="company">
+          <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 20px;">
+            <ion-row style="padding-bottom: 10px;">
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Biometric ID<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="number" formControlName="biometricId"></ion-input>
+                  <div *ngIf="company.get('biometricId').invalid && company.get('biometricId').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter biometricId.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Date of Joining<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="date" formControlName="DOJ"></ion-input>
+                  <div *ngIf="company.get('DOJ').invalid && company.get('DOJ').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter DOJ.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <!-- <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Employee Type*</ion-label>
+                  <select formControlName="employeeType"
+                    style="width: 100%;
+                  background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option value="1">Full Time</option>
+                    <option value="2">Part Time</option>
+                    <option value="3">Contract</option>
+                    <option value="4">Intern</option>
+                  </select>
+                </ion-item>
+              </ion-col> -->
+              <!-- <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Location*</ion-label>
+                  <select formControlName="location"
+                    style="width: 100%;
+                  background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option value="1">Off Shore</option>
+                    <option value="2">On Site</option>
+                    <option value="3">Remote</option>
+                  </select>
+                </ion-item>
+              </ion-col> -->
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Company Branch<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="companyBranch"></ion-input>
+                  <div *ngIf="company.get('companyBranch').invalid && company.get('companyBranch').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter companyBranch.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Official Email<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="officialEmail"></ion-input>
+                  <div *ngIf="company.get('officialEmail').invalid && company.get('officialEmail').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter officialEmail.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4" *ngIf="updateFlag!=true">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Password</ion-label>
+                  <ion-input type="password" formControlName="password"></ion-input>
+                  <div *ngIf="company.get('password').invalid && company.get('password').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter password.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Basic Salary<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="basicSalary" ></ion-input>
+                  <div *ngIf="company.get('basicSalary').invalid && company.get('basicSalary').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter basicSalary.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Total Salary<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="totalSalary" ></ion-input>
+                  <div *ngIf="company.get('totalSalary').invalid && company.get('totalSalary').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter totalSalary.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">User Group<span style="color: red;"> *</span></ion-label>
+                  <!-- <select formControlName="userGroup"
+                    style="width: 100%;
+                  background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option *ngFor="let group of userGroups" [value]="group.userGroupId">{{group.groupName}}</option>
+                  </select> -->
+
+
+                  <!-- new code to set multiple user groups to users -->
+
+                  <ion-select formControlName="userGroup" placeholder="Select User Group"  style="width: 100%;
+                  background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)" multiple>
+                    <ion-select-option style="color: var(--ion-color-dark);font-weight: bold;" *ngFor="let group of userGroups" [value]="group.userGroupId">{{group.groupName}}</ion-select-option>
+                 
+                  </ion-select>
+
+
+                  <div *ngIf="company.get('userGroup').invalid && company.get('userGroup').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Select User Group.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col sizeLg="10" offsetLg="1" *ngIf="segment==='contract'">
+        <form [formGroup]="contractor">
+          <ion-list id="inbox-list" lines="none" style="background: transparent;padding:10px 20px;">
+            <ion-row style="padding-bottom: 10px;">
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Tax Term<span style="color: red;"> *</span></ion-label>
+                  <select formControlName="taxTerm"
+                    style="width: 100%;background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option value="1099">1099</option>
+                    <option value="C2C">C2C</option>
+                    <option value="W2">W2</option>
+                    <option value="H1B">H1B</option>
+                  </select>
+                  <div *ngIf="contractor.get('taxTerm').invalid && contractor.get('taxTerm').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please select taxTerm.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Position Name<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="text" formControlName="positionName"></ion-input>
+                  <div *ngIf="contractor.get('positionName').invalid && contractor.get('positionName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please select positionName.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">FedID<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="fedID"></ion-input>
+                  <div *ngIf="contractor.get('fedID').invalid && contractor.get('fedID').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please select fedID.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Corporation Name<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="corporationName"></ion-input>
+                  <div *ngIf="contractor.get('corporationName').invalid && contractor.get('corporationName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter corporationName.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Official Email<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="officialEmail"></ion-input>
+                  <div *ngIf="contractor.get('officialEmail').invalid && contractor.get('officialEmail').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter officialEmail.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Password<span style="color: red;"> *</span></ion-label>
+                  <ion-input formControlName="password"></ion-input>
+                  <div *ngIf="contractor.get('password').invalid && contractor.get('password').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter password.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Tentative Start date<span style="color: red;"> *</span></ion-label>
+                  <ion-input type="date" formControlName="DOJ"></ion-input>
+                  <div *ngIf="contractor.get('DOJ').invalid && contractor.get('DOJ').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter DOJ.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">POC name</ion-label>
+                  <ion-input formControlName="pocName"></ion-input>
+                  <div *ngIf="contractor.get('pocName').invalid && contractor.get('pocName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter pocName.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Company</ion-label>
+                  <select formControlName="companyName"
+                    style="width: 100%;background: var(--ion-color-light); color: var(--ion-color-dark); padding: 7px;font-weight:300;border: 0.5px solid rgb(83, 83, 83)">
+                    <option value="Mckinsol">Mckinsol</option>
+                    <option value="Intellicept">Intellicept</option>
+                    <option value="Neuvays">Neuvays</option>
+                  </select>
+                  <div *ngIf="contractor.get('companyName').invalid && contractor.get('companyName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter companyName.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked" style="color: #fff;">Client/End-Client</ion-label>
+                  <ion-input formControlName="clientName"></ion-input>
+                  <div *ngIf="contractor.get('clientName').invalid && contractor.get('clientName').touched">
+                    <span style="color: red; font-size: 13px;">
+                      Please Enter clientName.
+                    </span>
+                  </div>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+
+    <!-- employee docs (Sonali) -->
+
+    <ion-grid class="ion-margin hidden-sm-down" *ngIf="segment==='docs'" >    
+      <ion-row style="
+      position: sticky;
+      top: 0px;
+      z-index: 999999999;
+      background-color: transparent;
+      color: var(--ion-color-dark);
+      margin: 0px;margin-top: 10px;
+    ">
+        <ion-col size="5"> Original Name </ion-col>
+        <ion-col size="2"> Mime Type </ion-col>
+        <ion-col size="2"> Size </ion-col>
+        <ion-col size="2"> Date </ion-col>
+        <ion-col size="1"></ion-col>
+      </ion-row>
+      <ion-row *ngIf="allDocs.length === 0" style="display: flex;justify-content:center;">
+        <h6>No Document Uploaded</h6>
+      </ion-row>
+      <ion-row style="background-color: var(--ion-color-light);color: var(--ion-color-dark);cursor: pointer;" *ngFor="let document of allDocs; index as i" [ngClass]="(i % 2 === 0) ? 'odd' : 'even'" (click)="openDocument(document)">
+        <ion-col size="5">{{document.originalname}}</ion-col>
+        <ion-col size="2">{{document.mimetype}}</ion-col>
+        <ion-col size="2">{{document.size/1000}} kb</ion-col>
+        <ion-col size="2">{{document.date | date:'dd MMM, yyyy'}}</ion-col>
+        <ion-col size="1"> 
+          <ion-icon name="trash-outline" color="danger"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border" color="gray">
+  <ion-toolbar color="gray">
+    <ion-buttons slot="end">
+      
+      <!-- <ion-button *ngIf="segment==='user' && !employeeActive" expand="block" fill="outline" color="success"
+        style="font-weight: 300;width: 150px;" [disabled]="!userOnboarded" (click)="updateStatus('1')">Activate</ion-button> -->
+      <ion-button *ngIf="segment==='user' && !employeeActive" expand="block" fill="outline" color="success"
+        style="font-weight: 300;width: 150px;"  (click)="updateStatus('1')">Activate</ion-button>
+      <ion-button *ngIf="segment==='user' && employeeActive" expand="block" fill="outline" color="danger"
+        style="font-weight: 300;width: 150px;"  (click)="updateStatus('0')">De-Activate</ion-button>
+
+      <ion-button *ngIf="segment==='user'" expand="block" fill="solid" color="success"
+        style="font-weight: 300;width: 150px;"  (click)="nextTab()" >Next</ion-button>
+
+      <ion-button *ngIf="(segment==='card' || segment==='contract')" expand="block" fill="clear" color="dark"
+        style="font-weight: 300;width: 150px;" (click)="previousTab()"><span style="color: #fff;">Previous</span>
+      </ion-button>
+      <ion-button *ngIf="(segment==='card' || segment==='contract') && !updateFlag" expand="block" fill="solid" color="success"
+        style="font-weight: 300;width: 150px;" (click)="register()" [disabled]="basic.invalid">Save</ion-button>
+      <ion-button *ngIf="(segment==='card' || segment==='contract') && updateFlag" expand="block" fill="solid" color="success"
+        style="font-weight: 300;width: 150px;" (click)="updateEmployee()" >Update</ion-button>
+
+      <input *ngIf="segment==='docs'" id="file" type="file" (change)="handleFileSelect($event)" multiple />
+      
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

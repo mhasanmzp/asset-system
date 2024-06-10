@@ -1,0 +1,409 @@
+
+
+ion-input {
+    border: 0.5px solid var(--ion-color-dark) !important;
+    border-radius: 10px;
+    padding: 0px 10px !important;
+  
+    background: var(--ion-color-light);
+    color: var(--ion-color-dark);
+  }
+  
+  select {
+    border-radius: 10px;
+  }
+  
+  
+  .even {
+    color: var(--ion-color-dark);
+    border-radius: 5px;
+  }
+  
+  input#file {
+    display: inline-block;
+    width: 150px;
+    padding: 50px 0 0 0;
+    height: 50px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: url(https://cdn1.iconfinder.com/data/icons/hawcons/32/698394-icon-130-cloud-upload-512.png) center center no-repeat var(--ion-color-gray);
+    border-radius: 10px;
+    background-size: 40px 40px;
+  }
+  
+  div[slot="content"] {
+  background: rgba(var(--ion-color-rose-rgb), 0.25)
+  }
+  
+  .root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  }
+  
+  textarea {
+  width: 100%;
+  border: none;
+  font-size: 15px;
+  background: transparent;
+  border: none;
+  overflow: auto;
+  outline: none;
+  
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  
+  resize: none;
+  
+  }
+  
+  .app-name {
+  font-size: 28px;
+  font-family: 'Lato', sans-serif;
+  font-weight: bold;
+  }
+  
+  .has-gradient-text {
+  background: -webkit-linear-gradient(#13f7f4, #2af598);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  }
+  
+  
+  .board {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  
+  min-width: 0;
+  min-height: 0;
+  
+  .board-bar {
+    background: rgba(gray, 0.5);
+    padding: 8px 15px;
+  
+    .board-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--ion-color-dark);
+    }
+  }
+  
+  .board-wrapper {
+    display: flex;
+    flex-grow: 1;
+    overflow-x: auto;
+  
+    .board-columns {
+      display: flex;
+      flex-grow: 1;
+  
+      .board-column {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        flex-basis: 0;
+        max-width: 300px;
+        margin: 0px 10px;
+        padding: 5px;
+        border-radius: 4px;
+        background: var(--ion-color-gray-shade);
+  
+        &:not(:first-child) {
+          margin-left: 0;
+        }
+  
+        .column-title {
+          font-size: 16px;
+          color: var(--ion-color-dark);
+          font-weight: 800;
+          font-family: 'Lato', sans-serif;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+  }
+  
+  
+  .tasks-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  }
+  
+  .task {
+  
+  background: var(--ion-color-light) !important;
+  color: var(--ion-color-dark) !important;
+  border: 1px solid #4e4e4e;
+  border-radius: 10px;
+  overflow: hidden;
+  
+  margin-bottom: 10px;
+  cursor: pointer;
+  
+  }
+  
+  .task:hover {
+  border: 1px solid #ccc;
+  }
+  
+  .newTask {
+  color: var(--ion-color-dark);
+  
+  ion-item {
+    --color: var(--ion-color-dark);
+    cursor: pointer;
+  }
+  
+  ion-item:hover {
+    background: var(--ion-color-dark);
+    ;
+    border-radius: 10px;
+  }
+  }
+  
+  .cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 10px;
+  color: var(--ion-color-dark);
+  border: 1px solid #0fbcf9;
+  
+  }
+  
+  .cdk-drag-placeholder {
+  opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .tasks-container.cdk-drop-list-dragging .task:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  ion-grid {
+  --ion-grid-column-padding: 10px;
+  border-collapse: collapse;
+  border-style: hidden;
+  margin-top: 0px;
+  padding-top: 0px;
+  
+  ion-row {
+    margin: 5px 0px;
+  }
+  
+  ion-row:first-child {
+    background-color: #2980b9;
+    border-radius: 5px;
+    color: var(--ion-color-dark);
+    font-weight: bold;
+  }
+  
+  ion-col {
+    border-bottom: 0;
+    border-right: 0;
+  }
+  
+  
+  }
+  
+  select {
+  width: 100%;
+  padding: 7px;
+  background: var(--ion-color-gray);
+  color: var(--ion-color-dark);
+  border: none;
+  
+  outline: none;
+  
+  }
+  
+  select:active,
+  select:hover {
+  outline: none
+  }
+  
+  select:focus {
+  border-color: gray;
+  outline: none;
+  }
+  
+  :host ::ng-deep .ngx-datatable .datatable-body .datatable-scroll {
+  display: inherit;
+  }
+  
+  .odd {
+  background-color: var(--ion-color-dark);
+  color: #222;
+  border-radius: 5px;
+  }
+  
+  .even {
+  background-color: var(--ion-color-dark);
+  border-radius: 5px;
+  }
+  
+  ion-item {
+  --background: transparent;
+  }
+  
+  ion-grid ion-col {
+  border-bottom: 0;
+  border-right: 0;
+  font-size: 14px;
+  }
+  
+  .box {
+  background-color: transparent;
+  height: 50px;
+  border-bottom: 0.3px solid var(--ion-color-light);
+  border-top: 0.3px solid var(--ion-color-light);
+  line-height: 60px;
+  padding: 0px 10px;
+  font-size: 16px;
+  }
+  
+  .colHeader {
+  background-color: transparent;
+  height: 70px;
+  border-bottom: 0.8px solid #000;
+  border-top: 0.8px solid #0d1116;
+  margin-bottom: 0.5px;
+  }
+  
+  .box div:nth-child(even) {
+  fill: #161c22 !important;
+  stroke: #0d1116 !important;
+  }
+  
+  .ganttTest {
+  }
+  
+  .wrapper1,
+  .wrapper2 {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  }
+  
+  .wrapper1 {
+  height: 20px;
+  margin-top: -10px;
+  position: sticky;
+  top: 0px;
+  z-index: 999999999;
+  }
+  
+  .wrapper2 {
+  height: 200px;
+  }
+  
+  .div1 {
+  width: 25000px;
+  height: 20px;
+  }
+  
+  .div2 {
+  width: 1000px;
+  height: 200px;
+  background-color: #88FF88;
+  overflow: auto;
+  }
+  
+  
+  .selected {
+  background-color: var(--ion-color-light);
+  cursor: pointer;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  
+  ion-label {
+    color: var(--ion-color-dark) !important;
+  }
+  }
+  
+  .notSelected {
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--ion-color-dark);
+  border: 0.5px solid rgb(101, 101, 101);
+  margin-bottom: 5px;
+  border-radius: 5px;
+  }
+  
+  .scroll {
+  width: 200px;
+  height: 400px;
+  overflow: scroll;
+  }
+  
+  .scroll::-webkit-scrollbar {
+  width: 12px;
+  }
+  
+  .scroll::-webkit-scrollbar-track {
+  border-radius: 10px;
+  }
+  
+  .scroll::-webkit-scrollbar-thumb {
+  background-color: #656565;
+  width: 3px;
+  border: 0.5px solid #656565;
+  }
+  
+  .tg {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  overflow-x: auto;
+  }
+  
+  .tg td {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+  padding: 10px 5px;
+  word-break: normal;
+  }
+  
+  .tg th {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  overflow: hidden;
+  padding: 10px 5px;
+  word-break: normal;
+  }
+  
+  .tg .tg-0pky {
+  border-color: inherit;
+  text-align: left;
+  vertical-align: top;
+  }
+  
+  .tg .tg-hpky {
+  border-color: inherit;
+  text-align: left;
+  vertical-align: top;
+  font-weight: bold;
+  }
+  
+  input#file {
+  display: inline-block;
+  width: 150px;
+  padding: 50px 0 0 0;
+  height: 50px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: url(https://cdn1.iconfinder.com/data/icons/hawcons/32/698394-icon-130-cloud-upload-512.png) center center no-repeat var(--ion-color-gray);
+  border-radius: 10px;
+  background-size: 40px 40px;
+  }

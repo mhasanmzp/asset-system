@@ -1,0 +1,602 @@
+<ion-header>
+  <ion-toolbar color="gray">
+    <!-- <ion-buttons slot="start"> -->
+    <!-- <ion-button *ngIf="item.status === 0" slot="start" fill="outline" color="white" (click)="setCompletionDate()"
+      size="small" style="margin-right: 10px;">
+      mark complete
+    </ion-button> -->
+    <!-- <ion-button *ngIf="item.status === 1" slot="start" fill="outline" color="success" (click)="reOpenTask()"
+      size="small" style="margin-right: 10px;">
+      re-open
+    </ion-button> -->
+    <ion-button
+      slot="start"
+      (click)="deleteTask()"
+      fill="outline"
+      color="danger"
+      size="small"
+      style="margin-right: 10px"
+      *ngIf="!item.showField && showDelete"
+    >
+      delete
+    </ion-button>
+    <ion-button
+      slot="start"
+      fill="outline"
+      color="dark"
+      (click)="sendRequest()"
+      size="small"
+      style="margin-right: 10px"
+    >
+      {{requestedTicket ? 'request sent' : 'send request'}}
+    </ion-button>
+    <ion-button
+      slot="end"
+      *ngIf="item.reOpened"
+      disabled
+      fill="outline"
+      color="warning"
+      size="small"
+      style="margin-right: 10px"
+    >
+      re-opened
+    </ion-button>
+    <ion-button
+      slot="end"
+      (click)="close()"
+      fill="outline"
+      color="success"
+      size="small"
+      style="margin-right: 10px"
+    >
+      update
+    </ion-button>
+    <!-- <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  <ion-item lines="none">
+    <ion-textarea
+      style="width: 100%"
+      auto-grow
+      type="text"
+      [(ngModel)]="item.taskName"
+    >
+    </ion-textarea>
+  </ion-item>
+  <ion-item
+    lines="none"
+    style="margin-top: 10px"
+    [disabled]="task.assignee && item.showField"
+  >
+    <ion-note slot="start" style="width: 100px; font-size: 14px">
+      Assignee
+    </ion-note>
+    <!-- <ion-avatar slot="start" style="">
+      <img [src]="getAssigneeDetails(item, 'image')">
+    </ion-avatar> -->
+
+    <ion-avatar
+      slot="start"
+      (click)="!item.showField ? assignTaskOverlay(item, i) : null"
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+
+    >
+      <img
+        [src]="getAssigneeDetails(item, 'image') || 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'"
+      />
+    </ion-avatar>
+    <ng-template
+      *ngIf="i === item.index"
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger"
+      [cdkConnectedOverlayOpen]="item.isOpen"
+      (overlayOutsideClick)="item.isOpen = false"
+    >
+      <div class="example-overlay" style="height: 350px; overflow-y: scroll">
+        <ion-item lines="none">
+          <ion-label style="color: #ccc"> Assignee </ion-label>
+          <ion-icon
+            name="close"
+            (click)="item.isOpen = !item.isOpen"
+          ></ion-icon>
+        </ion-item>
+        <hr />
+        <!-- <ion-toolbar>
+          <ion-searchbar placeholder="Search Name" debounce="1000" style="padding: 0px 5px !important;"
+            (ionChange)="assignMember($event)">
+          </ion-searchbar>
+        </ion-toolbar> -->
+        <ion-row
+          *ngFor="let user of projectMembers; index as i"
+          [ngClass]="(i % 2 === 0) ? 'odd' : 'even'"
+          style="
+            background: var(--ion-color-light);
+            border-radius: 10px;
+            margin: 10px;
+          "
+          (click)="assignTask(item, user)"
+        >
+          <ion-item lines="none" style="width: 100%; cursor: pointer">
+            <ion-avatar slot="start">
+              <img [src]="user.image" />
+            </ion-avatar>
+            <ion-label style="color: var()">
+              {{user.firstName || ''}} {{user.lastName || ''}}
+            </ion-label>
+          </ion-item>
+        </ion-row>
+      </div>
+    </ng-template>
+
+    <ion-note slot="start" style="font-size: 16px; font-weight: bold">
+      {{getAssigneeDetails(item, 'firstName')}}
+    </ion-note>
+  </ion-item>
+  <ion-item style="margin-top: 10px" lines="none">
+    <ion-note slot="start" style="width: 100px; font-size: 14px">
+      Reporter
+    </ion-note>
+    <ion-avatar slot="start">
+      <img [src]="getReporterDetails(item, 'image')" />
+    </ion-avatar>
+    <ion-note slot="start" style="font-size: 16px; font-weight: bold">
+      {{getReporterDetails(item, 'firstName')}}
+    </ion-note>
+  </ion-item>
+  <ion-row>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="stacked"> Status </ion-label>
+        <ion-select
+          [disabled]="(item.onHold || item.assignee != teamMember) && item.showField"
+          style="font-size: 16px"
+          [(ngModel)]="item.columnId"
+          (ionChange)="statusChange($event)"
+        >
+          <ion-select-option
+            *ngFor="let column of teamBoardColumns; index as i"
+            [value]="column.columnId"
+          >
+            {{column.columnName}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <small
+        *ngIf="taskStatus == 'To Do' && !this.assignMemberId"
+        style="color: rgb(250, 151, 2); margin-left: 20px"
+        >Please assign someone</small
+      >
+    </ion-col>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="stacked"> Priority </ion-label>
+        <ion-select
+          [disabled]="item.onHold || task.priority"
+          style="font-size: 16px"
+          [(ngModel)]="item.priority"
+        >
+          <ion-select-option
+            *ngFor="let priority of taskPriorities; index as i"
+            [value]="priority.id"
+            >{{priority.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="stacked"> Type </ion-label>
+        <ion-select
+          style="font-size: 16px"
+          [(ngModel)]="item.taskType"
+          [disabled]="task.taskType && item.showField"
+        >
+          <ion-select-option
+            *ngFor="let taskType of taskType; index as i"
+            [value]="taskType.id"
+            >{{taskType.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="stacked"> Category </ion-label>
+        <ion-select
+          style="font-size: 16px"
+          [(ngModel)]="item.category"
+          [disabled]="task.category && item.showField"
+        >
+          <ion-select-option
+            *ngFor="let category of category; index as i"
+            [value]="category.id"
+            >{{category.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="stacked"> Tester </ion-label>
+        <ion-select style="font-size: 16px" [(ngModel)]="item.tester">
+          <ion-select-option
+            *ngFor="let user of members; index as i"
+            [value]="user.employeeId"
+            >{{user.firstName}} {{user.lastName}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Planned Hours </ion-label>
+        <ion-input
+          placeholder="add estimated hrs"
+          min="0"
+          style="width: 100%"
+          auto-grow
+          type="number"
+          [(ngModel)]="item.estimatedHours"
+          [disabled]="item.showField"
+        >
+        </ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Actual Hours </ion-label>
+        <ion-input
+          placeholder="add actual hrs"
+          min="0"
+          style="width: 100%"
+          auto-grow
+          type="number"
+          [(ngModel)]="item.actualHours"
+          (keyup)="onInputChange($event)"
+          [disabled]="task.actualHours && item.showField"
+        >
+        </ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Extra Hours </ion-label>
+        <ion-input
+          placeholder="add extra hrs"
+          min="0"
+          style="width: 100%"
+          auto-grow
+          type="number"
+          [(ngModel)]="item.extraHours"
+          [disabled]="true"
+        >
+        </ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-item style="margin-top: 10px">
+    <ion-label position="stacked"> Comments </ion-label>
+    <ion-textarea
+      placeholder="add comments to this task..."
+      autocomplete="on"
+      autosize
+      autocorrect="on"
+      style="width: 100%"
+      auto-grow
+      type="text"
+      [(ngModel)]="item.description"
+    >
+    </ion-textarea>
+  </ion-item>
+  <ion-row>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked">Planned Start Date </ion-label>
+        <!-- <ion-datetime color="success" presentation="day-month-year" [preferWheel]="true" [(ngModel)]="item.dueDate"></ion-datetime> -->
+        <ion-input
+          [(ngModel)]="item.startDate"
+          type="date"
+          class="ion-text-start"
+          (ionChange)="changeDate()"
+          [disabled]="item.showField"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked">Planned Due Date </ion-label>
+        <!-- <ion-datetime color="success" presentation="day-month-year" [preferWheel]="true" [(ngModel)]="item.dueDate"></ion-datetime> -->
+        <ion-input
+          [(ngModel)]="item.dueDate"
+          type="date"
+          class="ion-text-start"
+          (ionChange)="changeDate()"
+          [disabled]="item.showField"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Actual Start Date </ion-label>
+        <!-- <ion-datetime color="success" presentation="day-month-year" [preferWheel]="true" [(ngModel)]="item.dueDate"></ion-datetime> -->
+        <ion-input
+          [(ngModel)]="item.actualStartDate"
+          type="date"
+          class="ion-text-start"
+          (ionChange)="changeDate()"
+          [disabled]="item.assignee != teamMember && item.showField"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked">Actual End Date </ion-label>
+        <!-- <ion-datetime color="success" presentation="day-month-year" [preferWheel]="true" [(ngModel)]="item.dueDate"></ion-datetime> -->
+        <ion-input
+          [(ngModel)]="item.actualDueDate"
+          type="date"
+          class="ion-text-start"
+          (ionChange)="changeDate()"
+          [disabled]="item.assignee != teamMember && item.showField"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Testing Planned Hours </ion-label>
+        <ion-input
+          placeholder="add estimated hrs"
+          min="0"
+          style="width: 100%"
+          auto-grow
+          type="number"
+          [(ngModel)]="item.testingEstimatedHours"
+          [disabled]="task.testingEstimatedHours && item.showField"
+        >
+        </ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Testing Actual Hours </ion-label>
+        <ion-input
+          placeholder="add actual hrs"
+          min="0"
+          style="width: 100%"
+          auto-grow
+          type="number"
+          [(ngModel)]="item.testingActualHours"
+          [disabled]="item.testingActualHours && item.showField"
+        >
+        </ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Testing Start Date </ion-label>
+        <ion-input
+          [(ngModel)]="item.testingStartDate"
+          type="date"
+          class="ion-text-start"
+          (ionChange)="changeDate()"
+          [disabled]="task.testingStartDate && item.showField"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked"> Testing Due Date </ion-label>
+        <ion-input
+          [(ngModel)]="item.testingDueDate"
+          type="date"
+          class="ion-text-start"
+          (ionChange)="changeDate()"
+          [disabled]="task.testingDueDate && item.showField"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+    <!-- test steps code starts Ankit 31-Jan-2024 -->
+    <!-- <ion-col size="6">
+      <ion-item style="margin-top: 10px">
+        <ion-label position="stacked">
+          <a (click)="displayTestModal (item.taskId)">Fill Test Cases</a>
+        </ion-label>
+      </ion-item>
+    </ion-col> -->
+
+    <!-- test steps code end Ankit  -->
+  </ion-row>
+  <ion-item>
+    <ion-label position="stacked"> Tester Comments </ion-label>
+    <ion-textarea
+      placeholder="add comments to this task..."
+      style="width: 100%"
+      auto-grow
+      type="text"
+      autocomplete="on"
+      autosize
+      autocorrect="on"
+      [(ngModel)]="item.testingDescription"
+    >
+    </ion-textarea>
+  </ion-item>
+</ion-content>
+
+
+<!-- modal for update logs screen Ankit -->
+<ion-modal class="ion-modal" [isOpen]="isLogsOpen" backdropDismiss="false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Task Logs Details </ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="onLogsClose()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div
+        style="
+          padding-bottom: 0px;
+          overflow: auto;
+          padding-top: 10px;
+          height: 400px;
+        "
+      >
+        <ion-grid>
+          <ion-row style="text-align: center; font-weight: bold">
+            <ion-col class="ion-col-header">Created By</ion-col>
+            <ion-col class="ion-col-header">Updated by</ion-col>
+            <ion-col class="ion-col-header">Planned Start Date</ion-col>
+            <ion-col class="ion-col-header">Planned End Date</ion-col>
+            <ion-col class="ion-col-header">Actual Start Date</ion-col>
+            <ion-col class="ion-col-header">Actual End Date</ion-col>
+            <ion-col class="ion-col-header">User Comments</ion-col>
+            <ion-col class="ion-col-header">Tester Comments</ion-col>
+          </ion-row>
+          <ion-row *ngIf="logsData.length == 0 ">
+            <div style="text-align: center; margin: auto">
+              <p style="top: 50%; left: 40%; position: absolute">
+                No data found!
+              </p>
+            </div>
+          </ion-row>
+          <ion-row *ngFor="let item of logsData" style="text-align: center">
+            <ion-col class="ion-col-item">{{item.createdBy}}</ion-col>
+            <ion-col class="ion-col-item">{{item.updatedBy}}</ion-col>
+            <ion-col class="ion-col-item"
+              >{{item.updateData.startDate}}</ion-col
+            >
+            <ion-col class="ion-col-item">{{item.updateData.dueDate}}</ion-col>
+            <ion-col class="ion-col-item"
+              >{{item.updateData.actualStartDate}}</ion-col
+            >
+            <ion-col class="ion-col-item"
+              >{{item.updateData.actualDueDate}}</ion-col
+            >
+            <ion-col class="ion-col-item"
+              >{{item.updateData.description}}</ion-col
+            >
+            <ion-col class="ion-col-item">{{item.updateData.testing}}</ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+<!-- modal for update logs screen end Ankit-->
+
+<ion-footer>
+  <ion-item
+    lines="none"
+    style="margin-top: 0px; background-color: var(--ion-color-light)"
+    *ngIf="item.completionDate "
+  >
+    <ion-note slot="start" style="width: 100px; font-size: 14px">
+      Completed On
+    </ion-note>
+    <ion-note slot="start" style="font-size: 16px; font-weight: bold">
+      {{item.completionDate | date:'dd MMMM, yyyy hh:mm a'}}
+    </ion-note>
+  </ion-item>
+  <ion-item
+    lines="none"
+    style="margin-top: 0px; background-color: var(--ion-color-gray)"
+  >
+    <ion-note slot="start" style="width: 100px; font-size: 14px">
+      Last Updated On
+    </ion-note>
+    <ion-note slot="start" style="font-size: 16px; font-weight: bold">
+      {{item.updatedAt | date:'dd MMMM, yyyy hh:mm a'}}
+    </ion-note>
+  </ion-item>
+  <ion-item
+    lines="none"
+    style="margin-top: 0px; background-color: var(--ion-color-light)"
+  >
+    <ion-note slot="start" style="width: 100px; font-size: 14px">
+      Created At
+    </ion-note>
+    <ion-note slot="start" style="font-size: 16px; font-weight: bold">
+      {{item.createdAt | date:'dd MMMM, yyyy hh:mm a'}}
+    </ion-note>
+  </ion-item>
+  <ion-item
+    lines="none"
+    style="margin-top: 0px; background-color: var(--ion-color-gray)"
+  >
+    <ion-note slot="start" style="width: 100px; font-size: 14px">
+      Last Updated By
+    </ion-note>
+    <ion-note slot="start" style="font-size: 16px; font-weight: bold">
+      {{getReporterDetails(item, 'firstName')}}
+    </ion-note>
+  </ion-item>
+  <ion-row>
+    <!-- <ion-col>
+      <ion-item>
+        <ion-checkbox slot="start" [(ngModel)]="item.reOpened"></ion-checkbox>
+        <ion-label>Re Opened</ion-label>
+      </ion-item>
+    </ion-col> -->
+    <ion-col size="6">
+      <ion-item
+        *ngIf="currentStatus == 'Done'"
+        [disabled]="item.onHold && item.showField"
+      >
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="item.onHold"
+          (ngModelChange)="onHoldChanged()"
+          disabled
+        ></ion-checkbox>
+        <ion-label disabled>On Hold</ion-label> 
+      </ion-item>
+      <ion-item
+        *ngIf="currentStatus != 'Done'"
+        [disabled]="item.onHold && item.showField"
+      >
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="item.onHold"
+          (ngModelChange)="onHoldChanged()"
+        ></ion-checkbox>
+        <ion-label>On Hold</ion-label>
+      </ion-item>
+    </ion-col>
+    <ion-col size="6" style="display: flex; justify-content: center">
+      <ion-item lines="none">
+        <ion-button
+          slot="start"
+          (click)="onLogs()"
+          fill="outline"
+          color="secondary"
+          size="small"
+          style="margin-right: 10px"
+        >
+          Logs
+        </ion-button>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-footer>

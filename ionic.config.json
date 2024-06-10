@@ -1,0 +1,7 @@
+{
+  "name": "HrApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

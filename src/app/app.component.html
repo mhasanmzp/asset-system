@@ -1,0 +1,102 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu side="start" contentId="main-content" type="overlay">
+      <ion-content>
+        <div>
+
+        </div>
+        <div style="text-align: left; padding: 25px 50px 20px 20px">
+          <img src="assets/icon/Logo-full.png" />
+        </div>
+        <ion-list id="inbox-list">
+          <ion-menu-toggle
+            auto-hide="false"
+            *ngFor="let p of modules; let i = index"
+          >
+            <ion-item
+              routerDirection="root"
+              [routerLink]="[p.url]"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected"
+            >
+              <ion-icon
+                slot="start"
+                [ios]="p.icon + '-outline'"
+                [md]="p.icon + '-sharp'"
+              ></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+              <div class="notification-section" *ngIf="allTicketData != 0 && organisationId==1">
+                <div class="notification" *ngIf="p.title === 'Dashboard'">
+                  {{ allTicketData }}
+                </div>
+              </div>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+        <ion-accordion-group *ngIf="salesPermission">
+          <ion-accordion toggle-icon="chevron-down-circle">
+            <ion-item slot="header">
+              <ion-icon slot="start" icon="bar-chart"></ion-icon>
+              <ion-label>Sales</ion-label>
+            </ion-item>
+            <ion-list id="inbox-list" slot="content">
+              <ion-menu-toggle auto-hide="false">
+                <ion-item
+                  *ngFor="let page of salesPages"
+                  [routerLink]="[page.url]"
+                  routerDirection="root"
+                  lines="none"
+                  detail="false"
+                  routerLinkActive="selected"
+                >
+                  <ion-label style="padding-left: 43px">{{
+                    page.title
+                  }}</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ion-list>
+          </ion-accordion>
+        </ion-accordion-group>
+        
+      </ion-content>
+      <ion-footer>
+        <ion-toolbar>
+          <ion-item
+            (click)="openProfile()"
+            style="
+              cursor: pointer;
+              border-bottom: 0px solid #394351;
+              margin-bottom: 0px;
+            "
+          >
+            <ion-avatar slot="start">
+              <ion-img [src]="user.image"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <div>{{ user.organisationName || user.firstName }}</div>
+              <p>{{ user.organisationEmail || user.officialEmail }}</p>
+            </ion-label>
+          </ion-item>
+          <!-- added by ankit -->
+          <ion-item lines="none">
+            <div class="logOut" (click)="logout()" style="cursor: pointer;">
+              <ion-button  color="light" size="small">
+                <span style="color: red">Log Out</span>
+                <ion-icon
+                  slot="end"
+                  color="danger"
+                  name="log-out-outline"
+                ></ion-icon>
+              </ion-button>
+            </div>
+          </ion-item>
+          <!-- added by ankit -->
+        </ion-toolbar>
+      </ion-footer>
+    </ion-menu>
+    <ion-router-outlet id="main-content">
+      <span class="loader" *ngIf="loading"></span>
+    </ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

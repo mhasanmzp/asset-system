@@ -1,0 +1,99 @@
+<ion-content>
+  <ion-row class="container">
+    <ion-col sizeMd="10" sizeLg="10" sizeSm="12" size="12" offsetMd="1" offsetLg="1">
+      <ion-row style="box-shadow: 0px 0px 24px 1px rgba(97,97,97,0.75);">
+        <ion-col sizeMd="4" size="12" style="padding:50px;display: flex;justify-content: center;align-items: center;">
+            <img src="assets/icon/Logo-full.png">
+        </ion-col>
+        <ion-col sizeMd="8" size="12" style="padding:50px;">
+          <form [formGroup]="form">
+            <ion-list style="background: transparent;">
+              <ion-row>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">Company Name</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationName"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">GST No.</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationGST"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">PAN No.</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationPAN"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">Phone*</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationPhone"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">Email*</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationEmail"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">Branch*</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationBranch"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeMd="8" size="12">
+                  <ion-label><span style="color: #fff;">Address*</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationAddress"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">No. of Employee*</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="number" required formControlName="NumberofEmployee"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">Password</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="password" required formControlName="password"
+                      (keyup)="validatePassword($event)"></ion-input>
+                  </ion-item>
+                  <span id="msg"></span>
+                </ion-col>
+                <ion-col sizeMd="4" size="12">
+                  <ion-label><span style="color: #fff;">Confirm Password</span></ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="password" required formControlName="confirmPassword"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col sizeMd="6" size="12">
+                  <ion-button expand="block" fill="solid" color="success" (click)="register()">Register</ion-button>
+                </ion-col>
+                <ion-col sizeMd="6" size="12">
+                  <ion-button style="border:1px solid rgb(122, 120, 120);border-radius: 10px;" expand="block"
+                    fill="clear" color="dark" [routerLink]="['/login']"><span style="color: #fff;">Go to
+                      login</span></ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-list>
+          </form>
+          <div style="text-align: center;width: 100%;color: #fff;margin-left: 20px;">
+            {{errorMessage}}
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  
+  </ion-row>
+</ion-content>

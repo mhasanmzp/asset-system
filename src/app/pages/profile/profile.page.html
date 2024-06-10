@@ -1,0 +1,116 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar  color="gray">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Organisation Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+    <ion-row style="height: 100%;">
+      <ion-col style="height: calc(100% - 100px);border-radius: 20px;margin: 50px;" sizeLg="8" offsetLg="2" sizeMd="8" offsetMd="2" sizeSm="12" sizeXs="12" class="box">
+        <div>
+          <form [formGroup]="form">
+            <ion-list style="background: transparent;padding:10px 20px;">
+              <ion-row>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #fff;">Company Name</ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationName"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #fff;">GST No.</ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationGST"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #fff;">PAN No.</ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationPAN"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #fff;">Phone*</ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationPhone"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #fff;">Email*</ion-label>
+                  <ion-item lines="none">
+                    <ion-input [disabled]="true" type="text" required formControlName="organisationEmail"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #fff;">Branch*</ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="text" required formControlName="organisationBranch"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row> 
+                <ion-col size="8" style="padding: 10px;">
+                    <ion-label style="color: #fff;">Address*</ion-label>
+                    <ion-item lines="none">
+                      <ion-input type="text" required formControlName="organisationAddress"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #fff;">No. of Employee*</ion-label>
+                  <ion-item lines="none">
+                    <ion-input type="number" required formControlName="NumberofEmployee"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <!-- <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #222;">Password</ion-label>
+                  <ion-item lines="none" style="border: 1px solid #222;margin-bottom: 10px;margin-top: 5px;background: #fff;border-radius: 10px;">
+                    <ion-input style="" type="password" required formControlName="NumberofEmployee"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="4" style="padding: 10px;">
+                  <ion-label style="color: #222;">Confirm Password</ion-label>
+                  <ion-item lines="none" style="border: 1px solid #222;margin-bottom: 10px;margin-top: 5px;background: #fff;border-radius: 10px;">
+                    <ion-input style="" type="password" required formControlName="NumberofEmployee"></ion-input>
+                  </ion-item>
+                </ion-col> -->
+              </ion-row>
+              <!-- <ion-label style="color: #222;">Organization name</ion-label>
+              <ion-item lines="none" style="border: 1px solid #ccc;margin-bottom: 10px;margin-top: 5px;background: #fff;border-radius: 10px;">
+                <ion-input style="" type="text" required formControlName="email"></ion-input>
+              </ion-item>
+              <ion-label style="color: #222;">Email address</ion-label>
+              <ion-item lines="none" style="border: 1px solid #ccc;margin-bottom: 10px;margin-top: 5px;background: #fff;border-radius: 10px;">
+                <ion-input style="" type="text" required formControlName="email"></ion-input>
+              </ion-item>
+              <ion-label style="color: #222;">Password</ion-label>
+              <ion-item lines="none" style="border: 1px solid #ccc;margin-top: 5px;background: #fff;border-radius: 10px;">
+                <ion-input style="" type="password" required formControlName="pwd"></ion-input>
+              </ion-item> -->
+             
+            </ion-list>
+          </form>
+        </div>
+        <div>
+          <div style="text-align: left;width: 100%;color: #fff;margin-left: 20px;">
+            {{errorMessage}}
+          </div>
+        </div>
+        <!-- <div style="position: absolute;bottom:0;">
+          <img src="assets/sap.png" style="border-radius: 20px;">
+        </div> -->
+      </ion-col>
+    </ion-row>
+</ion-content>
+<ion-footer class="ion-no-border" color="gray">
+  <ion-toolbar color="gray">
+  <ion-buttons slot="end">
+    <ion-button expand="block" fill="solid" color="success" style="font-weight: 300;width: 170px;" (click)="update()">Update</ion-button>
+  </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

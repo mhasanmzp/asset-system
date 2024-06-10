@@ -1,0 +1,974 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Change Request Table</ion-title>
+
+    <ion-button (click)="setOpen(true)" slot="end" class="hidden-sm-down"
+      >Create </ion-button
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-modal [isOpen]="isModalOpen" backdropDismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Change Request Form</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <!-- new code by ankit -->
+
+        <ion-row>
+          <ion-col sizeLg="12" sizeMd="12" sizeSm="12">
+            <form [formGroup]="cmfForm" (ngSubmit)="onSubmit()">
+              <ion-row class="ion-text-center">
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Project Name<span style="color: red"> *</span></ion-label
+                    >
+                    <select formControlName="projectName" class="borderArea">
+                      <option value="">Select</option>
+                      <option
+                        *ngFor="let item of projectList; let i = index"
+                        [value]="item.projectName"
+                        style="text-align: left;"
+                      >
+                        {{ item.projectName }}
+                      </option>
+                    </select>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('projectName').invalid &&
+                      cmfForm.get('projectName').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a Project Name.</span
+                    >
+                  </div>
+                </ion-col>
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Client Location<span style="color: red">
+                        *</span
+                      ></ion-label
+                    >
+                    <ion-input
+                      type="text"
+                      formControlName="clientLocation"
+                      class="borderArea"
+                      placeholder="Enter Client Name"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('clientLocation').invalid &&
+                      cmfForm.get('clientLocation').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a Client Location.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Requested By<span style="color: red"> *</span></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      formControlName="requestedBy"
+                      placeholder="Requested By"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('requestedBy').invalid &&
+                      cmfForm.get('requestedBy').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a requestedBy.</span
+                    >
+                  </div>
+                </ion-col>
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Department<span style="color: red"> *</span></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      formControlName="department"
+                      placeholder="Enter Department"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('department').invalid &&
+                      cmfForm.get('department').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a department.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Contact No<span style="color: red"> *</span></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                      maxlength="10"
+                      minlength="10"
+                      formControlName="contact"
+                      placeholder="Contact No"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('contact').invalid &&
+                      cmfForm.get('contact').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter Valid Contact No.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <ion-col sizeMd="2.4" sizeSm="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" style="font-weight: 800"
+                      >Request Type<span style="color: red"> *</span></ion-label
+                    >
+                    <select formControlName="requestType" class="borderArea">
+                      <option value="">Select</option>
+                      <option value="Problem">Problem</option>
+                      <option value="Change">Change</option>
+                      <option value="Error">Error</option>
+                    </select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeMd="2.4" sizeSm="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" style="font-weight: 800"
+                      >Priority<span style="color: red"> *</span></ion-label
+                    >
+                    <select formControlName="priority" class="borderArea">
+                      <option value="">Select</option>
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Pain Area<span style="color: red"> *</span></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      formControlName="painArea"
+                      placeholder="Enter Pain Area"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('painArea').invalid &&
+                      cmfForm.get('painArea').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a Pain Area.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Benefit<span style="color: red"> *</span></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      formControlName="benefit"
+                      placeholder="Enter Benefit"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('benefit').invalid &&
+                      cmfForm.get('benefit').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a benefit.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <!-- attchment to be here -->
+
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >User/Department Benefited<span style="color: red">
+                        *</span
+                      ></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      formControlName="userBenefited"
+                      placeholder="Enter Beneficiary"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('userBenefited').invalid &&
+                      cmfForm.get('userBenefited').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a User Benefited.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Cost/Time/Risk Impact:Time (Hr)<span style="color: red">
+                        *</span
+                      ></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                      maxlength="2"
+                      minlength="1"
+                      formControlName="costTime"
+                      placeholder="Enter Cost/Time"
+                    ></ion-input>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('costTime').invalid &&
+                      cmfForm.get('costTime').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please Enter Cost/Time.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <ion-col sizeMd="2.4" sizeSm="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" style="font-weight: 800"
+                      >Category<span style="color: red"> *</span></ion-label
+                    >
+                    <select formControlName="category" class="borderArea">
+                      <option value="">Select</option>
+                      <option value="Normal">Normal</option>
+                      <option value="Emergency">Emergency</option>
+                      <option value="Pre-Approved">Pre-Approved</option>
+                    </select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeMd="2.4" sizeSm="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" style="font-weight: 800"
+                      >Resolution Type<span style="color: red">
+                        *</span
+                      ></ion-label
+                    >
+                    <select formControlName="resolutionType" class="borderArea">
+                      <option value="">Select</option>
+                      <option value="Hardware">Hardware</option>
+                      <option value="Networking">Networking</option>
+                      <option value="Software">Software</option>
+                      <option value="Data Entry">Data Entry</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeMd="2.4" sizeSm="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" style="font-weight: 800"
+                      >Resolution <span style="color: red"> *</span></ion-label
+                    >
+                    <select formControlName="resolution" class="borderArea">
+                      <option value="">Select</option>
+                      <option value="Programming">Programming</option>
+                      <option value="Data Correction">Data Correction</option>
+                      <option value="Training">Training</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeMd="2.4" sizeSm="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" style="font-weight: 800"
+                      >Recommendation
+                      <span style="color: red"> *</span></ion-label
+                    >
+                    <select formControlName="recommendation" class="borderArea">
+                      <option value="">Select</option>
+                      <option value="Priority">Priority</option>
+                      <option value="Reject Request">Reject Request</option>
+                      <option value="Accept Request">Accept Request</option>
+                    </select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Time : Analysis/Programming (Hr)<span style="color: red">
+                        *</span
+                      ></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                      maxlength="2"
+                      minlength="1"
+                      formControlName="analysis"
+                      placeholder="Enter Analysis Hours"
+                    ></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Testing (Hr)<span style="color: red"> *</span></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                      maxlength="2"
+                      minlength="1"
+                      formControlName="testing"
+                      placeholder="Enter Testing Hours"
+                    ></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col sizeLg="2.4" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Total (Hr)<span style="color: red"> *</span></ion-label
+                    >
+                    <ion-input
+                      class="borderArea"
+                      type="text"
+                      [readonly]="true"
+                      formControlName="total"
+                      placeholder="Enter Total Hours"
+                    ></ion-input>
+                  </ion-item>
+                  <!-- <div *ngIf="cmfForm.get('total').invalid" style="color: red">
+                    <span style="color: red; margin-left: 5%">
+                      Please enter Valid Total Hours.</span
+                    >
+                  </div> -->
+                </ion-col>
+
+                <ion-col sizeLg="9.6" sizeMd="4" sizeSm="6">
+                  <ion-item lines="none">
+                    <ion-label position="stacked"
+                      >Change Description<span style="color: red"
+                        >*</span
+                      ></ion-label
+                    >
+                    <ion-textarea
+                      class="borderArea"
+                      formControlName="changeDesc"
+                      placeholder="Enter Decsription"
+                    ></ion-textarea>
+                  </ion-item>
+                  <div
+                    *ngIf="
+                      cmfForm.get('changeDesc').invalid &&
+                      cmfForm.get('changeDesc').touched
+                    "
+                    style="color: red"
+                  >
+                    <span style="color: red; margin-left: 5%">
+                      Please enter a Change Description.</span
+                    >
+                  </div>
+                </ion-col>
+
+                <ion-col
+                  sizeLg="2.4"
+                  sizeMd="4"
+                  sizeSm="6"
+                  style="margin-top: 3%;"
+                >
+                  <ion-button
+
+                    color="primary"
+                    [disabled]="cmfForm.invalid"
+                    type="submit"
+                    >Submit</ion-button
+                  >
+                </ion-col>
+              </ion-row>
+            </form>
+          </ion-col>
+        </ion-row>
+
+        <!-- new code by ankit -->
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<ion-grid>
+  <ion-row
+    style="
+      color: var(--ion-color-dark);
+  background: var(--ion-color-light) !important;
+
+      position: sticky;
+      top: 0;
+      z-index: 9999999999;
+      background-color: rgb(240, 237, 237);
+    "
+  >
+    <ion-col class="ion-col-header" size="1.5">CRF Id</ion-col>
+    <ion-col class="ion-col-header" size="1.5">Project Name</ion-col>
+    <ion-col class="ion-col-header" size="1.5">Date</ion-col>
+    <ion-col class="ion-col-header" size="2">Description</ion-col>
+    <ion-col class="ion-col-header" size="2">Benefits</ion-col>
+    <ion-col class="ion-col-header" size="2">Impact Of Benefits</ion-col>
+    <ion-col class="ion-col-header" size="1.5">Status</ion-col>
+  </ion-row>
+
+  <ion-row *ngFor="let emp of fetchdata; index as i">
+    <ion-col class="ion-col-item" size="1.5"
+      ><a style="cursor: pointer" (click)="displayData(emp)">{{
+        emp.crNo
+      }}</a></ion-col
+    >
+    <ion-col class="ion-col-item" size="1.5">{{ emp.projectName }}</ion-col>
+    <ion-col class="ion-col-item" size="1.5">{{
+      emp.createdAt | date
+    }}</ion-col>
+    <ion-col class="ion-col-item" size="2" style="text-transform: capitalize">{{
+      emp.changeDesc
+    }}</ion-col>
+    <ion-col class="ion-col-item" size="2">{{ emp.benefit }}</ion-col>
+    <ion-col class="ion-col-item" size="2">{{ emp.userBenefited }}</ion-col>
+    <ion-col
+      class="ion-col-item"
+      size="1.5"
+      [ngStyle]="getStatusColor(emp.status)"
+      >{{ emp.status }}</ion-col
+    >
+  </ion-row>
+</ion-grid>
+
+<!-- code to show single Record Data -->
+
+<ion-modal class="ion-modal" [isOpen]="isDisplayOpen" backdropDismiss="false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Update Change Management Form </ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="displayClose()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-row class="ion-text-center">
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Project Name</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="projectName"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Client Location</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.clientLocation"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Requested By</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.requestedBy"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Department</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.department"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Contact No</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.contact"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeMd="3" sizeSm="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked" style="font-weight: 800"
+              >Request Type</ion-label
+            >
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.requestType"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeMd="3" sizeSm="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked" style="font-weight: 800"
+              >Priority</ion-label
+            >
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.priority"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Pain Area</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.painArea"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Benefit</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.benefit"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <!-- attchment to be here -->
+
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">User/Department Benefited</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.userBenefited"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeMd="3" sizeSm="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked" style="font-weight: 800"
+              >Category</ion-label
+            >
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.category"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeMd="3" sizeSm="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked" style="font-weight: 800"
+              >Resolution Type</ion-label
+            >
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.resolutionType"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeMd="3" sizeSm="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked" style="font-weight: 800"
+              >Resolution
+            </ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.resolution"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeMd="3" sizeSm="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked" style="font-weight: 800"
+              >Recommendation
+            </ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.recommendation"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked"
+              >Time For : Analysis/Programming</ion-label
+            >
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.analysis"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Testing</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.testing"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col sizeLg="3" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Total</ion-label>
+            <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.total"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col sizeLg="6" sizeMd="4" sizeSm="6">
+          <ion-item lines="none">
+            <ion-label position="stacked">Change Description</ion-label>
+            <ion-textarea
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.changeDesc"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- change form -->
+
+      <ion-col sizeLg="12" sizeMd="12" sizeSm="12">
+        <ion-col sizeLg="12" sizeMd="12" sizeSm="12" class="ion-text-center">
+          <h1 position="stacked">Approval Form</h1>
+        </ion-col>
+        <ion-row class="ion-text-center">
+          <ion-col sizeLg="4" sizeMd="4" sizeSm="6">
+            <ion-item lines="none">
+              <ion-label position="stacked">Created By</ion-label>
+              <ion-input
+                class="borderArea"
+                [readonly]="true"
+                [ngModel]="singleCmfData.createdBy"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col sizeLg="4" sizeMd="4" sizeSm="6">
+            <ion-item lines="none">
+              <ion-label position="stacked">Created At</ion-label>
+              <ion-input
+                class="borderArea"
+                [readonly]="true"
+                [ngModel]="singleCmfData.createdAt | date"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <!-- Hierarchy forms-->
+        <form
+          [formGroup]="changeReviewForm"
+          (ngSubmit)="onChangeReviewSubmit()"
+          *ngIf="userId == singleCmfData.createdId"
+        >
+          <ion-row class="ion-text-center">
+            <ion-col sizeLg="3  " sizeMd="4" sizeSm="6">
+              <ion-item lines="none">
+                <ion-label position="stacked" style="font-weight: 800"
+                  >Forward For Review
+                  <span style="color: red"> *</span></ion-label
+                >
+                <select formControlName="frwForReview" class="borderArea">
+                  <option value="">Select</option>
+                  <option value="157 Amit Borshe">Amit Borshe</option>
+                  <option value="170 Divyansh Dhakrey">Divyansh Dhakrey</option>
+                  <option value="144 Sunpreet Singh Arora">
+                    Sunpreet Singh Arora
+                  </option>
+                </select>
+              </ion-item>
+            </ion-col>
+
+
+            <ion-col sizeMd="3" sizeSm="4" sizeSm="6">
+              <ion-item lines="none">
+                <ion-label position="stacked" style="font-weight: 800"
+                  >Status <span style="color: red"> *</span></ion-label
+                >
+                <select formControlName="status" class="borderArea">
+                  <option value="">Select</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </ion-item>
+            </ion-col>
+
+            <ion-col
+              sizeLg="2"
+              sizeMd="4"
+              sizeSm="6"
+              style="margin-top: 3%; margin-right: 5%"
+            >
+              <ion-button
+                style="float: right"
+                color="primary"
+                [disabled]="changeReviewForm.invalid"
+                type="submit"
+                >Submit</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </form>
+
+        <form
+          [formGroup]="changeForwardForm"
+          (ngSubmit)="onChangeForwardSubmit()"
+          *ngIf="userId == singleCmfData.reviewedId"
+        >
+          <ion-row class="ion-text-center">
+            <ion-col sizeLg="4" sizeMd="4" sizeSm="6">
+              <ion-item lines="none">
+                <ion-label position="stacked"
+                  >Forward For Approval<span style="color: red">
+                    *</span
+                  ></ion-label
+                >
+                <ion-input
+                  class="borderArea"
+                  id="fieldDisable"
+                  [readOnly]="true"
+                  (ionChange)="onInputChange($event)"
+                  value="Ashish Sharma"
+                ></ion-input>
+              </ion-item>
+              <div
+                *ngIf="
+                  changeForwardForm.get('fwdForApproval').invalid &&
+                  changeForwardForm.get('fwdForApproval').touched
+                "
+                style="color: red"
+              >
+                <span style="color: red; margin-left: 5%">
+                  ForwardTo is Required Field.</span
+                >
+              </div>
+            </ion-col>
+
+            <ion-col sizeMd="4" sizeSm="4" sizeSm="6">
+              <ion-item lines="none">
+                <ion-label position="stacked" style="font-weight: 800"
+                  >Status <span style="color: red"> *</span></ion-label
+                >
+                <select formControlName="status" class="borderArea">
+                  <option value="">Select</option>
+
+                  <option value="Reviewed">Reviewed</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </ion-item>
+            </ion-col>
+
+            <ion-col
+              sizeLg="2"
+              sizeMd="4"
+              sizeSm="6"
+              style="margin-top: 3%; margin-right: 5%"
+            >
+              <ion-button
+                style="float: right"
+                color="primary"
+                [disabled]="changeForwardForm.invalid"
+                type="submit"
+                >Submit</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </form>
+
+        <ion-row class="ion-text-center"  *ngIf="userId == singleCmfData.approvedId">
+          <ion-col sizeLg="4" sizeMd="4" sizeSm="6">
+            <ion-item lines="none">
+              <ion-label position="stacked"
+                >Forward Date for Review<span style="color: red"> *</span></ion-label
+              >
+              
+              <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.reviewedDate"
+            ></ion-input>
+            </ion-item>
+           
+          </ion-col>
+
+          <ion-col sizeLg="4" sizeMd="4" sizeSm="6">
+            <ion-item lines="none">
+              <ion-label position="stacked"
+                >Reviewed By<span style="color: red"> *</span></ion-label
+              >
+              
+              <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.reviewedBy"
+            ></ion-input>
+            </ion-item>
+           
+          </ion-col>
+          
+          <ion-col sizeLg="4" sizeMd="4" sizeSm="6">
+            <ion-item lines="none">
+              <ion-label position="stacked"
+                >Forward Date for Approval<span style="color: red"> *</span></ion-label
+              >
+             
+              <ion-input
+              class="borderArea"
+              [readonly]="true"
+              [ngModel]="singleCmfData.approvedDate"
+            ></ion-input>
+            </ion-item>
+           
+          </ion-col>
+         
+        </ion-row>
+
+        <form
+          [formGroup]="changeForm"
+          (ngSubmit)="onChangeSubmit()"
+          *ngIf="userId == singleCmfData.approvedId"
+        >
+        <ion-row>
+          <ion-col sizeMd="4" sizeSm="4" sizeSm="6">
+            <ion-item lines="none">
+              <ion-label position="stacked" style="font-weight: 800"
+                >Status <span style="color: red"> *</span></ion-label
+              >
+              <select formControlName="status" class="borderArea">
+                <option value="">Select</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Hold">Hold</option>
+              </select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col
+            sizeLg="2"
+            sizeMd="4"
+            sizeSm="6"
+            style="margin-top: 3%; margin-right: 5%"
+          >
+            <ion-button
+              style="float: right"
+              color="primary"
+              [disabled]="changeForm.invalid"
+              type="submit"
+              >Submit</ion-button
+            >
+          </ion-col>
+        </ion-row>
+        </form>
+        <!-- 3 forms-->
+      </ion-col>
+
+      <!-- change form END-->
+    </ion-content>
+  </ng-template>
+</ion-modal>

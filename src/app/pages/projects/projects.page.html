@@ -1,0 +1,98 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Projects</ion-title>
+    <ion-buttons slot="end" class="hidden-sm-down">
+      <ion-button [routerLink]="['/project-details/null']" color="primary" style="font-weight: 300;width: 100px;">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="tertiary">
+    <ion-segment [(ngModel)]="segment" style="margin: 0;" (ionChange)="statusChanged($event)">
+      <ion-segment-button value="Ongoing">
+        <ion-text>
+          Ongoing
+        </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="Upcoming">
+        <ion-text>
+          Upcoming
+        </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="Onhold">
+        <ion-text>
+          On Hold
+        </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="Completed">
+        <ion-text>
+          Completed
+        </ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="Suspended">
+        <ion-text>
+          Suspended
+        </ion-text>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar style="padding-top: 10px;">
+    <ion-searchbar placeholder="Filter by project name" (ionChange)="searchProject($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Desktop View -->
+  <ion-grid class="ion-margin hidden-sm-down">    
+    <ion-row style="
+    position: sticky;
+    top: 0px;
+    z-index: 999999999;
+    background-color: var(--ion-color-light);
+    color: var(--ion-color-dark);
+    margin: 0px;
+  ">
+      <ion-col size="3">Project Name</ion-col>
+      <ion-col size="2">Client Name</ion-col>
+      <ion-col size="2">Project Stage</ion-col>
+      <ion-col size="2">Project Type</ion-col>
+      <ion-col size="2">Start Date</ion-col>
+      <ion-col size="1"></ion-col>
+    </ion-row>
+    <ion-row *ngIf="allProjects.length == 0">
+          <div id="container">
+            <img width="100px" src="assets/loader.gif" alt="">
+          </div>
+    </ion-row>
+    <ion-row *ngFor="let project of allProjects; index as i" (click)="openProject(project)" [ngClass]="(i % 2 == 0) ? 'odd' : 'even'">
+      <ion-col size="3">{{project.projectName}}</ion-col>
+      <ion-col size="2">{{project.clientName}}</ion-col>
+      <ion-col size="2">{{project.projectStage}}</ion-col>
+      <ion-col size="2">{{project.projectType}}</ion-col>
+      <ion-col size="2">{{project.startDate | date:'dd MMM, yyyy'}}</ion-col>
+      <ion-col style="padding: 0px;text-align: center;" size="1">
+        <ion-button style="text-align: center;" size="small" fill="clear"
+          color="primary">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- <ion-infinite-scroll>
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+</ion-content>
+<!-- <ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="showModal()" fill="outline" color="dark" expand="block" style="font-weight: 300;width: 80px;">
+        Import
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer> -->
+

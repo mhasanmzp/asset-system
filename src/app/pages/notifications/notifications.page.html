@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Notifications</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="modalCtrl.dismiss()">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-card *ngFor="let notification of notification; index as i" [ngClass]="(i % 2 == 0) ? 'odd' : 'even'"
+    style="background: var(--ion-color-light); border-radius: 5px;margin: 5px;width: 100%;" (click)="assignTask(item, user)">
+    <ion-item style="width: 100%;cursor: pointer;">
+      <ion-note style="font-weight: 300;font-size: 12px;text-align: justify;">
+        {{notification.notification}}
+      </ion-note>
+      <ion-note slot="end" style="font-weight: 200;font-size: 10px;text-align: right;">
+        {{notification.date}}
+      </ion-note>
+    </ion-item>
+    </ion-card>
+  </ion-row>
+    <!-- <ion-row *ngFor="let notification of notification; index as i" [ngClass]="(i % 2 == 0) ? 'odd' : 'even'"
+      style="background: var(--ion-color-light); border-radius: 5px;margin: 5px;" (click)="assignTask(item, user)">
+      <ion-item style="width: 100%;cursor: pointer;">
+        <ion-note style="font-weight: 300;font-size: 12px;text-align: justify;">
+          {{notification.notification}}
+        </ion-note>
+        <ion-note slot="end" style="font-weight: 200;font-size: 10px;text-align: right;">
+          {{notification.date}}
+        </ion-note>
+      </ion-item>
+    </ion-row> -->
+</ion-content>

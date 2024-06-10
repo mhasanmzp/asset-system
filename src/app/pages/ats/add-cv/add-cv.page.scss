@@ -1,0 +1,40 @@
+.input{
+  border: 0.5px solid var(--ion-color-dark) !important;
+  background: transparent;
+  border-radius: 5px;
+  color: var(--ion-color-dark) !important;
+  font-weight: 400;
+  font-size: 14px;
+  height:30px;
+  display: flex;
+  align-items: center;
+}
+
+ion-label{
+  font-weight: 300;
+  font-size: 13px;
+}
+
+.alert{
+  font-size: 12px;
+  color: rgb(223, 5, 5);
+  margin-top: 2px;
+}
+.alertPara{
+  text-align: center;
+}
+.select{
+font-weight: 400;
+font-size: 15px;
+color: var(--ion-color-dark) !important;
+margin:0;
+}
+.radio{
+border:1px solid white;
+border-radius:50%;
+height:20px;
+width:20px;
+}
+.radio-checked{
+background-color: rgb(8, 161, 221);
+}

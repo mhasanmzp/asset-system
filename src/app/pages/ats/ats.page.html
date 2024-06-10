@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>ATS/CV Pool</ion-title>
+    <ion-buttons class="hidden-sm-down" slot="end">
+      <ion-button color="dark" style="font-weight: 300;width: 100px;font-size: 14px;" routerLink="/add-cv">
+        <ion-icon name="add-outline"></ion-icon>Add CV
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="gray">
+    <ion-row>
+      <ion-col size="3" style="background-color: transparent;padding: 0px;">
+        <ion-item lines="none">
+          <ion-input type="text" [(ngModel)]="searchData" style="color: var(--ion-color-dark);font-weight: 300;" placeholder="Enter Position/Location"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="0.5"></ion-col>
+      <ion-col size="2.5" style="background-color: transparent;padding: 0px;">
+        <ion-item lines="none">
+          <ion-input type="number" min="0" [(ngModel)]="sCtc" style="color: var(--ion-color-dark);font-weight: 300;" placeholder="Enter Starting CTC"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="0.5" style="text-align: center;line-height: 34px;">
+        <div> to </div>
+      </ion-col>
+      <ion-col size="2.5" style="background-color: transparent;padding: 0px;">
+        <ion-item lines="none">
+          <ion-input type="number" min="0" [(ngModel)]="eCtc" style="color: var(--ion-color-dark);font-weight: 300;" placeholder="Enter Ending CTC"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="0.5"></ion-col>
+      <ion-col size="1">
+        <ion-button color="danger" fill="outline" style="height: 34px;width: 100%;" (click)="searchCV()">
+          Search
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row style="color: var(--ion-color-dark);margin-top: 10px;">
+      <ion-col size="0.5">Id</ion-col>
+      <ion-col size="1.5">
+        <ion-label>Name</ion-label><br>
+        <small>Job Title</small>
+      </ion-col>
+      <ion-col size="2">
+        <ion-label>Email</ion-label><br>
+        <small>Contact No.</small>
+      </ion-col>
+      <ion-col size="1.3">Work Auth.</ion-col>
+      <ion-col size="1.5">
+        <ion-label>City</ion-label><br>
+        <small>State</small>
+      </ion-col>
+      <ion-col size="1.2">Source</ion-col>
+      <ion-col size="1.3">Status</ion-col>
+      <ion-col size="1.2">
+        <ion-label>Created By</ion-label><br>
+        <small>Created On</small>
+      </ion-col>
+      <ion-col size="1.5"></ion-col>
+    </ion-row>
+    <ion-row *ngIf="allCVresponse == []" style="display: flex;justify-content:center;">
+      <h6>No CV Found!</h6>
+    </ion-row>
+    <ion-row *ngFor="let data of allCVresponse; i as index" [ngClass]="(i % 2 == 0) ? 'odd' : 'even'">
+      <ion-col size="0.5">{{data.id}}</ion-col>
+      <ion-col size="1.5">
+        <ion-label>{{data.name}}<br>
+        <small>{{data.jobTitle}}</small>&nbsp;&nbsp;<ion-icon slot="end" name="document-attach-outline" style="font-size: 14px;" (click)="displayCV(data)"></ion-icon></ion-label>
+      </ion-col>
+      <ion-col size="2">
+        <ion-label>{{data.email}}</ion-label><br>
+        <small>{{data.phone}}</small>
+      </ion-col>
+      <ion-col size="1.3">{{data.workAuth}}</ion-col>
+      <ion-col size="1.5">
+        <ion-label>{{data.city}}</ion-label><br>
+        <small>{{data.state}}</small>
+      </ion-col>
+      <ion-col size="1.2">{{data.source}}</ion-col>
+      <ion-col size="1.3">Status</ion-col>
+      <ion-col size="1.2">
+        <ion-label>Ritika Singh</ion-label><br>
+        <small>{{data.createdAt | date}}</small>
+      </ion-col>
+      <ion-col size="1.5" style="display: flex;justify-content: flex-end;">
+        <ion-icon name="eye-outline" (click)="viewCV(data)"></ion-icon>
+        <ion-icon name="create-outline" (click)="updateCV(data)"></ion-icon>
+        <ion-icon name="trash-outline" (click)="deleteCV(data.id)"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

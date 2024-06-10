@@ -1,0 +1,200 @@
+<ion-row style="margin-top: 10px; margin-bottom: 2rem;justify-content: center;" >
+  <ion-col sizeLg="9" size="12">
+    <div
+      echarts
+      [options]="chartOptionUser"
+      style="height: 300px; margin-top: 40px; width:auto"
+    ></div>
+  </ion-col>
+</ion-row>
+<ion-row *ngIf=chartLoaded>
+  <div style="text-align: center; margin: auto">
+    <p style="top: 30%; left: 40%; position: absolute">No Chart Found!</p>
+  </div>
+</ion-row>
+<div style="padding-bottom: 0px; overflow: auto; padding-top: 0;max-height: 600px;" [style.height]="windowHeight1">
+  <table class="tg">
+    <thead>
+      <tr style="
+        background-color: var(--ion-color-light);
+        position: sticky;
+        top: 0px;
+        z-index: 9999999999999;
+        border-bottom: 20px;
+      ">
+        <th class="tg-hpky" style="width: 70px">Id</th>
+        <th class="tg-hpky" style="width: 250px">
+          Project Name
+          <ion-icon style="font-size: 14px; cursor: pointer" name="filter-outline" (click)="filterChanged('project')">
+          </ion-icon>
+        </th>
+        <th class="tg-hpky" style="width: 200px">
+          Epic
+          <ion-icon style="font-size: 14px; cursor: pointer" name="filter-outline" (click)="filterChanged('epic')">
+          </ion-icon>
+        </th>
+        <th class="tg-hpky" style="width: 200px">
+          Story
+          <ion-icon style="font-size: 14px; cursor: pointer" name="filter-outline" (click)="filterChanged('story')">
+          </ion-icon>
+        </th>
+        <th class="tg-hpky" style="width: 300px">Task</th>
+        <th class="tg-hpky" style="width: 100px">
+          Assignee
+          <ion-icon style="font-size: 14px; cursor: pointer" name="filter-outline" (click)="filterChanged('assignee')">
+          </ion-icon>
+        </th>
+        <th class="tg-hpky" style="width: 70px">Estimated Hours (Total:{{totalEstimatedHours}})</th>
+        <th class="tg-hpky" style="width: 70px">Actual Hours (Total:{{totalActualHours}})</th>
+        <th class="tg-hpky" style="width: 120px">Estimated Cost (Total:  {{estimatedCostTotal}} $)</th>
+        <th class="tg-hpky" style="width: 120px">Actual Cost  (Total:  {{actualCostTotal}} $)</th>
+        <th class="tg-hpky" style="width: 100px">
+          Status
+          <ion-icon style="font-size: 14px; cursor: pointer" name="filter-outline" (click)="filterChanged('status')">
+          </ion-icon>
+        </th>
+        <th class="tg-hpky" style="width: 100px">Priority</th>
+        <th class="tg-hpky" style="width: 100px">
+          Type
+          <ion-icon style="font-size: 14px; cursor: pointer" name="filter-outline" (click)="filterChanged('type')">
+          </ion-icon>
+        </th>
+        <th class="tg-hpky" style="width: 100px">Planned Start Date</th>
+        <th class="tg-hpky" style="width: 100px">Planned End Date</th>
+        <th class="tg-hpky" style="width: 100px">Actual Start Date</th>
+        <th class="tg-hpky" style="width: 100px">Actual End Date</th>
+        <th class="tg-hpky" style="width: 100px">Completion Date</th>
+        <th class="tg-hpky" style="width: 100px">
+          Tester
+          <ion-icon style="font-size: 14px; cursor: pointer" name="filter-outline" (click)="filterChanged('tester')">
+          </ion-icon>
+        </th>
+        <th class="tg-hpky" style="width: 70px">Tester EHours</th>
+        <th class="tg-hpky" style="width: 70px">Tester AHours</th>
+        <th class="tg-hpky" style="width: 100px">TestingS. Date</th>
+        <th class="tg-hpky" style="width: 100px">TestingE. Date</th>
+        <th class="tg-hpky" style="width: 70px">Total Estimated Hours</th>
+        <th class="tg-hpky" style="width: 70px">Total Actual Hours</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let epic of projectData; index as i">
+        <td style="width: 70px" class="tg-0pky" (click)="viewTaskDetails(epic, null)"
+          [style.background]="getTeamBoardColumns(epic.storyTask_columnId) === 'Done'? '#2ecc71': getTeamBoardColumns(epic.storyTask_columnId) === 'In Progress'? '#e67e22': getTeamBoardColumns(epic.storyTask_columnId) === 'Unit Testing'? '#3498db': getTeamBoardColumns(epic.storyTask_columnId) === 'Hold'? '#B1907F':''">
+          {{epic.storyTask_projectTaskNumber}}
+        </td>
+        <td style="width: 70px" class="tg-0pky" (click)="viewTaskDetails(epic, null)">
+          {{epic.projectName}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 200px">
+          {{epic.epic_name}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 200px">
+          {{epic.story_name}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 300px">
+          {{epic.storyTask_taskName}}
+        </td>
+        <td style="width: 100px" class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="font-weight: bold">
+          {{getListAssigneeDetails(epic, 'storyTask_assignee', 'firstName')}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 70px">
+          {{epic.storyTask_estimatedHours}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 70px">
+          {{epic.storyTask_actualHours}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 120px">
+          {{ epic.storyTask_estimatedCost}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 120px">
+          {{epic.storyTask_actualCost}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{getTeamBoardColumns(epic.storyTask_columnId)}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)"
+          style="text-align: center; padding: 0px !important; width: 100px">
+          <ion-chip *ngIf="epic.storyTask_priority === 2">
+            <ion-icon name="radio-button-on-outline" color="danger"></ion-icon>
+            <ion-label>High</ion-label>
+          </ion-chip>
+          <ion-chip *ngIf="epic.storyTask_priority === 1">
+            <ion-icon name="radio-button-on-outline" color="warning"></ion-icon>
+            <ion-label>Medium</ion-label>
+          </ion-chip>
+          <ion-chip *ngIf="epic.storyTask_priority === 0">
+            <ion-icon name="radio-button-on-outline" color="secondary"></ion-icon>
+            <ion-label>Low</ion-label>
+          </ion-chip>
+          <ion-chip *ngIf="epic.storyTask_priority === 3">
+            <ion-icon name="radio-button-on-outline" color="tertiary"></ion-icon>
+            <ion-label>Hold</ion-label>
+          </ion-chip>
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_taskType == 0 ? 'Feature' : 'Bug'}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_startDate | date:'dd-MM-yyyy'}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_dueDate | date:'dd-MM-yyyy'}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_actualStartDate | date:'dd-MM-yyyy'}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_actualDueDate | date:'dd-MM-yyyy'}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_completionDate | date:'dd-MM-yyyy'}}
+        </td>
+        <td style="width: 100px" class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="font-weight: bold">
+          {{getListAssigneeDetails(epic, 'tester', 'firstName')}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 70px">
+          {{epic.storyTask_testingEstimatedHours}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 70px">
+          {{epic.storyTask_testingActualHours}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_testingStartDate | date:'dd-MM-yyyy'}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 100px">
+          {{epic.storyTask_testingDueDate | date:'dd-MM-yyyy'}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 70px">
+          {{epic?.storyTask_estimatedHours + epic?.storyTask_testingEstimatedHours}}
+        </td>
+        <td class="tg-0pky" (click)="viewTaskDetails(epic, null)" style="width: 70px">
+          {{epic?.storyTask_actualHours + epic?.storyTask_testingActualHours}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ion-footer >
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="downloadExcel()">
+        <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+        Download Excel
+      </ion-button>
+      <!-- <ion-button
+        color="danger"
+        fill="outline"
+        (click)="resetList()"
+        style="
+          margin-left: 20px;
+          height: 25px;
+          display: flex;
+          align-items: center;
+        "
+      >
+        Reset
+      </ion-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Delivery</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <!-- Sidebar for Category Selection -->
+      <ion-col size="2" class="category-sidebar">
+        <ion-list>
+          <ion-list-header>
+            <ion-label>Categories</ion-label>
+          </ion-list-header>
+          <ion-radio-group [(ngModel)]="selectedCategory">
+            <ion-item *ngFor="let category of categories" (click)="selectCategory(category)" class="category-item">
+              <ion-label>{{ category.name }}</ion-label>
+              <ion-radio slot="start" [value]="category"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+      </ion-col>
+      <!-- Main Content Area -->
+      <ion-col size="7">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Products</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilters()" placeholder="Search Products"></ion-searchbar>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="3"><strong>Serial Number</strong></ion-col>
+                <ion-col size="3"><strong>Product Name</strong></ion-col>
+                <ion-col size="3"><strong>Status</strong></ion-col>
+                <ion-col size="3"><strong>Select</strong></ion-col>
+              </ion-row>
+              <ion-row *ngFor="let product of filteredProductList; trackBy: trackByProductId" style="border-bottom: 1px solid #ccc;">
+                <ion-col size="3">{{ product.SerialNumber }}</ion-col>
+                <ion-col size="3">{{ product.ProductName }}</ion-col>
+                <ion-col size="3">{{ product.Status }}</ion-col>
+                <ion-col size="3">
+                  <ion-checkbox [(ngModel)]="product.selected"></ion-checkbox>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <!-- Delivery Form -->
+      <ion-col size="3">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Delivery Details</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <form (ngSubmit)="deliverProduct()">
+              <ion-item>
+                <ion-select [(ngModel)]="selectedSubstation" name="substation" placeholder="Select Substation">
+                  <ion-select-option *ngFor="let substation of substationData" [value]="substation">{{ substation.siteName }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-button expand="block" type="submit">Deliver</ion-button>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

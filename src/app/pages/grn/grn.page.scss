@@ -1,0 +1,70 @@
+/* component.scss */
+
+ion-content {
+  --background: #f8f9fa;
+}
+
+.table-header {
+  background-color: #188afc;
+  color: #ffffff;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.data-row {
+  background-color: #ffffff;
+  color: #373440;
+  border-bottom: 1px solid #dee2e6;
+  transition: background-color 0.3s;
+}
+
+.data-row:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.data-row:hover {
+  background-color: #e9ecef;
+}
+
+ion-col {
+  align-items: center;
+  padding: 10px 5px;
+}
+
+ion-item {
+  margin: 10px 0;
+}
+
+.save-button {
+  background-color: #28a745;
+  color: #ffffff;
+}
+.custom-input {
+  --background: #f9f9f9;
+  --border-radius: 10px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --min-height: 50px;
+  --box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --min-height: 50px;
+  --background: #f9f9f9;
+  --border-radius: 10px;
+  --box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-label {
+  --color: #000;
+  --padding-start: 0;
+  --padding-end: 0;
+  font-weight: 500;
+}
+.myInputs {
+  border: 1px solid black !important;
+  border-radius: 10px;
+}
+
