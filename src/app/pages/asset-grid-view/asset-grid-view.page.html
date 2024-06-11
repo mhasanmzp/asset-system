@@ -37,16 +37,14 @@
                   <ion-col size="2"><strong>Product Name</strong></ion-col>
                   <ion-col size="2"><strong>Warranty Start Date</strong></ion-col>
                   <ion-col size="2"><strong>Warranty End Date</strong></ion-col>
-                  <!-- <ion-col size="1.7" class="column-header"><strong>Delivered Date</strong></ion-col> -->
                   <ion-col size="2"><strong>Site Name</strong></ion-col>
                   <ion-col size="2"><strong>Status</strong></ion-col>
                 </ion-row>
                 <ion-row *ngFor="let data of deliveredData">
                   <ion-col size="2">{{ data.serialNumber }}</ion-col>
-                  <ion-col size="2">{{ data.productName }}</ion-col>>
+                  <ion-col size="2">{{ data.productName }}</ion-col>
                   <ion-col size="2">{{ data.warrantyStartDate }}</ion-col>
                   <ion-col size="2">{{ data.warrantyEndDate }}</ion-col>
-                  <!-- <ion-col size="auto">{{ data.deliveredDate }}</ion-col> -->
                   <ion-col size="2">{{ data.siteName }}</ion-col>
                   <ion-col size="2">{{ data.status }}</ion-col>
                 </ion-row>
@@ -56,5 +54,6 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    
   </ion-grid>
 </ion-content>

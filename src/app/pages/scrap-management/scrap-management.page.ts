@@ -26,7 +26,7 @@ export class ScrapManagementPage implements OnInit {
   ngOnInit() {
     this.loadSubstations();
     this.loadCategories();
-    this.loadProducts();
+    this.loadScrapProducts();
   }
 
   loadSubstations() {
@@ -55,16 +55,40 @@ export class ScrapManagementPage implements OnInit {
     });
   }
 
-  loadProducts() {
-    this.assetService.getProducts().subscribe(
-      data => {
-        this.products = data;
-        this.filterAssets();
-      },
-      error => {
-        console.error('Error loading products', error);
-      }
-    );
+  // loadScrapProducts() {
+
+  //   const formData = {
+  //     permissionName: 'Tasks',
+  //     employeeIdMiddleware: 342,
+  //     employeeId: 342,
+  //   };
+
+
+  //   this.dataService.getProducts(formData).then(
+  //     data => {
+  //       this.products = data;
+  //       this.filterAssets();
+  //     },
+  //     error => {
+  //       console.error('Error loading products', error);
+  //     }
+  //   );
+  // }
+
+  loadScrapProducts() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    this.dataService.getProducts(formData).then((res: any) => {
+      this.products = res;
+      this.filterAssets();
+      console.log("Response ::::::::::::::", res);
+    }).catch(error => {
+      console.error('Error fetching delivered data', error);
+    });
   }
 
   filterAssets() {
@@ -88,7 +112,7 @@ export class ScrapManagementPage implements OnInit {
     this.assetService.updateProduct(product).subscribe(
       () => {
         alert('Product marked as Scrap.');
-        this.loadProducts(); // Refresh the product list
+        this.loadScrapProducts(); // Refresh the product list
       },
       error => {
         console.error('Error marking product as Scrap', error);
@@ -102,7 +126,7 @@ export class ScrapManagementPage implements OnInit {
     this.assetService.updateProduct(product).subscribe(
       () => {
         alert('Product unmarked as Scrap.');
-        this.loadProducts(); // Refresh the product list
+        this.loadScrapProducts(); // Refresh the product list
       },
       error => {
         console.error('Error unmarking product as Scrap', error);

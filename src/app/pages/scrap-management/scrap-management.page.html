@@ -48,13 +48,13 @@
                 <ion-col size="3"><strong>Status</strong></ion-col>
                 <ion-col size="3"><strong>Actions</strong></ion-col>
               </ion-row>
-              <ion-row *ngFor="let product of filteredProductsList">
-                <ion-col size="3">{{ product.serialNumber }}</ion-col>
-                <ion-col size="3">{{ product.name }}</ion-col>
-                <ion-col size="3">{{ product.status }}</ion-col>
+              <ion-row *ngFor="let products of filteredProductsList">
+                <ion-col size="3">{{ products.serialNumber }}</ion-col>
+                <ion-col size="3">{{ products.productName }}</ion-col>
+                <ion-col size="3">{{ products.status }}</ion-col>
                 <ion-col size="3">
-                  <ion-button *ngIf="product.status !== 'Scrap'" (click)="markAsScrap(product)" color="danger">Mark as Scrap</ion-button>
-                  <ion-button *ngIf="product.status === 'Scrap'" (click)="unmarkAsScrap(product)" color="secondary">Unmark as Scrap</ion-button>
+                  <ion-button *ngIf="products.status !== 'Scrap'" (click)="markAsScrap(products)" color="danger">Mark as Scrap</ion-button>
+                  <ion-button *ngIf="products.status === 'Scrap'" (click)="unmarkAsScrap(products)" color="secondary">Unmark as Scrap</ion-button>
                 </ion-col>
               </ion-row>
             </ion-grid>

@@ -15,9 +15,8 @@
     <!-- Search bar -->
     <ion-row>
       <ion-col size="12">
-            <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilter()" placeholder="Search Products"></ion-searchbar >
-
-        <!-- <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterPurchaseData()" placeholder="Search by Model or Serial Number"></ion-searchbar> -->
+        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilter()"
+          placeholder="Search Products"></ion-searchbar>
       </ion-col>
     </ion-row>
     <!-- Table headers -->
@@ -36,11 +35,12 @@
     </ion-row>
     <!-- Data rows -->
     <ion-row *ngFor="let item of filteredData; let i = index"
-      [ngClass]="{'data-row-even': i % 2 === 0, 'data-row-odd': i % 2 !== 0}"
-      style="border-bottom: 1px solid #ccc;"
-      (click)="openDetailsModal(item.purchaseId)">
+      [ngClass]="{'data-row-even': i % 2 === 0, 'data-row-odd': i % 2 !== 0}" style="border-bottom: 1px solid #ccc;">
       <!-- Clickable Purchase ID -->
-      <ion-col style="width: 170px; margin-left: 30px;">{{ item.purchaseId }}</ion-col>
+      <ion-col style="width: 170px; margin-left: 30px; cursor: pointer; color: blue;"
+        (click)="openDetailsModal(item.purchaseId)">
+        {{ item.purchaseId }}
+      </ion-col>
       <ion-col style="width: 170px; margin-left: 30px;">{{ item.categoryName }}</ion-col>
       <ion-col style="width: 300px; margin-left: 30px;">{{ item.productName }}</ion-col>
       <ion-col style="width: 120px; margin-left: 50px;">{{ item.totalItems }}</ion-col>
@@ -115,8 +115,7 @@
                 <ion-col size="2.5">
                   <ion-item>
                     <ion-label position="stacked">Category</ion-label>
-                    <ion-select style="border: 1px solid black; border-radius: 10px;" 
-                    [(ngModel)]="item.categoryName"
+                    <ion-select style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.categoryName"
                       name="categoryName{{i}}" placeholder="Select Category" required>
                       <ion-select-option *ngFor="let category of data2" [value]="category.id">{{ category.name
                         }}</ion-select-option>
@@ -186,29 +185,29 @@
                         <ion-item>
                           <ion-label position="stacked">Serial Number: {{j + 1}}</ion-label>
                           <ion-input style="border: 1px solid black; border-radius: 10px;"
-                            [(ngModel)]="item.serialNumbers[j]" name="serialNumber{{i}}{{j}}" class="small-input" debounce="10000"
-                            required></ion-input>
+                            [(ngModel)]="item.serialNumbers[j]" name="serialNumber{{i}}{{j}}" class="small-input"
+                            debounce="10000" required></ion-input>
                         </ion-item>
                       </ion-col>
                     </ng-container>
                   </ion-row>
                 </ion-col>
-
               </ion-row>
             </ng-container>
             <!-- Save Button -->
             <ion-row>
               <ion-col>
                 <ion-button expand="ion-button" type="submit" class="save-button">Save</ion-button>
-              </ion-col>.5
+              </ion-col>
             </ion-row>
           </ion-grid>
         </form>
       </ion-content>
     </ng-template>
   </ion-modal>
+
   <!-- Detail Modal -->
-  <ion-modal [isOpen]="isDetailModalOpen" (didDismiss)="closeDetailsModal()">
+  <ion-modal [isOpen]="isDetailModalOpen" (didDismiss)="closeDetailsModal()" class="large-modal">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -219,35 +218,74 @@
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
+        <ion-toolbar>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="3">
+                <ion-label><strong>Store:</strong> {{ selectedPurchase.storeName }}</ion-label>
+              </ion-col>
+              <ion-col size="3">
+                <ion-label><strong>OEM:</strong> {{ selectedPurchase.oemName }}</ion-label>
+              </ion-col>
+              <ion-col size="3">
+                <ion-label><strong>Challan No.:</strong> {{ selectedPurchase.challanNo }}</ion-label>
+              </ion-col>
+              <ion-col size="3">
+                <ion-label><strong>Challan Date:</strong> {{ selectedPurchase.challanDate | date:'yyyy-MM-dd' }}</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-toolbar>
       </ion-header>
       <ion-content>
-        <!-- Modal content goes here -->
-        <!-- Display details fetched from the API -->
         <ion-grid>
-          <ion-row>
-            <ion-col>
-              <ion-label>Store: {{ selectedPurchase.store }}</ion-label>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-label>OEM: {{ selectedPurchase.oem }}</ion-label>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-label>Challan No.: {{ selectedPurchase.challanNo }}</ion-label>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-label>Challan Date: {{ selectedPurchase.challanDate }}</ion-label>
-            </ion-col>
-          </ion-row>
-          <!-- Add more rows to display other details -->
+          <!-- Product details -->
+          <ng-container *ngFor="let item of selectedPurchase.items; let i = index">
+            <ion-row>
+              <ion-col size="12">
+                <ion-label><strong>Product {{ i + 1 }}:</strong></ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="2">
+                <ion-label position="stacked"><strong>Category:</strong></ion-label>
+                <ion-input value="{{ item.categoryName }}" readonly></ion-input>
+              </ion-col>
+              <ion-col size="2">
+                <ion-label position="stacked"><strong>Product Name:</strong></ion-label>
+                <ion-input value="{{ item.productName }}" readonly></ion-input>
+              </ion-col>
+              <ion-col size="2">
+                <ion-label position="stacked"><strong>Warranty Period (Months):</strong></ion-label>
+                <ion-input value="{{ item.warrantyPeriodMonths }}" readonly></ion-input>
+              </ion-col>
+              <ion-col size="2">
+                <ion-label position="stacked"><strong>Store Location:</strong></ion-label>
+                <ion-input value="{{ item.storeLocation }}" readonly></ion-input>
+              </ion-col>
+              <ion-col size="2">
+                <ion-label position="stacked"><strong>Status:</strong></ion-label>
+                <ion-input value="{{ item.status }}" readonly></ion-input>
+              </ion-col>
+              <ng-container *ngFor="let serial of item.serialNumbers; let j = index">
+                <ion-col size="2">
+                  <ion-label position="stacked"><strong>Serial No:</strong></ion-label>
+                  <ion-input value="{{ serial }}" readonly></ion-input>
+                </ion-col>
+              </ng-container>
+            </ion-row>
+          </ng-container>
         </ion-grid>
       </ion-content>
     </ng-template>
   </ion-modal>
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
 </ion-content>

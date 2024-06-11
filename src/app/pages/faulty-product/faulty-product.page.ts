@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-//Please Change the name of functions and fields
+import { ModalController, ToastController } from '@ionic/angular';
+import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 
 @Component({
   selector: 'app-faulty-product',
@@ -9,30 +10,21 @@ import { Component, OnInit } from '@angular/core';
 export class FaultyProductPage implements OnInit {
   selectedSubstation: string = '';
   searchQuery: string = '';
-  substations: string[] = ['Substation 1', 'Substation 2', 'Substation 3'];
-  assets: any[] = [
-    {
-      serialNumber: '123456',
-      productName: 'Transformer',
-      warrantyStartDate: '2021-01-01',
-      warrantyEndDate: '2023-01-01',
-      deliveredDate: '2021-01-15',
-      siteName: 'Site A',
-      status: 'Active',
-      action: ''
-    },
-    {
-      serialNumber: '654321',
-      productName: 'Generator',
-      warrantyStartDate: '2022-05-01',
-      warrantyEndDate: '2024-05-01',
-      deliveredDate: '2022-05-15',
-      siteName: 'Site B',
-      status: 'Inactive',
-      action: ''
-    }
-    // Add more asset objects as needed
-  ];
+  substations: any[] = [];
+  changedAssets: any[] = [];
+  deliveredData: any[] = [];
+  substationData: any[] = [];
+
+  constructor(
+    private modalController: ModalController,
+    private dataService: DataService, // Inject the DataService
+    private toastController: ToastController
+  ) {}
+
+  ngOnInit() {
+    this.loadDeliveredData();
+    this.loadSubstations();
+  }
 
   selectSubstation(event: any) {
     this.selectedSubstation = event.detail.value;
@@ -40,22 +32,99 @@ export class FaultyProductPage implements OnInit {
   }
 
   filteredAssets() {
-    return this.assets.filter(asset => {
-      return (
-        asset.serialNumber.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        asset.productName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        asset.warrantyStartDate.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        asset.warrantyEndDate.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        asset.deliveredDate.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        asset.siteName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        asset.status.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+    return this.deliveredData.filter(asset => {
+      const matchesSearchQuery = this.searchQuery
+        ? asset.productName.toLowerCase().includes(this.searchQuery.toLowerCase())
+        : true;
+
+      const matchesSubstation = this.selectedSubstation
+        ? asset.siteName === this.selectedSubstation
+        : true;
+
+      return matchesSearchQuery && matchesSubstation;
     });
   }
 
-  constructor() { }
-
-  ngOnInit() {
+  async showToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      position: 'top'
+    });
+    await toast.present();
   }
 
+  onActionChange(asset: any) {
+    if (asset.action === 'null') {
+      asset.action = null; // Reset to placeholder
+    } else {
+      this.trackChange(asset);
+    }
+  }
+
+  trackChange(asset: any) {
+    if (!this.changedAssets.includes(asset)) {
+      this.changedAssets.push(asset);
+    }
+  }
+
+ async submitReturn() {
+  try {
+    const filteredAssets = this.changedAssets.filter(asset => asset.action !== null && asset.action !== 'None');
+
+    if (filteredAssets.length === 0) {
+      this.showToast('No data to save.');
+      return;
+    }
+
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    const dataToSend = {
+      ...formData,
+      assetsData: filteredAssets
+    };
+
+    const response = await this.dataService.submitReturn(dataToSend).toPromise();
+    this.showToast('Data saved successfully!');
+    this.changedAssets = [];
+  } catch (error) {
+    console.error('Error saving data', error);
+    this.showToast('Failed to save data');
+  }
+}
+
+
+  loadDeliveredData() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    this.dataService.fetchDeliveredData(formData).then((res: any) => {
+      this.deliveredData = res;
+      console.log("Response ::::::::::::::", res);
+    }).catch(error => {
+      console.error('Error fetching delivered data', error);
+    });
+  }
+
+  loadSubstations() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    this.dataService.fetchSubstations(formData).then((res: any) => {
+      this.substationData = res;
+      console.log("Response ::::::::::::::", res);
+    }).catch(error => {
+      console.error('Error fetching Substations data', error);
+    });
+  }
 }

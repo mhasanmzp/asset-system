@@ -172,4 +172,59 @@ ion-select-option {
   --placeholder-color: black !important;
 
 }
+.responsive-filter {
+  margin: 8px 0;
+}
+
+.filter-select {
+  --placeholder-color: black;
+  --padding-start: 12px;
+  --padding-end: 12px;
+}
+
+.ion-item-custom {
+  --inner-padding-top: 8px;
+  --inner-padding-bottom: 8px;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ion-label-custom {
+  font-weight: bold;
+  color: #4a4a4a;
+}
+
+.ion-select-custom {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.responsive-filter {
+  margin: 8px 0;
+}
+
+.filter-select {
+  --placeholder-color: #333; /* Darker placeholder color */
+  --padding-start: 12px;
+  --padding-end: 12px;
+}
+
+.ion-item-custom {
+  --inner-padding-top: 8px;
+  --inner-padding-bottom: 8px;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --background: #f0f0f0; /* Slightly dark white box color */
+}
+
+.ion-label-custom {
+  font-weight: bold;
+  color: #4a4a4a;
+}
+
+.ion-select-custom {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --background: #f0f0f0; /* Slightly dark white box color */
+}
+
 

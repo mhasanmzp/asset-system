@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 })
 export class DataService {
 
-  private baseUrl = 'https://0b83-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
+  private baseUrl = 'https://37c3-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 
@@ -75,8 +75,18 @@ export class DataService {
     return this.http.get<any[]>(`${this.baseUrl}?substation=${substation}`);
   }
 
-  getProducts(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+  // getProducts(): Observable<any[]> {
+  //   return this.http.get<any[]>(this.baseUrl);
+  // }
+
+  getProducts(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl +'/scrap-managemet-dashboard', data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
   }
 
   updateProduct(product: any): Observable<any> {
@@ -125,7 +135,7 @@ export class DataService {
 
   fetchDeliveredData(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.post(this.baseUrl + "/grid-view-dashboard", data, { headers: this.header }).subscribe((resp: any) => {
+      this.http.post(this.baseUrl + '/faulty-asset-dashboard', data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);
@@ -152,7 +162,7 @@ export class DataService {
   }
 
   saveOEM(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/oems`, data);
+    return this.http.post(`${this.baseUrl}/asset-oems`, data);
   }
 
   saveProject(data: any): Observable<any> {
@@ -167,14 +177,17 @@ export class DataService {
     return this.http.post(`${this.baseUrl}/stores`, data);
   }
 
-  getItemsByPurchaseId(purchaseId: string): Promise<any> {
+  submitReturn(assets: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/faulty-asset-action`, assets);
+  }
+
+  getItemsByPurchaseId(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get(this.baseUrl + `/getItemsByPurchaseId/${purchaseId}`, { headers: this.header })
-        .subscribe((resp: any) => {
-          resolve(resp);
-        }, error => {
-          reject(error);
-        });
+      this.http.post(this.baseUrl + '/getItemsByPurchaseId', data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
     });
   }
 

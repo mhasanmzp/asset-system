@@ -6,8 +6,8 @@
      <!-- Filters Row -->
     <!-- Category Selection -->
     <ion-col size="4" size-md="3">
-      <ion-item class="rounded-item">
-        <ion-label>Substation</ion-label>
+      <ion-item>
+        <ion-label>Category</ion-label>
         <ion-select [(ngModel)]="selectedCategory" (ionChange)="selectCategory($event)" class="responsive-filter filter-select" placeholder="Select Category" interface="popover">
           <ion-select-option *ngFor="let category of data2" [value]="category.name">
             {{ category.name }}
@@ -15,10 +15,21 @@
         </ion-select>
       </ion-item>
     </ion-col>
+
+    <!-- <ion-col size="3">
+      <ion-item>
+        <ion-label>Substation</ion-label>
+        <ion-select [(ngModel)]="selectedSubstation" (ionChange)="loadSubstations()">
+          <ion-select-option *ngFor="let substation of substationData" [value]="substation.siteName">
+            {{ substation.siteName }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col> -->
     
   <!-- OEM Selection -->
   <ion-col size="6" size-md="3">
-    <ion-item class="rounded-item">
+    <ion-item >
       <ion-label>OEM</ion-label>
       <ion-select [(ngModel)]="selectedOEM" class="responsive-filter filter-select" placeholder="Select OEM" placeholder-color="black" style="width: 100%;" interface="popover;">
         <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">
@@ -28,8 +39,8 @@
     </ion-item>
   </ion-col>
     <!-- Engineer Details -->
-    <ion-col size="12" size-md="3" class="fixed-card">
-            <ion-item class="rounded-item">
+    <ion-col size="12" size-md="3" >
+            <ion-item>
               <ion-label>Select Engineer</ion-label>
               <ion-select [(ngModel)]="selectedEngineer" name="engineer" placeholder="Select Enginner" interface="popover">
                 <ion-select-option *ngFor="let engineer of engineers" [value]="engineer">
