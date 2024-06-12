@@ -7,13 +7,13 @@ import { IonicModule } from '@ionic/angular';
 import { AssetGridViewPageRoutingModule } from './asset-grid-view-routing.module';
 
 import { AssetGridViewPage } from './asset-grid-view.page';
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AssetGridViewPageRoutingModule
+    AssetGridViewPageRoutingModule,Ng2SearchPipeModule
   ],
   declarations: [AssetGridViewPage]
 })

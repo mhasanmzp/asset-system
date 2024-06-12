@@ -13,7 +13,7 @@ export class ScrapManagementPage implements OnInit {
   filteredProductsList: any[] = [];
   selectedSubstation: string = '';
   selectedCategory: string = '';
-  searchQuery: string = '';
+  searchQuery: any;
   data: any;
 
   constructor(

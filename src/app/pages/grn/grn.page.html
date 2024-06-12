@@ -15,15 +15,15 @@
     <!-- Search bar -->
     <ion-row>
       <ion-col size="12">
-        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilter()"
+        <ion-searchbar [(ngModel)]="searchQuery" 
           placeholder="Search Products"></ion-searchbar>
       </ion-col>
     </ion-row>
     <!-- Table headers -->
     <ion-row class="table-header">
-      <ion-col class="tg-hpky" style="width: 50px; margin-left: 50px;">Purchase Id</ion-col>
+      <ion-col class="tg-hpky" style="width: 50px; margin-left: 30px;">Purchase Id</ion-col>
       <ion-col class="tg-hpky" style="width: 170px;">
-        Category&nbsp;&nbsp;&nbsp;
+        OEM Name&nbsp;&nbsp;&nbsp;
         <ion-icon style="font-size: 14px;" name="filter-outline"></ion-icon>
       </ion-col>
       <ion-col class="tg-hpky" style="width: 300px;">Product Name</ion-col>
@@ -34,14 +34,14 @@
       <ion-col class="tg-hpky" style="width: 170px;">Stockable Quantity</ion-col>
     </ion-row>
     <!-- Data rows -->
-    <ion-row *ngFor="let item of filteredData; let i = index"
+    <ion-row *ngFor="let item of filteredData | filter: searchQuery; let i = index" 
       [ngClass]="{'data-row-even': i % 2 === 0, 'data-row-odd': i % 2 !== 0}" style="border-bottom: 1px solid #ccc;">
       <!-- Clickable Purchase ID -->
       <ion-col style="width: 170px; margin-left: 30px; cursor: pointer; color: blue;"
         (click)="openDetailsModal(item.purchaseId)">
         {{ item.purchaseId }}
       </ion-col>
-      <ion-col style="width: 170px; margin-left: 30px;">{{ item.categoryName }}</ion-col>
+      <ion-col style="width: 170px; margin-left: 30px;">{{ item.oemName }}</ion-col>
       <ion-col style="width: 300px; margin-left: 30px;">{{ item.productName }}</ion-col>
       <ion-col style="width: 120px; margin-left: 50px;">{{ item.totalItems }}</ion-col>
       <ion-col style="width: 170px; margin-left: 40px;">{{ item.quantityRejected }}</ion-col>
@@ -239,43 +239,30 @@
       </ion-header>
       <ion-content>
         <ion-grid>
-          <!-- Product details -->
+          <ion-row style="height: 40px; align-items: center; border-bottom: 1px solid #ccc; background-color: #007bff; color: white; border-radius: 10px;">
+            <ion-col size="1"><strong>#</strong></ion-col>
+            <ion-col size="2"><strong>Category</strong></ion-col>
+            <ion-col size="2"><strong>Product Name</strong></ion-col>
+            <!-- <ion-col size="2"><strong>Warranty Period (Months)</strong></ion-col> -->
+            <ion-col size="2"><strong>Serial No</strong></ion-col>
+            <ion-col size="2"><strong>Store Location</strong></ion-col>
+            <ion-col size="2"><strong>Warranty Period (Months)</strong></ion-col>
+            <ion-col size="1"><strong>Status</strong></ion-col>
+            
+
+            <!-- <ion-col size="2"><strong>Serial No</strong></ion-col> -->
+          </ion-row>
           <ng-container *ngFor="let item of selectedPurchase.items; let i = index">
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>Product {{ i + 1 }}</ion-card-title>
-              </ion-card-header>
-              <ion-card-content>
-                <ion-row>
-                  <ion-col size="2">
-                    <ion-label position="stacked"><strong>Category:</strong></ion-label>
-                    <ion-input value="{{ item.categoryName }}" readonly></ion-input>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-label position="stacked"><strong>Product Name:</strong></ion-label>
-                    <ion-input value="{{ item.productName }}" readonly></ion-input>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-label position="stacked"><strong>Warranty Period (Months):</strong></ion-label>
-                    <ion-input value="{{ item.warrantyPeriodMonths }}" readonly></ion-input>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-label position="stacked"><strong>Store Location:</strong></ion-label>
-                    <ion-input value="{{ item.storeLocation }}" readonly></ion-input>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-label position="stacked"><strong>Status:</strong></ion-label>
-                    <ion-input value="{{ item.status }}" readonly></ion-input>
-                  </ion-col>
-                  <ng-container *ngFor="let serial of item.serialNumbers; let j = index">
-                    <ion-col size="2">
-                      <ion-label position="stacked"><strong>Serial No:</strong></ion-label>
-                      <ion-input value="{{ serial }}" readonly></ion-input>
-                    </ion-col>
-                  </ng-container>
-                </ion-row>
-              </ion-card-content>
-            </ion-card>
+            <ion-row [ngClass]="{'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0}" style="height: 40px; align-items: center; border-bottom: 1px solid #ccc;">
+              <ion-col size="1">{{ i + 1 }}</ion-col>
+              <ion-col size="2">{{ item.categoryName }}</ion-col>
+              <ion-col size="2">{{ item.productName }}</ion-col>
+              <ion-col size="2"><ion-row><ion-col *ngFor="let serial of item.serialNumbers">{{ serial }}</ion-col></ion-row></ion-col>
+              <ion-col size="2">{{ item.storeLocation }}</ion-col>
+              <ion-col size="2">{{ item.warrantyPeriodMonths }}</ion-col>
+              <ion-col size="1">{{ item.status }}</ion-col>
+              
+            </ion-row>
           </ng-container>
         </ion-grid>
       </ion-content>
@@ -286,9 +273,11 @@
   
   
   
-  
-  
-  
-  
-  
 </ion-content>
+ 
+  
+  
+  
+  
+  
+  

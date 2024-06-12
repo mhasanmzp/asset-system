@@ -13,7 +13,7 @@ export class DeliveryPage implements OnInit {
   substations: string[] = [];
   selectedSubstation: string;
   selectedCategory: any;
-  searchQuery: string = '';
+  searchQuery: any;
   data: any;
   substationData: any[];
   productData: any[] = [];
@@ -95,11 +95,6 @@ export class DeliveryPage implements OnInit {
     }).catch(error => {
       console.error('Error fetching Substations data', error);
     });
-  }
-
-  selectCategory(category: any) {
-    this.selectedCategory = category;
-    this.applyFilters();
   }
 
   trackByProductId(index: number, product: any): string {

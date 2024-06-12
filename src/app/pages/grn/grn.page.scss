@@ -75,4 +75,15 @@ ion-item {
   text-align: center;
   font-size: 16px;
 }
+.row-border {
+  border-bottom: 1px solid #ccc; /* or any color you prefer */
+}
+.even-row {
+  background-color: #f9f9f9; /* Light gray for even rows */
+}
+
+.odd-row {
+  background-color: #ffffff; /* White for odd rows */
+}
+
 

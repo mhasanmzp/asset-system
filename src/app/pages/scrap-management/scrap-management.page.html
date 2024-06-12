@@ -20,7 +20,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="8">
-        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterAssets()" placeholder="Search Products" class="custom-ion-searchbar responsive-searchbar"></ion-searchbar>
+        <ion-searchbar [(ngModel)]="searchQuery" placeholder="Search Products" class="custom-ion-searchbar responsive-searchbar"></ion-searchbar>
       </ion-col>
     </ion-row>
 
@@ -40,7 +40,7 @@
                 <ion-col size="2.4"><strong>Category</strong></ion-col>
                 <ion-col size="2.4"><strong>Actions</strong></ion-col>
               </ion-row>
-              <ion-row *ngFor="let product of filteredProductsList">
+              <ion-row *ngFor="let product of filteredProductsList | filter: searchQuery">
                 <ion-col size="2.4">{{ product.serialNumber }}</ion-col>
                 <ion-col size="2.4">{{ product.productName }}</ion-col>
                 <ion-col size="2.4">{{ product.status }}</ion-col>

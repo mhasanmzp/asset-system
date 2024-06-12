@@ -11,7 +11,8 @@
       <ion-col size="3">
         <ion-item>
           <ion-label>Substation</ion-label>
-          <ion-select [(ngModel)]="selectedSubstation" (ionChange)="loadSubstations()">
+          <ion-select [(ngModel)]="selectedSubstation" (ionChange)="onSubstationChange()">
+            <ion-select-option value="All">All</ion-select-option>
             <ion-select-option *ngFor="let substation of substationData" [value]="substation.siteName">
               {{ substation.siteName }}
             </ion-select-option>
@@ -40,7 +41,7 @@
                   <ion-col size="2"><strong>Site Name</strong></ion-col>
                   <ion-col size="2"><strong>Status</strong></ion-col>
                 </ion-row>
-                <ion-row *ngFor="let data of deliveredData">
+                <ion-row *ngFor="let data of filteredDeliveredData | filter:searchQuery">
                   <ion-col size="2">{{ data.serialNumber }}</ion-col>
                   <ion-col size="2">{{ data.productName }}</ion-col>
                   <ion-col size="2">{{ data.warrantyStartDate }}</ion-col>
@@ -54,6 +55,5 @@
         </ion-card>
       </ion-col>
     </ion-row>
-    
   </ion-grid>
 </ion-content>

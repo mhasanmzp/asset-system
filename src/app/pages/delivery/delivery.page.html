@@ -1,33 +1,29 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Delivery</ion-title>
+    
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
+  <ion-item class="category-selector">
+    <ion-label>Categories</ion-label>
+    <ion-select [(ngModel)]="selectedCategory" (ionChange)="applyFilters()">
+      <ion-select-option *ngFor="let category of categories" [value]="category">
+        {{ category.name }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
   <ion-grid>
     <ion-row>
-      <!-- Sidebar for Category Selection -->
-      <ion-col size="2" class="category-sidebar">
-        <ion-list>
-          <ion-list-header>
-            <ion-label>Categories</ion-label>
-          </ion-list-header>
-          <ion-radio-group [(ngModel)]="selectedCategory">
-            <ion-item *ngFor="let category of categories" (click)="selectCategory(category)" class="category-item">
-              <ion-label>{{ category.name }}</ion-label>
-              <ion-radio slot="start" [value]="category"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-        </ion-list>
-      </ion-col>
       <!-- Main Content Area -->
-      <ion-col size="7">
+      <ion-col size="9">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Products</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilters()" placeholder="Search Products"></ion-searchbar>
+            <ion-searchbar [(ngModel)]="searchQuery" placeholder="Search Products"></ion-searchbar>
             <ion-grid>
               <ion-row>
                 <ion-col size="3"><strong>Serial Number</strong></ion-col>
@@ -35,7 +31,7 @@
                 <ion-col size="3"><strong>Status</strong></ion-col>
                 <ion-col size="3"><strong>Select</strong></ion-col>
               </ion-row>
-              <ion-row *ngFor="let product of filteredProductList; trackBy: trackByProductId" style="border-bottom: 1px solid #ccc;">
+              <ion-row *ngFor="let product of filteredProductList | filter: searchQuery" style="border-bottom: 1px solid #ccc;">
                 <ion-col size="3">{{ product.SerialNumber }}</ion-col>
                 <ion-col size="3">{{ product.ProductName }}</ion-col>
                 <ion-col size="3">{{ product.Status }}</ion-col>
@@ -47,6 +43,7 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
+
       <!-- Delivery Form -->
       <ion-col size="3">
         <ion-card>

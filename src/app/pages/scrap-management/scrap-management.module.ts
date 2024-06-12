@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ScrapManagementPageRoutingModule } from './scrap-management-routing.module';
 
 import { ScrapManagementPage } from './scrap-management.page';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ScrapManagementPageRoutingModule
+    ScrapManagementPageRoutingModule,
+    Ng2SearchPipeModule
   ],
   declarations: [ScrapManagementPage]
 })

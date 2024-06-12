@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import { ModalController, ToastController } from '@ionic/angular';
 
-
 @Component({
   selector: 'app-quality-assurance',
   templateUrl: './quality-assurance.page.html',
@@ -15,51 +14,64 @@ export class QualityAssurancePage implements OnInit {
   data: any = [];
   data2: any = [];
 
-
-  selectedCategory: any;
-  selectedOEM: any;
-  searchQuery:'';
+  selectedCategory: any = '';
+  selectedOEM: any = '';
+  searchQuery: string = '';
   selectedSubstation: string;
 
   products: any[] = [];
 
-currentPage: number = 1;
-itemsPerPage: number = 10;
-selectedEngineer: any;
-engineers: any = [];
-oemName: any;
-material: any = {
-  oemName: '',
-};
-substationData : any[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  selectedEngineer: any;
+  engineers: any = [];
+  oemName: any;
+  material: any = {
+    oemName: '',
+  };
+  substationData: any[] = [];
 
-
-constructor(
-  private modalController: ModalController,
-  private dataService: DataService, // Inject the DataService
-  private toastController: ToastController
-) { }
+  constructor(
+    private modalController: ModalController,
+    private dataService: DataService, // Inject the DataService
+    private toastController: ToastController
+  ) { }
 
   ngOnInit() {
-    this.loadOems()
-    this.loadCategories()
-    this.loadEngineers()
-    this.fetchQAProducts()
+    this.loadOems();
+    this.loadCategories();
+    this.loadEngineers();
+    this.fetchQAProducts();
   }
 
   selectCategory(event: any) {
     // Handle category selection
     console.log('Selected Category:', this.selectedCategory);
+    this.filteredProducts();
+  }
+
+  selectOEM(event: any) {
+    // Handle OEM selection
+    console.log('Selected OEM:', this.selectedOEM);
+    this.filteredProducts();
   }
 
   filteredProducts() {
-    const filtered = this.searchQuery
-      ? this.products.filter(product =>
-         ( product.productName.toLowerCase().includes(this.searchQuery.toLowerCase())||
-         product.serialNumber.toLowerCase().includes(this.searchQuery.toLowerCase())
-        ))
-      : this.products;
-    
+    const filtered = this.products.filter(product => {
+      const matchesSearchQuery = this.searchQuery
+        ? product.productName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          product.serialNumber.toLowerCase().includes(this.searchQuery.toLowerCase())
+        : true;
+      const matchesCategory = this.selectedCategory
+        ? this.selectedCategory === 'All' || product.categoryName === this.selectedCategory
+        : true;
+      const matchesOEM = this.selectedOEM
+        ? this.selectedOEM === 'All' || product.oemName === this.selectedOEM
+        : true;
+
+      return matchesSearchQuery && matchesCategory && matchesOEM;
+    });
+
     return this.paginate(filtered);
   }
 
@@ -86,6 +98,7 @@ constructor(
 
     this.dataService.fetchOEM(formData).then((res: any) => {
       this.data = res;
+      this.data.unshift({ oemName: 'All' }); // Add "All" option
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
       console.error('Error fetching OEM data', error);
@@ -103,10 +116,9 @@ constructor(
       this.engineers = res;
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
-      console.error('Error fetching OEM data', error);
+      console.error('Error fetching Engineers data', error);
     });
   }
-
 
   loadCategories() {
     const formData = {
@@ -117,6 +129,7 @@ constructor(
 
     this.dataService.fetchCategories(formData).then((res: any) => {
       this.data2 = res;
+      this.data2.unshift({ name: 'All' }); // Add "All" option
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
       console.error('Error fetching Categories data', error);
@@ -147,14 +160,15 @@ constructor(
     console.log('formdata', formData);
     this.dataService.fetchQAProducts(formData).then((data: any) => {
       console.log('Delivery DATA :::::::::::::::::::::::::::::::::::::::', data);
-      this.products = data
+      this.products = data;
+    }).catch(error => {
+      console.error('Error fetching QA Products data', error);
     });
-
   }
 
   submitSelectedProducts() {
     const selectedProducts = this.products.filter(product => product.selection);
-  
+
     if (selectedProducts.length === 0) {
       this.toastController.create({
         message: 'No products selected',
@@ -163,7 +177,7 @@ constructor(
       }).then(toast => toast.present());
       return;
     }
-  
+
     const payload = {
       permissionName: 'Tasks',
       employeeIdMiddleware: 342,
@@ -178,14 +192,14 @@ constructor(
         testResult: product.selection
       }))
     };
-  
+
     this.dataService.submitProducts(payload).subscribe(async response => {
       this.toastController.create({
         message: 'Products submitted successfully!',
         duration: 2000,
         position: 'bottom'
       }).then(toast => toast.present());
-  
+
       // Remove submitted products from the list
       this.products = this.products.filter(product => !product.selection);
       this.changePage(-this.currentPage + 1); // Reset to first page if necessary
@@ -197,29 +211,4 @@ constructor(
       }).then(toast => toast.present());
     });
   }
-  
-
-  
-  // fetchDeliveryProducts() {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: 342,
-  //     employeeId: 342,
-  //   };
-  //   console.log('formdata', formData);
-  //   this.dataService.fetchProducts(formData).then((data: any) => {
-  //     console.log('Delivery DATA :::::::::::::::::::::::::::::::::::::::', data);
-  //     this.productData = data.productData.map((product) => ({
-  //       ...product,
-  //       SerialNumber: product.serialNumber,
-  //       ProductName: product.productName,
-  //       Status: product.status,
-  //       selected: false // Add selected property
-  //     }));
-  //     this.applyFilters(); // Filter products after loading
-  //   }).catch(error => {
-  //     console.error('Error fetching data', error);
-  //   });
-  // }
-
 }

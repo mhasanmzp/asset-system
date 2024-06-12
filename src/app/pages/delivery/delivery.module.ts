@@ -7,13 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { DeliveryPageRoutingModule } from './delivery-routing.module';
 
 import { DeliveryPage } from './delivery.page';
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DeliveryPageRoutingModule
+    DeliveryPageRoutingModule,
+    Ng2SearchPipeModule
   ],
   declarations: [DeliveryPage]
 })

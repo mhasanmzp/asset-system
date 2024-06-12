@@ -1,3 +1,6 @@
+
+
+
 import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
@@ -15,7 +18,7 @@ export class GrnPage implements OnInit {
   selectedPurchase: any;
   oemsList = [];
   categories = [];
-  searchQuery: string = '';
+  searchQuery:any;
   data: any = [];
   data2: any = [];
   material: any = {
@@ -80,37 +83,6 @@ export class GrnPage implements OnInit {
     });
   }
 
- 
-
-  // openDetailsModal(purchaseId: string) {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: 342,
-  //     employeeId: 342,
-  //     purchaseId: purchaseId
-  //   };
-  
-  //   this.dataService.getItemsByPurchaseId(formData).then((data) => {
-  //     console.log('Fetched data:', data); // Debug log to check data
-  //     this.selectedPurchase = {
-  //       ...data,
-  //       items: data.items.map(item => ({
-  //         ...item,
-  //         categoryName: item.categoryName,
-  //         productName: item.productName,
-  //         quantity: item.quantity,
-  //         warrantyPeriodMonths: item.warrantyPeriodMonths,
-  //         storeLocation: item.storeLocation,
-  //         serialNumbers: item.serialNumbers,
-  //       }))
-  //     };
-  //     console.log('Selected purchase:', this.selectedPurchase); // Debug log to check selected purchase
-  //     this.isDetailModalOpen = true;
-  //   }).catch(error => {
-  //     console.error('Error fetching data:', error);
-  //   });
-  // }
-  
   openDetailsModal(purchaseId: string) {
     // Prepare formData
     const formData = {
