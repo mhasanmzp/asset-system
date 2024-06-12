@@ -135,7 +135,8 @@ export class GrnPage implements OnInit {
           quantity: item.quantity,
           warrantyPeriodMonths: item.warrantyPeriodMonths,
           storeLocation: item.storeLocation,
-          serialNumbers: item.serialNumber ? [item.serialNumber] : [] // Assuming serialNumber is a single value and not an array
+          serialNumbers: item.serialNumber ? [item.serialNumber] : [],
+          status:item.status                             // Assuming serialNumber is a single value and not an array
         }))
       };
   

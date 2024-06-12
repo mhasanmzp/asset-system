@@ -9,27 +9,18 @@
     <!-- Filters -->
     <ion-row>
       <ion-col size="4">
-        <ion-item class="rounded-item">
-          <ion-label position="floating">Substation</ion-label>
-          <ion-select [(ngModel)]="selectedSubstation" (ionChange)="filterAssets()" class="responsive-filter filter-select" placeholder="">
-            <ion-select-option *ngFor="let substation of substations" [value]="substation">
-              {{ substation }}
+        <ion-item class="custom-ion-item">
+          <ion-label>Category</ion-label>
+          <ion-select [(ngModel)]="selectedCategory" (ionChange)="filterAssets()" placeholder="Select Category" interface="popover" class="custom-ion-select">
+            <ion-select-option value="">All</ion-select-option>
+            <ion-select-option *ngFor="let category of data2" [value]="category.name">
+              {{ category.name }}
             </ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
-      <ion-col size="4">
-        <ion-item class="rounded-item">
-          <ion-label position="floating">Category</ion-label>
-          <ion-select [(ngModel)]="selectedCategory" (ionChange)="filterAssets()" class="responsive-filter filter-select" placeholder="">
-            <ion-select-option *ngFor="let category of categories" [value]="category">
-              {{ category }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>      
-      <ion-col size="4">
-        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterAssets()" placeholder="Search Products" class="responsive-searchbar"></ion-searchbar>
+      <ion-col size="8">
+        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterAssets()" placeholder="Search Products" class="custom-ion-searchbar responsive-searchbar"></ion-searchbar>
       </ion-col>
     </ion-row>
 
@@ -43,18 +34,19 @@
           <ion-card-content>
             <ion-grid>
               <ion-row>
-                <ion-col size="3"><strong>Serial Number</strong></ion-col>
-                <ion-col size="3"><strong>Product Name</strong></ion-col>
-                <ion-col size="3"><strong>Status</strong></ion-col>
-                <ion-col size="3"><strong>Actions</strong></ion-col>
+                <ion-col size="2.4"><strong>Serial Number</strong></ion-col>
+                <ion-col size="2.4"><strong>Product Name</strong></ion-col>
+                <ion-col size="2.4"><strong>Status</strong></ion-col>
+                <ion-col size="2.4"><strong>Category</strong></ion-col>
+                <ion-col size="2.4"><strong>Actions</strong></ion-col>
               </ion-row>
-              <ion-row *ngFor="let products of filteredProductsList">
-                <ion-col size="3">{{ products.serialNumber }}</ion-col>
-                <ion-col size="3">{{ products.productName }}</ion-col>
-                <ion-col size="3">{{ products.status }}</ion-col>
-                <ion-col size="3">
-                  <ion-button *ngIf="products.status !== 'Scrap'" (click)="markAsScrap(products)" color="danger">Mark as Scrap</ion-button>
-                  <ion-button *ngIf="products.status === 'Scrap'" (click)="unmarkAsScrap(products)" color="secondary">Unmark as Scrap</ion-button>
+              <ion-row *ngFor="let product of filteredProductsList">
+                <ion-col size="2.4">{{ product.serialNumber }}</ion-col>
+                <ion-col size="2.4">{{ product.productName }}</ion-col>
+                <ion-col size="2.4">{{ product.status }}</ion-col>
+                <ion-col size="2.4">{{ product.categoryName }}</ion-col>
+                <ion-col size="2.4">
+                  <ion-button (click)="markAsUnscrap(product)" color="secondary" class="small-button">Mark as Unscrap</ion-button>
                 </ion-col>
               </ion-row>
             </ion-grid>

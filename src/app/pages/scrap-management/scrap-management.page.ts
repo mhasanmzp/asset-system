@@ -8,7 +8,7 @@ import { DataService } from 'src/app/services/asset.service'; // Adjust the path
 })
 export class ScrapManagementPage implements OnInit {
   substations: string[] = [];
-  categories: string[] = [];
+  data2: any = [];
   products: any[] = [];
   filteredProductsList: any[] = [];
   selectedSubstation: string = '';
@@ -18,15 +18,19 @@ export class ScrapManagementPage implements OnInit {
 
   constructor(
     private assetService: DataService,
-    private dataService: DataService, // Inject the DataService
-
-
+    private dataService: DataService // Inject the DataService
   ) {}
 
   ngOnInit() {
     this.loadSubstations();
     this.loadCategories();
     this.loadScrapProducts();
+  }
+
+  selectCategory(event: any) {
+    // Handle category selection
+    console.log('Selected Category:', this.selectedCategory);
+    this.filterAssets();
   }
 
   loadSubstations() {
@@ -48,32 +52,12 @@ export class ScrapManagementPage implements OnInit {
     };
 
     this.dataService.fetchCategories(formData).then((res: any) => {
-      this.data= res
-      console.log("Response ::::::::::::::",res)
+      this.data2 = res;
+      console.log("Response ::::::::::::::", res);
     }).catch(error => {
-      console.error('Error fetching OEM data', error);
+      console.error('Error fetching Categories data', error);
     });
   }
-
-  // loadScrapProducts() {
-
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: 342,
-  //     employeeId: 342,
-  //   };
-
-
-  //   this.dataService.getProducts(formData).then(
-  //     data => {
-  //       this.products = data;
-  //       this.filterAssets();
-  //     },
-  //     error => {
-  //       console.error('Error loading products', error);
-  //     }
-  //   );
-  // }
 
   loadScrapProducts() {
     const formData = {
@@ -84,53 +68,52 @@ export class ScrapManagementPage implements OnInit {
 
     this.dataService.getProducts(formData).then((res: any) => {
       this.products = res;
-      this.filterAssets();
-      console.log("Response ::::::::::::::", res);
+      this.filterAssets(); // Initial filter
+      console.log("Products Response:", res);
     }).catch(error => {
-      console.error('Error fetching delivered data', error);
+      console.error('Error fetching products data', error);
     });
   }
 
   filterAssets() {
-    this.filteredProductsList = this.products;
+    console.log("Filtering assets with selected category:", this.selectedCategory, "and search query:", this.searchQuery);
 
-    if (this.selectedSubstation) {
-      this.filteredProductsList = this.filteredProductsList.filter(product => product.substation === this.selectedSubstation);
-    }
+    this.filteredProductsList = this.products.filter(product => {
+      const matchesSearchQuery = this.searchQuery
+        ? product.productName.toLowerCase().includes(this.searchQuery.toLowerCase())
+        : true;
 
-    if (this.selectedCategory) {
-      this.filteredProductsList = this.filteredProductsList.filter(product => product.category === this.selectedCategory);
-    }
+      const matchesSubstation = this.selectedSubstation
+        ? product.substation === this.selectedSubstation
+        : true;
 
-    if (this.searchQuery) {
-      this.filteredProductsList = this.filteredProductsList.filter(product => product.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
-    }
+      const matchesCategory = this.selectedCategory
+        ? product.categoryName === this.selectedCategory
+        : true;
+
+      return matchesSearchQuery && matchesSubstation && matchesCategory;
+    });
+
+    console.log("Filtered Products List:", this.filteredProductsList);
   }
 
-  markAsScrap(product: any) {
-    product.status = 'Scrap';
-    this.assetService.updateProduct(product).subscribe(
+  markAsUnscrap(product: any) {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    product.status = 'In Stock';
+
+    this.assetService.updateProduct({...product, ...formData}).then(
       () => {
-        alert('Product marked as Scrap.');
+        alert('Product marked as In Stock.');
         this.loadScrapProducts(); // Refresh the product list
       },
       error => {
-        console.error('Error marking product as Scrap', error);
-        alert('There was an error marking the product as Scrap.');
-      }
-    );
-  }
-
-  unmarkAsScrap(product: any) {
-    product.status = 'Active'; // Assuming 'Active' is the normal status
-    this.assetService.updateProduct(product).subscribe(
-      () => {
-        alert('Product unmarked as Scrap.');
-        this.loadScrapProducts(); // Refresh the product list
-      },
-      error => {
-        console.error('Error unmarking product as Scrap', error);
-        alert('There was an error unmarking the product as Scrap.');
+        console.error('Error marking product as In Stock', error);
+        alert('There was an error marking the product as In Stock.');
       }
     );
   }

@@ -83,8 +83,8 @@
             <ion-col size="2.4">
               <ion-item>
                 <ion-label position="stacked">OEM</ion-label>
-                <ion-select style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.oemName"
-                  name="oemName" placeholder="Select OEM" required>
+                <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.oemName"
+                  name="oemName" placeholder=" Select OEM" required>
                   <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">{{ oem.oemName
                     }}</ion-select-option>
                 </ion-select>
@@ -115,8 +115,8 @@
                 <ion-col size="2.5">
                   <ion-item>
                     <ion-label position="stacked">Category</ion-label>
-                    <ion-select style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.categoryName"
-                      name="categoryName{{i}}" placeholder="Select Category" required>
+                    <ion-select  class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.categoryName"
+                      name="categoryName{{i}}" placeholder=" Select Category" required>
                       <ion-select-option *ngFor="let category of data2" [value]="category.id">{{ category.name
                         }}</ion-select-option>
                     </ion-select>
@@ -140,9 +140,9 @@
                 <ion-col size="2.5">
                   <ion-item>
                     <ion-label position="stacked">Unit</ion-label>
-                    <ion-select style="border: 1px solid black; border-radius: 10px;" interface="popover"
+                    <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" interface="popover"
                       placeholder="Select Unit" [(ngModel)]="item.quantityUnit" name="quantityUnit{{i}}"
-                      class="small-input" required>
+                       required>
                       <ion-select-option value="KG">KG</ion-select-option>
                       <ion-select-option value="Metre">Metre</ion-select-option>
                       <ion-select-option value="Units">Units</ion-select-option>
@@ -241,44 +241,47 @@
         <ion-grid>
           <!-- Product details -->
           <ng-container *ngFor="let item of selectedPurchase.items; let i = index">
-            <ion-row>
-              <ion-col size="12">
-                <ion-label><strong>Product {{ i + 1 }}:</strong></ion-label>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="2">
-                <ion-label position="stacked"><strong>Category:</strong></ion-label>
-                <ion-input value="{{ item.categoryName }}" readonly></ion-input>
-              </ion-col>
-              <ion-col size="2">
-                <ion-label position="stacked"><strong>Product Name:</strong></ion-label>
-                <ion-input value="{{ item.productName }}" readonly></ion-input>
-              </ion-col>
-              <ion-col size="2">
-                <ion-label position="stacked"><strong>Warranty Period (Months):</strong></ion-label>
-                <ion-input value="{{ item.warrantyPeriodMonths }}" readonly></ion-input>
-              </ion-col>
-              <ion-col size="2">
-                <ion-label position="stacked"><strong>Store Location:</strong></ion-label>
-                <ion-input value="{{ item.storeLocation }}" readonly></ion-input>
-              </ion-col>
-              <ion-col size="2">
-                <ion-label position="stacked"><strong>Status:</strong></ion-label>
-                <ion-input value="{{ item.status }}" readonly></ion-input>
-              </ion-col>
-              <ng-container *ngFor="let serial of item.serialNumbers; let j = index">
-                <ion-col size="2">
-                  <ion-label position="stacked"><strong>Serial No:</strong></ion-label>
-                  <ion-input value="{{ serial }}" readonly></ion-input>
-                </ion-col>
-              </ng-container>
-            </ion-row>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Product {{ i + 1 }}</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-row>
+                  <ion-col size="2">
+                    <ion-label position="stacked"><strong>Category:</strong></ion-label>
+                    <ion-input value="{{ item.categoryName }}" readonly></ion-input>
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-label position="stacked"><strong>Product Name:</strong></ion-label>
+                    <ion-input value="{{ item.productName }}" readonly></ion-input>
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-label position="stacked"><strong>Warranty Period (Months):</strong></ion-label>
+                    <ion-input value="{{ item.warrantyPeriodMonths }}" readonly></ion-input>
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-label position="stacked"><strong>Store Location:</strong></ion-label>
+                    <ion-input value="{{ item.storeLocation }}" readonly></ion-input>
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-label position="stacked"><strong>Status:</strong></ion-label>
+                    <ion-input value="{{ item.status }}" readonly></ion-input>
+                  </ion-col>
+                  <ng-container *ngFor="let serial of item.serialNumbers; let j = index">
+                    <ion-col size="2">
+                      <ion-label position="stacked"><strong>Serial No:</strong></ion-label>
+                      <ion-input value="{{ serial }}" readonly></ion-input>
+                    </ion-col>
+                  </ng-container>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
           </ng-container>
         </ion-grid>
       </ion-content>
     </ng-template>
   </ion-modal>
+  
   
   
   
