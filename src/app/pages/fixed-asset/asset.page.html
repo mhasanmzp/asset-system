@@ -119,9 +119,6 @@
                     <ion-segment-button value="Category">
                       Category
                     </ion-segment-button>
-                    <ion-segment-button value="Engineer">
-                      Engineer
-                    </ion-segment-button>
                     <ion-segment-button value="OEM">
                       OEM
                     </ion-segment-button>
@@ -155,23 +152,6 @@
                 </ion-button>
               </ion-col>
             </ion-row>
-
-            <ion-row *ngIf="data.masterData === 'Engineer'">
-              <ion-col size="12">
-                <ion-item *ngFor="let engineerInput of engineerInputs; let i = index">
-                  <ion-input [(ngModel)]="engineerInputs[i]" placeholder=" Enter Engineer" name="engineer{{i}}" debounce="2000"
-                    style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
-                  <ion-button slot="end" (click)="removeEngineerInput(i)">
-                    <ion-icon name="close-circle"></ion-icon>
-                  </ion-button>
-                </ion-item>
-                <ion-button expand="block" fill="clear" size="medium" (click)="addEngineerInput()"
-                  style="float: right;">
-                  <ion-icon name="add-circle-outline"></ion-icon>
-                </ion-button>
-              </ion-col>
-            </ion-row>
-
             <ion-row *ngIf="data.masterData === 'OEM'">
               <ion-col size="12">
                 <ion-item *ngFor="let oemInput of oemInputs; let i = index">
@@ -234,12 +214,14 @@
 
             <ion-row>
               <ion-col size="12">
-                <ion-button style="margin-left: 50%; margin-top: 20px;" expand="save-button" type="submit">Save</ion-button>
               </ion-col>
             </ion-row>
           </ion-grid>
         </form>
       </ion-content>
+      <ion-button style="margin-left: 50%; margin-top: 20px;" expand="save-button" type="submit">Save</ion-button>
+
     </ng-template>
+    
   </ion-modal>
 </ion-content>

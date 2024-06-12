@@ -31,12 +31,41 @@ export class AssetPage implements OnInit {
 
   openAddDataModal() {
     this.isModalOpen = true;
-    this.data.masterData = 'Category';  // Set default segment to "Category"
+  
+    // Initialize input arrays based on selected masterData
+    switch (this.data.masterData) {
+      case 'Category':
+        this.categoryInputs = ['']; // Initialize with an empty input
+        break;
+      case 'OEM':
+        this.oemInputs = [''];
+        break;
+      case 'Project':
+        this.projectInputs = [''];
+        break;
+      case 'Site':
+        this.siteInputs = [''];
+        break;
+      case 'Store':
+        this.storeInputs = [''];
+        break;
+      default:
+        break;
+    }
   }
+  
 
   closeAddDataModal() {
     this.isModalOpen = false;
+    
+    // Reset all input arrays
+    this.categoryInputs = [''];
+    this.oemInputs = [''];
+    this.projectInputs = [''];
+    this.siteInputs = [''];
+    this.storeInputs = [''];
   }
+  
 
   addCategoryInput() {
     this.categoryInputs.push('');

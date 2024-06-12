@@ -176,15 +176,15 @@ export class DataService {
   }
 
   saveProject(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/projects`, data);
+    return this.http.post(`${this.baseUrl}/asset-project`, data);
   }
 
   saveSite(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/sites`, data);
+    return this.http.post(`${this.baseUrl}/asset-site`, data);
   }
 
   saveStore(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/stores`, data);
+    return this.http.post(`${this.baseUrl}/asset-stores`, data);
   }
 
   submitReturn(assets: any): Observable<any> {
