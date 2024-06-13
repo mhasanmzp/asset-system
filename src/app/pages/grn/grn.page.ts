@@ -1,6 +1,3 @@
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
@@ -15,11 +12,13 @@ export class GrnPage implements OnInit {
   filteredData: any[] = [];
   isModalOpen = false;
   isDetailModalOpen = false;
+  isAddMoreDataModalOpen = false;
   selectedPurchase: any;
   oemsList = [];
   categories = [];
-  searchQuery:any;
+  searchQuery: any;
   data: any = [];
+  storeData: any = [];
   data2: any = [];
   material: any = {
     grnNo: '',
@@ -49,8 +48,22 @@ export class GrnPage implements OnInit {
     this.loadOems();
     this.loadCategories();
     this.fetchData();
-    this.openDetailsModal
-   
+    this.loadStores();
+  }
+
+  loadStores() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    this.dataService.fetchStore(formData).then((res: any) => {
+      this.storeData = res;
+      console.log("Response ::::::::::::::", res);
+    }).catch(error => {
+      console.error('Error fetching OEM data', error);
+    });
   }
 
   loadOems() {
@@ -93,23 +106,26 @@ export class GrnPage implements OnInit {
     };
   
     // Fetch details using purchaseId and formData
-    this.dataService.getItemsByPurchaseId(formData).then((data: any) => {
+    this.dataService.getItemsByPurchaseId(formData).then((data: any[]) => {
+      // Map each item in data to extract details
+      const items = data.map(item => ({
+        categoryName: item.categoryName,
+        productName: item.productName,
+        quantity: item.quantity,
+        warrantyPeriodMonths: item.warrantyPeriodMonths,
+        storeLocation: item.storeLocation,
+        serialNumbers: item.serialNumber ? [item.serialNumber] : [],
+        status: item.status,
+        challanNo: item.challanNumber // Include challanNo here
+      }));
+  
       // Populate the "Details" modal with fetched data
       this.selectedPurchase = {
         purchaseId: purchaseId,
         oemName: data[0].oemName,
         storeName: data[0].inventoryStoreName,
-        challanNo: data[0].challanNumber,
         challanDate: data[0].purchaseDate,
-        items: data.map(item => ({
-          categoryName: item.categoryName,
-          productName: item.productName,
-          quantity: item.quantity,
-          warrantyPeriodMonths: item.warrantyPeriodMonths,
-          storeLocation: item.storeLocation,
-          serialNumbers: item.serialNumber ? [item.serialNumber] : [],
-          status:item.status                             // Assuming serialNumber is a single value and not an array
-        }))
+        items: items // Assign items array
       };
   
       // Open the "Details" modal
@@ -119,12 +135,10 @@ export class GrnPage implements OnInit {
     });
   }
   
-  
   closeDetailsModal() {
     // Close the "Details" modal
     this.isDetailModalOpen = false;
   }
-  
 
   openAddMaterialModal() {
     this.isModalOpen = true;
@@ -132,6 +146,14 @@ export class GrnPage implements OnInit {
 
   closeAddMaterialModal() {
     this.isModalOpen = false;
+  }
+
+  openAddMoreDataModal() {
+    this.isAddMoreDataModalOpen = true;
+  }
+
+  closeAddMoreDataModal() {
+    this.isAddMoreDataModalOpen = false;
   }
 
   addRow() {
@@ -233,6 +255,90 @@ export class GrnPage implements OnInit {
       await toast.present();
     });
   }
+
+  async saveMoreData() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+      purchaseId: this.selectedPurchase.purchaseId,
+      oemName: this.selectedPurchase.oemName,
+      challanNo: this.material.challanNo,
+      challanDate: this.material.challanDate,
+      materialRows: this.materialRows.map(row => ({
+        categoryName: row.categoryName,
+        productName: row.productName,
+        quantity: row.quantity,
+        quantityUnit: row.quantityUnit,
+        warrantyPeriodMonths: row.warrantyPeriodMonths,
+        storeLocation: row.storeLocation,
+        serialNumbers: row.serialNumbers,
+        storeName: row.storeName,
+
+      }))
+    };
+  
+    // Save more data via API using DataService
+    this.dataService.submitMoreData(this.material, formData).subscribe(
+      async response => {
+        // Show success toast message
+        const toast = await this.toastController.create({
+          message: 'More data saved successfully!',
+          duration: 5000,
+          position: 'bottom'
+        });
+        await toast.present();
+  
+        // Close the modal
+        this.closeAddMoreDataModal();
+        // Refresh the data
+        this.fetchData();
+      },
+      async error => {
+        // Handle error
+        const toast = await this.toastController.create({
+          message: 'Failed to save more data. Please try again.',
+          duration: 2000,
+          position: 'bottom'
+        });
+        await toast.present();
+      }
+    );
+  }
+  
+
+  // async saveMoreData() {
+  //   const formData = {
+  //     permissionName: 'Tasks',
+  //     employeeIdMiddleware: 342,
+  //     employeeId: 342,
+  //     // Add any other fields you need for the form
+  //   };
+
+  //   // Save more data via API using DataService
+  //   this.dataService.submitMoreData(this.material,formData).subscribe(async response => {
+  //     // Show success toast message
+  //     const toast = await this.toastController.create({
+  //       message: 'More data saved successfully!',
+  //       duration: 5000,
+  //       position: 'bottom'
+  //     });
+  //     await toast.present();
+
+  //     // Close the modal
+  //     this.closeAddMoreDataModal();
+  //     // Refresh the data
+  //     this.fetchData();
+  //   }, async error => {
+  //     // Handle error
+  //     const toast = await this.toastController.create({
+  //       message: 'Failed to save more data. Please try again.',
+  //       duration: 2000,
+  //       position: 'bottom'
+  //     });
+  //     await toast.present();
+  //   });
+  // }
 
   // Filter purchase data based on search query
   applyFilter() {

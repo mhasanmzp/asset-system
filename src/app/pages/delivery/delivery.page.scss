@@ -67,4 +67,39 @@ ion-content {
   .category-item ion-radio {
     margin-left: auto;
   }
+  .custom-segment {
+    margin: 16px auto;
+    max-width: 300px;
+    --background: #f8f8f8;
+    --indicator-color: #007bff;
+    --button-color: #007bff;
+    --button-background: #ffffff;
+    --button-background-checked: #007bff;
+    --button-color-checked: #ffffff;
+    --button-border-radius: 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-segment-button {
+    --border-radius: 20px;
+    --color-checked: #ffffff;
+    --color-focused: #ffffff;
+    --color-hover: #ffffff;
+    --color-pressed: #ffffff;
+    --color: #007bff;
+    --background-checked: #007bff;
+    // --background-focused: #007bff;
+    // --background-hover: #007bff;
+    // --background-pressed: #007bff;
+    --background: #ffffff;
+    font-weight: bold;
+  }
+  
+  .segment-content {
+    padding: 16px;
+  }
+  
+  
+  
 }

@@ -15,6 +15,7 @@ export class ScrapManagementPage implements OnInit {
   selectedCategory: string = '';
   searchQuery: any;
   data: any;
+  siteData :any= [];
 
   constructor(
     private assetService: DataService,
@@ -22,7 +23,7 @@ export class ScrapManagementPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadSubstations();
+    this.loadSites();
     this.loadCategories();
     this.loadScrapProducts();
   }
@@ -33,16 +34,21 @@ export class ScrapManagementPage implements OnInit {
     this.filterAssets();
   }
 
-  loadSubstations() {
-    this.assetService.getSubstations().subscribe(
-      data => {
-        this.substations = data;
-      },
-      error => {
-        console.error('Error loading substations', error);
-      }
-    );
+  loadSites() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    this.dataService.fetchSites(formData).then((res: any) => {
+      this.siteData = res;
+      console.log("Response ::::::::::::::", res);
+    }).catch(error => {
+      console.error('Error fetching Substations data', error);
+    });
   }
+
 
   loadCategories() {
     const formData = {

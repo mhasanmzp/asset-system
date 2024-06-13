@@ -85,5 +85,10 @@ ion-item {
 .odd-row {
   background-color: #ffffff; /* White for odd rows */
 }
-
-
+.large-modal-detail {
+  --width: 90vw;
+  --height: 90vh;
+}
+.required-asterisk {
+  color: red;
+}

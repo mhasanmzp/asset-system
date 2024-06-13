@@ -17,18 +17,18 @@ export class AssetGridViewPage implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit() {
-    this.loadSubstations();
+    this.loadSites();
     this.loadDeliveredData();
   }
 
-  loadSubstations() {
+  loadSites() {
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: 342,
       employeeId: 342,
     };
 
-    this.dataService.fetchSubstations(formData).then((res: any) => {
+    this.dataService.fetchSites(formData).then((res: any) => {
       this.substationData = res;
       console.log("Response ::::::::::::::", res);
     }).catch(error => {

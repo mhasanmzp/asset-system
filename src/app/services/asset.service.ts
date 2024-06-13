@@ -6,16 +6,84 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class DataService {
+  
+  
+ 
 
-  private baseUrl = 'https://6528-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
+  private baseUrl = 'https://0f7a-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 
   constructor(private http: HttpClient) { }
 
+
+
+  ///////////test/////////
+
+  
+  // furtherDeliverProduct(data: any): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+  //       resolve(resp);
+  //     }, error => {
+  //       reject(error);
+  //     });
+  //   });
+  // }
+
+  furtherDeliverProduct(deliveryDetails: any): Observable<Blob> {
+    return this.http.post(this.baseUrl + '/generateChallan', deliveryDetails, { responseType: 'blob' });
+  }
+
+  fetchClients(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  fetchClientWarehouses(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+
+  
+  fetchWarehouseProducts(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+
+//////////////////////////////////
   fetchOEM(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+
+
+  fetchStore(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + "/stores-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);
@@ -63,9 +131,9 @@ export class DataService {
     return this.http.post(this.baseUrl + "/update-delivery-data", payload);
   }
 
-  getSubstations(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
-  }
+  // getSites(): Observable<any[]> {
+  //   return this.http.get<any[]>(this.baseUrl);
+  // }
 
   generateChallan(deliveryDetails: any): Observable<Blob> {
     return this.http.post(this.baseUrl + '/generateChallan', deliveryDetails, { responseType: 'blob' });
@@ -133,7 +201,7 @@ export class DataService {
     });
   }
 
-  fetchSubstations(data: any): Promise<any> {
+  fetchSites(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + "/asset-sites-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
@@ -199,6 +267,14 @@ export class DataService {
         reject(error);
       });
     });
+  }
+
+  submitMoreData(material: any, formData: any): Observable<any> {
+    const payload = {
+      ...formData,
+      material: material
+    };
+    return this.http.post(this.baseUrl + '/asset-inventory-update-grn', payload);
   }
 
 }

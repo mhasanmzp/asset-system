@@ -10,21 +10,35 @@ export class DeliveryPage implements OnInit {
   categories: any[] = [];
   products: any[] = [];
   filteredProductList: any[] = [];
-  substations: string[] = [];
-  selectedSubstation: string;
+  filteredWarehouseProductList: any[] = [];
+  clients: any[] = [];
+  clientWarehouses: any[] = [];
+  selectedClient: any;
+  selectedWarehouse: any;
   selectedCategory: any;
+  selectedSite: any;
   searchQuery: any;
   data: any;
-  substationData: any[];
+  siteData: any[];
   productData: any[] = [];
+  warehouseProductData: any[] = [];
   deliveryAddress: any;
+  showFurtherDelivery: boolean = false;
+  selectedSegment: string = 'step1';
 
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
     this.fetchDeliveryProducts();
     this.loadCategories();
-    this.loadSubstations();
+    this.loadClients();
+    this.loadSites();
+  }
+
+  segmentChanged() {
+    if (this.selectedSegment === 'step2') {
+      this.fetchWarehouseProducts();
+    }
   }
 
   loadCategories() {
@@ -64,6 +78,26 @@ export class DeliveryPage implements OnInit {
     });
   }
 
+  fetchWarehouseProducts() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+    this.dataService.fetchWarehouseProducts(formData).then((data: any) => {
+      this.warehouseProductData = data.map((product) => ({
+        ...product,
+        SerialNumber: product.serialNumber,
+        ProductName: product.productName,
+        Status: product.status,
+        selected: false // Add selected property
+      }));
+      this.applyWarehouseFilters(); // Filter products after loading
+    }).catch(error => {
+      console.error('Error fetching warehouse products', error);
+    });
+  }
+
   getFilteredProducts(): any[] {
     let filtered = this.productData;
 
@@ -78,38 +112,89 @@ export class DeliveryPage implements OnInit {
     return filtered;
   }
 
+  getFilteredWarehouseProducts(): any[] {
+    let filtered = this.warehouseProductData;
+
+    if (this.searchQuery) {
+      filtered = filtered.filter(product => product.ProductName.toLowerCase().includes(this.searchQuery.toLowerCase()));
+    }
+
+    return filtered;
+  }
+
   applyFilters() {
     this.filteredProductList = this.getFilteredProducts();
   }
 
-  loadSubstations() {
+  applyWarehouseFilters() {
+    this.filteredWarehouseProductList = this.getFilteredWarehouseProducts();
+  }
+
+  loadSites() {
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: 342,
       employeeId: 342,
     };
 
-    this.dataService.fetchSubstations(formData).then((res: any) => {
-      this.substationData = res;
+    this.dataService.fetchSites(formData).then((res: any) => {
+      this.siteData = res;
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
       console.error('Error fetching Substations data', error);
     });
   }
 
+  loadClients() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+
+    this.dataService.fetchClients(formData).then((res: any) => {
+      this.clients = res;
+      console.log("Clients Response ::::::::::::::", res);
+    }).catch(error => {
+      console.error('Error fetching clients data', error);
+    });
+  }
+
+  fetchClientWarehouses() {
+    if (this.selectedClient) {
+      const formData = {
+        permissionName: 'Tasks',
+        employeeIdMiddleware: 342,
+        employeeId: 342,
+        clientId: this.selectedClient.id
+      };
+
+      this.dataService.fetchClientWarehouses(formData).then((res: any) => {
+        this.clientWarehouses = res;
+        console.log("Client Warehouses Response ::::::::::::::", res);
+      }).catch(error => {
+        console.error('Error fetching client warehouses data', error);
+      });
+    }
+  }
+
   trackByProductId(index: number, product: any): string {
     return product.id;
   }
 
-  deliverProduct() {
+  deliverProductToWarehouse() {
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: 342,
       employeeId: 342,
     };
     const selectedProducts = this.productData.filter(product => product.selected);
-    if (!this.selectedSubstation) {
-      alert('Please select a substation.');
+    if (!this.selectedClient) {
+      alert('Please select a client.');
+      return;
+    }
+    if (!this.selectedWarehouse) {
+      alert('Please select a client warehouse.');
       return;
     }
     if (selectedProducts.length === 0) {
@@ -118,18 +203,46 @@ export class DeliveryPage implements OnInit {
     }
     const deliveryDetails = {
       products: selectedProducts,
-      substation: this.selectedSubstation,
+      client: this.selectedClient,
+      warehouse: this.selectedWarehouse,
     };
     this.dataService.deliverProduct(deliveryDetails, formData).subscribe(
       () => {
-        alert('Products delivered successfully!');
-        this.selectedSubstation = null;
+        alert('Products delivered to warehouse successfully!');
+        this.showFurtherDelivery = true;
+        this.selectedClient = null;
+        this.selectedWarehouse = null;
         this.productData.forEach(product => product.selected = false); // Deselect all products
         this.applyFilters(); // Refresh filtered products
       },
       error => {
-        console.error('Error delivering products', error);
-        alert('There was an error delivering the products.');
+        console.error('Error delivering products to warehouse', error);
+        alert('There was an error delivering the products to the warehouse.');
+      }
+    );
+  }
+
+  deliverProductToSite() {
+    if (!this.selectedSite) {
+      alert('Please select a site.');
+      return;
+    }
+    const selectedProducts = this.warehouseProductData.filter(product => product.selected);
+    const furtherDeliveryDetails = {
+      products: selectedProducts,
+      site: this.selectedSite,
+    };
+    this.dataService.furtherDeliverProduct(furtherDeliveryDetails).subscribe(
+      () => {
+        alert('Products delivered to site successfully!');
+        this.selectedSite = null;
+        this.warehouseProductData.forEach(product => product.selected = false); // Deselect all products
+        this.applyWarehouseFilters(); // Refresh filtered products
+        this.showFurtherDelivery = false;
+      },
+      error => {
+        console.error('Error delivering products to site', error);
+        alert('There was an error delivering the products to the site.');
       }
     );
   }

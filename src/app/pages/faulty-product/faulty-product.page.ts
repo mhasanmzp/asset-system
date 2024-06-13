@@ -120,7 +120,7 @@ export class FaultyProductPage implements OnInit {
       employeeId: 342,
     };
 
-    this.dataService.fetchSubstations(formData).then((res: any) => {
+    this.dataService.fetchSites(formData).then((res: any) => {
       this.substationData = res;
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
