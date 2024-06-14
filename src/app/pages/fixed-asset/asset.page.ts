@@ -32,7 +32,8 @@ export class AssetPage implements OnInit {
   ) { }
 
   ngOnInit() { 
-    this.loadClients()
+    this.loadClients();
+    
   }
 
   loadClients() {

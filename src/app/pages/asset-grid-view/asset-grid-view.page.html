@@ -32,29 +32,32 @@
             <!-- Search Bar -->
             <ion-searchbar [(ngModel)]="searchQuery" placeholder="Search Assets"></ion-searchbar>
             <div class="scroll-container">
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="1.5"><strong>Serial Number</strong></ion-col>
-                  <ion-col size="1.5"><strong>Product Name</strong></ion-col>
-                  <ion-col size="1.5"><strong>Warranty Start Date</strong></ion-col>
-                  <ion-col size="1.5"><strong>Warranty End Date</strong></ion-col>
-                  <ion-col size="1.5"><strong>Site Name</strong></ion-col>
-                  <ion-col size="1.5"><strong>Status</strong></ion-col>
-                  <ion-col size="1.5"><strong>Client</strong></ion-col>
-                  <ion-col size="1.5"><strong>Client Warehouse</strong></ion-col>
-
-                </ion-row>
-                <ion-row *ngFor="let data of filteredDeliveredData | filter:searchQuery">
-                  <ion-col size="1.5">{{ data.serialNumber }}</ion-col>
-                  <ion-col size="1.5">{{ data.productName }}</ion-col>
-                  <ion-col size="1.5">{{ data.warrantyStartDate }}</ion-col>
-                  <ion-col size="1.5">{{ data.warrantyEndDate }}</ion-col>
-                  <ion-col size="1.5">{{ data.siteName }}</ion-col>
-                  <ion-col size="1.5">{{ data.status }}</ion-col>
-                  <ion-col size="1.5">{{ data.client }}</ion-col>
-                  <ion-col size="1.5">{{ data.clientWarehouse }}</ion-col>
-                </ion-row>
-              </ion-grid>
+              <table class="asset-table">
+                <thead>
+                  <tr>
+                    <th>Serial Number</th>
+                    <th>Product Name</th>
+                    <th>Warranty Start Date</th>
+                    <th>Warranty End Date</th>
+                    <th>Site Name</th>
+                    <th>Client</th>
+                    <th>Client Warehouse</th>
+                    <th style="text-align: center;">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of filteredDeliveredData | filter:searchQuery">
+                    <td>{{ data.serialNumber }}</td>
+                    <td>{{ data.productName }}</td>
+                    <td>{{ data.warrantyStartDate }}</td>
+                    <td>{{ data.warrantyEndDate }}</td>
+                    <td>{{ data.siteName }}</td>
+                    <td>{{ data.client }}</td>
+                    <td>{{ data.clientWarehouse }}</td>
+                    <td >{{ data.status }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </ion-card-content>
         </ion-card>

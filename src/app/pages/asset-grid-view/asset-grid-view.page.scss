@@ -82,5 +82,29 @@
     --color: #333; /* Text color */
     margin-bottom: 15px;
   }
+  .scroll-container {
+    overflow-x: auto;
+  }
+  
+  .asset-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .asset-table th,
+  .asset-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .asset-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .asset-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+  
   
   

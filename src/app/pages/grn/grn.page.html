@@ -169,7 +169,7 @@
                       <ion-col size="2.5">
                         <ion-item>
                           <ion-label position="stacked">Serial Number: {{j + 1}}</ion-label>
-                          <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[j]" name="serialNumber{{i}}{{j}}" class="small-input"></ion-input>
+                          <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[j]" debounce="1000" name="serialNumber{{i}}{{j}}" class="small-input"></ion-input>
                         </ion-item>
                       </ion-col>
                     </ng-container>
