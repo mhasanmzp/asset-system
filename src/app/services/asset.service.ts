@@ -10,7 +10,7 @@ export class DataService {
   
  
 
-  private baseUrl = 'https://0f7a-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
+  private baseUrl = 'https://942c-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 
@@ -20,24 +20,18 @@ export class DataService {
 
   ///////////test/////////
 
-  
-  // furtherDeliverProduct(data: any): Promise<any> {
-  //   return new Promise((resolve, reject) => {
-  //     this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
-  //       resolve(resp);
-  //     }, error => {
-  //       reject(error);
-  //     });
-  //   });
-  // }
 
-  furtherDeliverProduct(deliveryDetails: any): Observable<Blob> {
-    return this.http.post(this.baseUrl + '/generateChallan', deliveryDetails, { responseType: 'blob' });
+  furtherDeliverProduct(deliveryDetails: any, formData: any): Observable<any> {
+    const payload = {
+      ...formData,
+      deliveryDetails: deliveryDetails
+    };
+    return this.http.post(this.baseUrl + "/update-delivery-data-s2", payload);
   }
 
   fetchClients(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+      this.http.post(this.baseUrl + "/asset-client-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);
@@ -47,7 +41,7 @@ export class DataService {
 
   fetchClientWarehouses(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+      this.http.post(this.baseUrl + '/asset-warehouse-dropdown', data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);
@@ -59,14 +53,23 @@ export class DataService {
   
   fetchWarehouseProducts(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+      this.http.post(this.baseUrl + '/delivery-product-list-s2', data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+
+  }
+  fetchProductsByClient(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + '/delivery-product-list-s2', data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);
       });
     });
   }
-
 
 //////////////////////////////////
   fetchOEM(data: any): Promise<any> {
@@ -101,6 +104,8 @@ export class DataService {
     });
   }
 
+  
+
   fetchEngineers(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + "/asset-engineers-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
@@ -128,7 +133,7 @@ export class DataService {
       ...formData,
       deliveryDetails: deliveryDetails
     };
-    return this.http.post(this.baseUrl + "/update-delivery-data", payload);
+    return this.http.post(this.baseUrl + "/update-delivery-data-s1", payload);
   }
 
   // getSites(): Observable<any[]> {
@@ -240,7 +245,7 @@ export class DataService {
   }
 
   saveOEM(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/asset-oems`, data);
+    return this.http.post(`${this.baseUrl}/asset-oem`, data);
   }
 
   saveProject(data: any): Observable<any> {
@@ -275,6 +280,15 @@ export class DataService {
       material: material
     };
     return this.http.post(this.baseUrl + '/asset-inventory-update-grn', payload);
+  }
+
+
+  saveClient(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/asset-client`, data);
+  }
+
+  saveWarehouse(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/asset-warehouse`, data);
   }
 
 }

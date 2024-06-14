@@ -17,7 +17,7 @@
 
     <!-- OEM Selection -->
     <ion-col size="12" size-md="4">
-      <ion-item>
+      <ion-item class="text-black">
         <ion-label>OEM</ion-label>
         <ion-select [(ngModel)]="selectedOEM" (ionChange)="selectOEM($event)" class="responsive-filter filter-select" placeholder="Select OEM" interface="popover">
           <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">
@@ -33,8 +33,9 @@
     </ion-col>
   </ion-row>
 </ion-header>
+
 <ion-content>
-  <ion-grid>
+  <ion-grid class="text-black">
     <!-- Main Content Row -->
     <ion-row>
       <!-- Products List -->
@@ -45,24 +46,28 @@
           </ion-card-header>
           <ion-card-content>
             <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filteredProducts()" placeholder="Search Products"></ion-searchbar>
-            <ion-grid>
+            <ion-grid class="text-black">
               <ion-row>
-                <ion-col size="2.4"><strong>Serial Number</strong></ion-col>
-                <ion-col size="2.4"><strong>Product Name</strong></ion-col>
-                <ion-col size="2.4"><strong>Category</strong></ion-col>
-                <ion-col size="2.4"><strong>Status</strong></ion-col>
-                <ion-col size="2.4"><strong>Select</strong></ion-col>
+                <ion-col size="2"><strong>Serial Number</strong></ion-col>
+                <ion-col size="2"><strong>Product Name</strong></ion-col>
+                <ion-col size="2"><strong>Category</strong></ion-col>
+                <ion-col size="2"><strong>Status</strong></ion-col>
+                <ion-col size="2"><strong>Select</strong></ion-col>
+                <ion-col size="2"><strong>Remark</strong></ion-col>
               </ion-row>
               <ion-row *ngFor="let product of filteredProducts()">
-                <ion-col size="2.4">{{ product.serialNumber }}</ion-col>
-                <ion-col size="2.4">{{ product.productName }}</ion-col>
-                <ion-col size="2.4">{{ product.categoryName }}</ion-col>
-                <ion-col size="2.4">{{ product.status }}</ion-col>
-                <ion-col size="2.4">
-                  <ion-select [(ngModel)]="product.selection" placeholder="Select">
+                <ion-col size="2">{{ product.serialNumber }}</ion-col>
+                <ion-col size="2">{{ product.productName }}</ion-col>
+                <ion-col size="2">{{ product.categoryName }}</ion-col>
+                <ion-col size="2">{{ product.status }}</ion-col>
+                <ion-col size="2">
+                  <ion-select [(ngModel)]="product.selection" (ionChange)="handleTestResultChange($event, product)" placeholder="Select">
                     <ion-select-option value="PASS">PASS</ion-select-option>
                     <ion-select-option value="FAIL">FAIL</ion-select-option>
                   </ion-select>
+                </ion-col>
+                <ion-col size="2">
+                  <ion-input *ngIf="product.selection === 'FAIL'" [(ngModel)]="product.remark" placeholder="Enter remark"></ion-input>
                 </ion-col>
               </ion-row>
             </ion-grid>
