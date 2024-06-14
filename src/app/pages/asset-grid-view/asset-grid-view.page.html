@@ -34,20 +34,25 @@
             <div class="scroll-container">
               <ion-grid>
                 <ion-row>
-                  <ion-col size="2"><strong>Serial Number</strong></ion-col>
-                  <ion-col size="2"><strong>Product Name</strong></ion-col>
-                  <ion-col size="2"><strong>Warranty Start Date</strong></ion-col>
-                  <ion-col size="2"><strong>Warranty End Date</strong></ion-col>
-                  <ion-col size="2"><strong>Site Name</strong></ion-col>
-                  <ion-col size="2"><strong>Status</strong></ion-col>
+                  <ion-col size="1.5"><strong>Serial Number</strong></ion-col>
+                  <ion-col size="1.5"><strong>Product Name</strong></ion-col>
+                  <ion-col size="1.5"><strong>Warranty Start Date</strong></ion-col>
+                  <ion-col size="1.5"><strong>Warranty End Date</strong></ion-col>
+                  <ion-col size="1.5"><strong>Site Name</strong></ion-col>
+                  <ion-col size="1.5"><strong>Status</strong></ion-col>
+                  <ion-col size="1.5"><strong>Client</strong></ion-col>
+                  <ion-col size="1.5"><strong>Client Warehouse</strong></ion-col>
+
                 </ion-row>
                 <ion-row *ngFor="let data of filteredDeliveredData | filter:searchQuery">
-                  <ion-col size="2">{{ data.serialNumber }}</ion-col>
-                  <ion-col size="2">{{ data.productName }}</ion-col>
-                  <ion-col size="2">{{ data.warrantyStartDate }}</ion-col>
-                  <ion-col size="2">{{ data.warrantyEndDate }}</ion-col>
-                  <ion-col size="2">{{ data.siteName }}</ion-col>
-                  <ion-col size="2">{{ data.status }}</ion-col>
+                  <ion-col size="1.5">{{ data.serialNumber }}</ion-col>
+                  <ion-col size="1.5">{{ data.productName }}</ion-col>
+                  <ion-col size="1.5">{{ data.warrantyStartDate }}</ion-col>
+                  <ion-col size="1.5">{{ data.warrantyEndDate }}</ion-col>
+                  <ion-col size="1.5">{{ data.siteName }}</ion-col>
+                  <ion-col size="1.5" style="margin: ;">{{ data.status }}</ion-col>
+                  <ion-col size="1.5">{{ data.client }}</ion-col>
+                  <ion-col size="1.5">{{ data.clientWarehouse }}</ion-col>
                 </ion-row>
               </ion-grid>
             </div>

@@ -218,7 +218,7 @@ export class DataService {
 
   fetchDeliveredData(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.post(this.baseUrl + '/faulty-asset-dashboard', data, { headers: this.header }).subscribe((resp: any) => {
+      this.http.post(this.baseUrl + '/grid-view-dashboard', data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);

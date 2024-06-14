@@ -46,7 +46,7 @@ export class AssetGridViewPage implements OnInit {
     this.dataService.fetchDeliveredData(formData).then((res: any) => {
       this.deliveredData = res;
       this.filteredDeliveredData = res;
-      this.filterDeliveredData();  // Initial filter
+      // this.filterDeliveredData();  // Initial filter
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
       console.error('Error fetching Delivered data', error);
