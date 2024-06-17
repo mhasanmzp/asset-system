@@ -90,7 +90,7 @@
             </ion-col>
             <ion-col size="2.4">
               <ion-item>
-                <ion-label position="stacked">Challan No. <span class="required-asterisk">*</span></ion-label>
+                <ion-label position="stacked">Challan Number <span class="required-asterisk">*</span></ion-label>
                 <ion-input style="border: 1px solid black; border-radius: 10px;" type="text" [(ngModel)]="material.challanNo" name="challanNo" required></ion-input>
               </ion-item>
             </ion-col>
@@ -156,7 +156,7 @@
                 </ion-col>
                 <ion-col size="2.5">
                   <ion-item>
-                    <ion-label position="stacked">Address <span class="required-asterisk">*</span></ion-label>
+                    <ion-label position="stacked">Store Address <span class="required-asterisk">*</span></ion-label>
                     <ion-input style="border: 1px solid black; border-radius: 10px;" type="text" [(ngModel)]="item.storeLocation" name="storeLocation{{i}}" class="small-input" required></ion-input>
                   </ion-item>
                 </ion-col>
@@ -169,7 +169,7 @@
                       <ion-col size="2.5">
                         <ion-item>
                           <ion-label position="stacked">Serial Number: {{j + 1}}</ion-label>
-                          <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[j]" debounce="1000" name="serialNumber{{i}}{{j}}" class="small-input"></ion-input>
+                          <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[j]" debounce="100000" name="serialNumber{{i}}{{j}}" class="small-input"></ion-input>
                         </ion-item>
                       </ion-col>
                     </ng-container>
@@ -377,7 +377,7 @@
               </ion-col>
               <ion-col size="2.5">
                 <ion-item>
-                  <ion-label position="stacked">Address</ion-label>
+                  <ion-label position="stacked">Store Address</ion-label>
                   <ion-input style="border: 1px solid black; border-radius: 10px;" type="text"
                     [(ngModel)]="item.storeLocation" name="storeLocation{{i}}" class="small-input"
                     required></ion-input>

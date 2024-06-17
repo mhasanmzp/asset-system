@@ -10,7 +10,7 @@ export class DataService {
   
  
 
-  private baseUrl = 'https://f17b-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
+  private baseUrl = 'https://5c00-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 

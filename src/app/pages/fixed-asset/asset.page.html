@@ -132,8 +132,8 @@
             <ion-row *ngIf="data.masterData === 'Category'">
               <ion-col size="12">
                 <ion-item *ngFor="let categoryInput of categoryInputs; let i = index">
-                  <ion-input [(ngModel)]="categoryInputs[i]" placeholder="Enter Category" name="category{{i}}" debounce="1000"
-                    style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                  <ion-input [(ngModel)]="categoryInputs[i]" placeholder="Enter Category" name="category{{i}}" debounce="100000"
+                    style="border: 1px solid #ccc; border-radius: 10px; padding: 8px; "></ion-input>
                   <ion-button slot="end" (click)="removeCategoryInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
                   </ion-button>
@@ -148,7 +148,7 @@
             <ion-row *ngIf="data.masterData === 'OEM'">
               <ion-col size="12">
                 <ion-item *ngFor="let oemInput of oemInputs; let i = index">
-                  <ion-input [(ngModel)]="oemInputs[i]" placeholder="Enter OEM" name="oem{{i}}" debounce="1000"
+                  <ion-input [(ngModel)]="oemInputs[i]" placeholder="Enter OEM" name="oem{{i}}" debounce="100000"
                     style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                   <ion-button slot="end" (click)="removeOEMInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
@@ -164,7 +164,7 @@
             <ion-row *ngIf="data.masterData === 'Project'">
               <ion-col size="12">
                 <ion-item *ngFor="let projectInput of projectInputs; let i = index">
-                  <ion-input [(ngModel)]="projectInputs[i]" placeholder="Enter Project" name="project{{i}}" debounce="1000"
+                  <ion-input [(ngModel)]="projectInputs[i]" placeholder="Enter Project" name="project{{i}}" debounce="100000"
                     style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                   <ion-button slot="end" (click)="removeProjectInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
@@ -180,7 +180,7 @@
             <ion-row *ngIf="data.masterData === 'Site'">
               <ion-col size="12">
                 <ion-item *ngFor="let siteInput of siteInputs; let i = index">
-                  <ion-input [(ngModel)]="siteInputs[i]" placeholder="Enter Site" name="site{{i}}" debounce="1000"
+                  <ion-input [(ngModel)]="siteInputs[i]" placeholder="Enter Site" name="site{{i}}" debounce="100000"
                     style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                   <ion-button slot="end" (click)="removeSiteInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
@@ -196,7 +196,7 @@
             <ion-row *ngIf="data.masterData === 'Store'">
               <ion-col size="12">
                 <ion-item *ngFor="let storeInput of storeInputs; let i = index">
-                  <ion-input [(ngModel)]="storeInputs[i]" placeholder="Enter Store" name="store{{i}}" debounce="1000"
+                  <ion-input [(ngModel)]="storeInputs[i]" placeholder="Enter Store" name="store{{i}}" debounce="10000"
                     style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                   <ion-button slot="end" (click)="removeStoreInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
@@ -212,7 +212,7 @@
             <ion-row *ngIf="data.masterData === 'Client'">
               <ion-col size="12">
                 <ion-item *ngFor="let clientInput of clientInputs; let i = index">
-                  <ion-input [(ngModel)]="clientInputs[i]" placeholder="Enter Client" name="client{{i}}" debounce="1000"
+                  <ion-input [(ngModel)]="clientInputs[i]" placeholder="Enter Client" name="client{{i}}" debounce="100000"
                     style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                   <ion-button slot="end" (click)="removeClientInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
@@ -234,7 +234,7 @@
                   </ion-select>
                 </ion-item>
                 <ion-item *ngFor="let warehouseInput of warehouseInputs; let i = index">
-                  <ion-input [(ngModel)]="warehouseInputs[i]" placeholder="Enter Warehouse" name="warehouse{{i}}" debounce="1000"
+                  <ion-input [(ngModel)]="warehouseInputs[i]" placeholder="Enter Warehouse" name="warehouse{{i}}" debounce="100000"
                     style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                   <ion-button slot="end" (click)="removeWarehouseInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
