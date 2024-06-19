@@ -173,8 +173,7 @@ export class GrnPage implements OnInit {
   }
 
   updateSerialNumbersArray(row) {
-    const quantity = row.quantity;
-    row.serialNumbers = Array.from({ length: quantity }, (_, i) => row.serialNumbers[i] || '');
+    // Do nothing here to keep serialNumbers array unchanged
   }
 
   resetAddMaterialModal() {
@@ -204,7 +203,7 @@ export class GrnPage implements OnInit {
       employeeIdMiddleware: 342,
       employeeId: 342,
     };
-    console.log('formdata', formData);
+
     this.dataService.fetchData(formData).then((data: any) => {
       console.log('Asset DATA', data);
       this.purchaseData = data.purchaseData.map((purchaseData) => ({
@@ -291,7 +290,6 @@ export class GrnPage implements OnInit {
       }
     );
   }
-
 
   applyFilter() {
     if (this.searchQuery.trim() === '') {

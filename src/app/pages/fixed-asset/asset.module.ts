@@ -13,7 +13,8 @@ import { AssetPage } from './asset.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    AssetPageRoutingModule
+    AssetPageRoutingModule,
+    
   ],
   declarations: [AssetPage]
 })
