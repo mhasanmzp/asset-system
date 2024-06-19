@@ -26,7 +26,8 @@ export class GrnPage implements OnInit {
     storeName: '',
     oemName: '',
     challanNo: '',
-    challanDate: ''
+    challanDate: '',
+    storeAddress: ''
   };
   materialRows: any[] = [{
     categoryName: '',
@@ -37,10 +38,12 @@ export class GrnPage implements OnInit {
     storeLocation: '',
     serialNumbers: ['']
   }];
+  currentPage = 1;
+  itemsPerPage = 10;
 
   constructor(
     private modalController: ModalController,
-    private dataService: DataService, // Inject the DataService
+    private dataService: DataService,
     private toastController: ToastController
   ) { }
 
@@ -62,7 +65,7 @@ export class GrnPage implements OnInit {
       this.storeData = res;
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
-      console.error('Error fetching OEM data', error);
+      console.error('Error fetching store data', error);
     });
   }
 
@@ -92,22 +95,19 @@ export class GrnPage implements OnInit {
       this.data2 = res;
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
-      console.error('Error fetching Categories data', error);
+      console.error('Error fetching categories data', error);
     });
   }
 
   openDetailsModal(purchaseId: string) {
-    // Prepare formData
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: 342,
       employeeId: 342,
       purchaseId: purchaseId
     };
-  
-    // Fetch details using purchaseId and formData
+
     this.dataService.getItemsByPurchaseId(formData).then((data: any[]) => {
-      // Map each item in data to extract details
       const items = data.map(item => ({
         categoryName: item.categoryName,
         productName: item.productName,
@@ -116,27 +116,24 @@ export class GrnPage implements OnInit {
         storeLocation: item.storeLocation,
         serialNumbers: item.serialNumber ? [item.serialNumber] : [],
         status: item.status,
-        challanNo: item.challanNumber // Include challanNo here
+        challanNo: item.challanNumber
       }));
-  
-      // Populate the "Details" modal with fetched data
+
       this.selectedPurchase = {
         purchaseId: purchaseId,
         oemName: data[0].oemName,
         storeName: data[0].inventoryStoreName,
         challanDate: data[0].purchaseDate,
-        items: items // Assign items array
+        items: items
       };
-  
-      // Open the "Details" modal
+
       this.isDetailModalOpen = true;
     }).catch(error => {
       console.error('Error fetching data:', error);
     });
   }
-  
+
   closeDetailsModal() {
-    // Close the "Details" modal
     this.isDetailModalOpen = false;
   }
 
@@ -156,8 +153,8 @@ export class GrnPage implements OnInit {
     this.isAddMoreDataModalOpen = false;
   }
 
-  addRow() {
-    this.materialRows.push({
+  addRow(rowData = null) {
+    const newRow = rowData ? JSON.parse(JSON.stringify(rowData)) : {
       categoryName: '',
       productName: '',
       quantity: '',
@@ -165,7 +162,8 @@ export class GrnPage implements OnInit {
       warrantyPeriodMonths: '',
       storeLocation: '',
       serialNumbers: ['']
-    });
+    };
+    this.materialRows.push(newRow);
   }
 
   removeRow(index: number) {
@@ -186,7 +184,8 @@ export class GrnPage implements OnInit {
       storeName: '',
       oemName: '',
       challanNo: '',
-      challanDate: ''
+      challanDate: '',
+      storeAddress: ''
     };
     this.materialRows = [{
       categoryName: '',
@@ -229,9 +228,7 @@ export class GrnPage implements OnInit {
       materialRows: this.materialRows
     };
 
-    // Save material via API using DataService
     this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
-      // Show success toast message
       const toast = await this.toastController.create({
         message: 'Asset saved successfully!',
         duration: 5000,
@@ -239,14 +236,10 @@ export class GrnPage implements OnInit {
       });
       await toast.present();
 
-      // Close the modal
       this.closeAddMaterialModal();
-      // Refresh the data
       this.fetchData();
-      // Reset the entered data of the Modal: Add Asset
-      this.resetAddMaterialModal()
+      this.resetAddMaterialModal();
     }, async error => {
-      // Handle error
       const toast = await this.toastController.create({
         message: 'Failed to save asset. Please try again.',
         duration: 2000,
@@ -272,30 +265,23 @@ export class GrnPage implements OnInit {
         quantityUnit: row.quantityUnit,
         warrantyPeriodMonths: row.warrantyPeriodMonths,
         storeLocation: row.storeLocation,
-        serialNumbers: row.serialNumbers,
-        storeName: row.storeName,
-
+        serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
       }))
     };
-  
-    // Save more data via API using DataService
+
     this.dataService.submitMoreData(this.material, formData).subscribe(
       async response => {
-        // Show success toast message
         const toast = await this.toastController.create({
           message: 'More data saved successfully!',
           duration: 5000,
           position: 'bottom'
         });
         await toast.present();
-  
-        // Close the modal
+
         this.closeAddMoreDataModal();
-        // Refresh the data
         this.fetchData();
       },
       async error => {
-        // Handle error
         const toast = await this.toastController.create({
           message: 'Failed to save more data. Please try again.',
           duration: 2000,
@@ -305,51 +291,37 @@ export class GrnPage implements OnInit {
       }
     );
   }
-  
 
-  // async saveMoreData() {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: 342,
-  //     employeeId: 342,
-  //     // Add any other fields you need for the form
-  //   };
 
-  //   // Save more data via API using DataService
-  //   this.dataService.submitMoreData(this.material,formData).subscribe(async response => {
-  //     // Show success toast message
-  //     const toast = await this.toastController.create({
-  //       message: 'More data saved successfully!',
-  //       duration: 5000,
-  //       position: 'bottom'
-  //     });
-  //     await toast.present();
-
-  //     // Close the modal
-  //     this.closeAddMoreDataModal();
-  //     // Refresh the data
-  //     this.fetchData();
-  //   }, async error => {
-  //     // Handle error
-  //     const toast = await this.toastController.create({
-  //       message: 'Failed to save more data. Please try again.',
-  //       duration: 2000,
-  //       position: 'bottom'
-  //     });
-  //     await toast.present();
-  //   });
-  // }
-
-  // Filter purchase data based on search query
   applyFilter() {
     if (this.searchQuery.trim() === '') {
-      // If search query is empty or only contains whitespace, reset to all data
       this.filteredData = this.purchaseData;
     } else {
-      // Otherwise, filter the data
       this.filteredData = this.purchaseData.filter(item =>
         item.productName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
+    }
+  }
+
+  get paginatedRows() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.materialRows.slice(start, end);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.materialRows.length / this.itemsPerPage);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
     }
   }
 }
