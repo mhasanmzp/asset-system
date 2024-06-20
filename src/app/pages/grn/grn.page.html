@@ -203,6 +203,13 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>Details</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="generateChallan()">
+            <ion-icon slot="icon-only" name="document-outline"></ion-icon>
+            Generate Challan
+          </ion-button>
+        </ion-buttons>
+        
         <!-- <ion-button (click)="openAddMoreDataModal()">Add More Data</ion-button> -->
         <ion-buttons slot="end">
           <ion-button (click)="openAddMoreDataModal()">
@@ -291,7 +298,8 @@
         <ion-buttons slot="end">
           <ion-button (click)="addRow()">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
-            Add Row</ion-button>
+            Add Row
+          </ion-button>
           <ion-button (click)="closeAddMoreDataModal()">
             <ion-icon slot="icon-only" name="close-outline"></ion-icon>
           </ion-button>
@@ -386,10 +394,10 @@
                 </ion-col>
                 <ion-col size="2" class="ion-align-self-end">
                   <ion-item lines="none" style="display: flex; justify-content: space-around;">
-                    <ion-button fill="clear" (click)="removeRow(i)" style="font-size: 1.2em; --size: 48px; ">
+                    <ion-button fill="clear" (click)="removeRowMoreData(i)" style="font-size: 1.2em; --size: 48px; ">
                       <ion-icon name="trash-bin-outline" style="font-size: 1.2em;" title="Remove row"></ion-icon>
                     </ion-button>
-                    <ion-button fill="clear" (click)="addRow()" style="font-size: 1.2em; --size: 48px;">
+                    <ion-button fill="clear" (click)="addRowMoreData()" style="font-size: 1.2em; --size: 48px;">
                       <ion-icon name="duplicate" style="font-size: 1.2em;" ></ion-icon>
                     </ion-button>
                   </ion-item>
@@ -416,6 +424,7 @@
       </form>
     </ion-content>
   </ng-template>
-</ion-modal> 
+</ion-modal>
+
 </ion-content>
  

@@ -6,11 +6,11 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class DataService {
-  
-  
- 
 
-  private baseUrl = 'https://73a1-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
+
+
+
+  private baseUrl = 'https://4266-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 
@@ -20,6 +20,19 @@ export class DataService {
 
   ///////////test/////////
 
+  
+  getOneEmployee(formData) {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + 'getoneEmployee', formData).subscribe(
+        (resp: any) => {
+          resolve(resp);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
 
   furtherDeliverProduct(deliveryDetails: any, formData: any): Observable<any> {
     const payload = {
@@ -49,8 +62,6 @@ export class DataService {
     });
   }
 
-
-  
   fetchWarehouseProducts(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + '/delivery-product-list-s2', data, { headers: this.header }).subscribe((resp: any) => {
@@ -61,6 +72,7 @@ export class DataService {
     });
 
   }
+
   fetchProductsByClient(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + '/delivery-product-list-s2', data, { headers: this.header }).subscribe((resp: any) => {
@@ -71,7 +83,7 @@ export class DataService {
     });
   }
 
-//////////////////////////////////
+  //////////////////////////////////
   fetchOEM(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
@@ -81,8 +93,6 @@ export class DataService {
       });
     });
   }
-
-
 
   fetchStore(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -103,8 +113,6 @@ export class DataService {
       });
     });
   }
-
-  
 
   fetchEngineers(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -136,10 +144,6 @@ export class DataService {
     return this.http.post(this.baseUrl + "/update-delivery-data-s1", payload);
   }
 
-  // getSites(): Observable<any[]> {
-  //   return this.http.get<any[]>(this.baseUrl);
-  // }
-
   generateChallan(deliveryDetails: any): Observable<Blob> {
     return this.http.post(this.baseUrl + '/generateChallan', deliveryDetails, { responseType: 'blob' });
   }
@@ -148,13 +152,9 @@ export class DataService {
     return this.http.get<any[]>(`${this.baseUrl}?substation=${substation}`);
   }
 
-  // getProducts(): Observable<any[]> {
-  //   return this.http.get<any[]>(this.baseUrl);
-  // }
-
   getProducts(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.post(this.baseUrl +'/scrap-managemet-dashboard', data, { headers: this.header }).subscribe((resp: any) => {
+      this.http.post(this.baseUrl + '/scrap-managemet-dashboard', data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);
@@ -162,9 +162,7 @@ export class DataService {
     });
   }
 
-  // updateProduct(product: any): Observable<any> {
-  //   return this.http.put<any>(`${this.baseUrl}/${product.id}`, product);
-  // }
+  
 
   updateProduct(product: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -290,6 +288,7 @@ export class DataService {
   saveWarehouse(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/asset-warehouse`, data);
   }
+
 
 }
 
