@@ -183,8 +183,8 @@ export class GrnPage implements OnInit {
     }
   }
 
-  addRowMoreData(rowData2 = null) {
-    const newRow2 = rowData2 ? JSON.parse(JSON.stringify(rowData2)) : {
+  addRow2(rowData = null) {
+    const newRow = rowData ? JSON.parse(JSON.stringify(rowData)) : {
       categoryName: '',
       productName: '',
       quantity: '',
@@ -193,14 +193,33 @@ export class GrnPage implements OnInit {
       storeLocation: '',
       serialNumbers: ['']
     };
-    this.moreDataRows.push(newRow2);
+    this.materialRows.push(newRow);
   }
 
-  removeRowMoreData(index: number) {
-    if (this.moreDataRows.length > 1) {
-      this.moreDataRows.splice(index, 1);
+  removeRow2(index: number) {
+    if (this.materialRows.length > 1) {
+      this.materialRows.splice(index, 1);
     }
   }
+
+  // addRowMoreData(rowData = null) {
+  //   const newRow = rowData ? JSON.parse(JSON.stringify(rowData)) : {
+  //     categoryName: '',
+  //     productName: '',
+  //     quantity: '',
+  //     quantityUnit: '',
+  //     warrantyPeriodMonths: '',
+  //     storeLocation: '',
+  //     serialNumbers: ['']
+  //   };
+  //   this.moreDataRows.push(newRow);
+  // }
+
+  // removeRowMoreData(index: number) {
+  //   if (this.moreDataRows.length > 1) {
+  //     this.moreDataRows.splice(index, 1);
+  //   }
+  // }
 
   updateSerialNumbersArray(row) {
     // Do nothing here to keep serialNumbers array unchanged
