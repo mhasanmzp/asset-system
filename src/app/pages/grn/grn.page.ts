@@ -11,6 +11,7 @@ import 'jspdf-autotable';
 })
 export class GrnPage implements OnInit {
   purchaseData: any[] = [];
+  userId=localStorage.getItem("userId");
   filteredData: any[] = [];
   isModalOpen = false;
   isDetailModalOpen = false;
@@ -52,6 +53,7 @@ export class GrnPage implements OnInit {
   currentPage = 1;
   itemsPerPage = 10;
 
+
   constructor(
     private modalController: ModalController,
     private dataService: DataService,
@@ -83,10 +85,11 @@ export class GrnPage implements OnInit {
   loadOems() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId
     };
-
+    console.log("UserId:::::::::::::::",formData);
+    
     this.dataService.fetchOEM(formData).then((res: any) => {
       this.data = res;
       console.log("Response ::::::::::::::", res);
@@ -154,6 +157,7 @@ export class GrnPage implements OnInit {
 
   closeAddMaterialModal() {
     this.isModalOpen = false;
+    this.resetAddMaterialModal()
   }
 
   openAddMoreDataModal() {
@@ -162,6 +166,8 @@ export class GrnPage implements OnInit {
 
   closeAddMoreDataModal() {
     this.isAddMoreDataModalOpen = false;
+    this.resetAddMaterialModal()
+
   }
 
   addRow(rowData = null) {
@@ -202,24 +208,6 @@ export class GrnPage implements OnInit {
     }
   }
 
-  // addRowMoreData(rowData = null) {
-  //   const newRow = rowData ? JSON.parse(JSON.stringify(rowData)) : {
-  //     categoryName: '',
-  //     productName: '',
-  //     quantity: '',
-  //     quantityUnit: '',
-  //     warrantyPeriodMonths: '',
-  //     storeLocation: '',
-  //     serialNumbers: ['']
-  //   };
-  //   this.moreDataRows.push(newRow);
-  // }
-
-  // removeRowMoreData(index: number) {
-  //   if (this.moreDataRows.length > 1) {
-  //     this.moreDataRows.splice(index, 1);
-  //   }
-  // }
 
   updateSerialNumbersArray(row) {
     // Do nothing here to keep serialNumbers array unchanged
@@ -454,7 +442,7 @@ export class GrnPage implements OnInit {
       });
 
       // Save the PDF
-      doc.save('challan.pdf');
+      doc.save('Inward-Challan.pdf');
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
@@ -482,7 +470,6 @@ export class GrnPage implements OnInit {
     });
   }
 }
-
 
 // import { Component, OnInit } from '@angular/core';
 // import { ModalController, ToastController } from '@ionic/angular';
