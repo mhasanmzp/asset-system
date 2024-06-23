@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-delivery',
@@ -28,7 +29,7 @@ export class DeliveryPage implements OnInit {
   showFurtherDelivery: boolean = false;
   selectedSegment: string = 'step1';
   isClientDetailsModalOpen: boolean = false;
-
+  // selectedPurchase: any;
   gstNumber: string = '';
   billingClient: any;
   billingWarehouse: any;
@@ -40,6 +41,17 @@ export class DeliveryPage implements OnInit {
   otherReferences: string = '';
   destination: string = '';
   motorVehicleNo: string = '';
+  selectedPurchase: any = {
+    purchaseId: '12345', // Dummy data for testing
+    items: [
+      { productName: 'Product 1', quantity: 10, serialNumbers: ['SN1', 'SN2'] },
+      { productName: 'Product 2', quantity: 5, serialNumbers: ['SN3'] }
+    ],
+    challanNo: 'CH12345', // Dummy data for testing
+    storeLocation: 'Warehouse 1', // Dummy data for testing
+    warrantyPeriodMonths: '12', // Dummy data for testing
+    status: 'Dispatched' // Dummy data for testing
+  };
 
   constructor(private dataService: DataService, private toastController: ToastController) { }
 
@@ -242,59 +254,61 @@ export class DeliveryPage implements OnInit {
     this.isClientDetailsModalOpen = false;
   }
 
-  deliverProductToWarehouse() {
-    const formData = {
-      permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
-    };
-    const selectedProducts = this.productData.filter(product => product.selected);
-    if (!this.selectedClient) {
-      this.presentToast('Please select a client.');
-      return;
-    }
-    if (!this.selectedWarehouse) {
-      this.presentToast('Please select a client warehouse.');
-      return;
-    }
-    if (selectedProducts.length === 0) {
-      this.presentToast('Please select at least one product.');
-      return;
-    }
-    const deliveryDetails = {
-      products: selectedProducts,
-      client: this.selectedClient,
-      warehouse: this.selectedWarehouse,
-      gstNumber: this.gstNumber,
-      billingClient: this.billingClient,
-      billingWarehouse: this.billingWarehouse,
-      billingGstNumber: this.billingGstNumber,
-      companyPanNumber: this.companyPanNumber,
-      dispatchedThrough: this.dispatchedThrough,
-      dispatchedDate: this.dispatchedDate,
-      paymentTerms: this.paymentTerms,
-      otherReferences: this.otherReferences,
-      destination: this.destination,
-      motorVehicleNo: this.motorVehicleNo,
-    };
-    this.dataService.deliverProduct(deliveryDetails, formData).subscribe(
-      () => {
-        this.presentToast('Products delivered to warehouse successfully!');
-        this.showFurtherDelivery = true;
-        this.selectedClient = null;
-        this.selectedWarehouse = null;
-        this.productData.forEach(product => product.selected = false); // Deselect all products
-        this.applyFilters(); // Refresh filtered products
-        this.closeClientDetailsModal(); // Close the modal
-      },
-      error => {
-        console.error('Error delivering products to warehouse', error);
-        this.presentToast('There was an error delivering the products to the warehouse.');
-      }
-    );
-  }
+  // deliverProductToWarehouse() {
+  //   const formData = {
+  //     permissionName: 'Tasks',
+  //     employeeIdMiddleware: 342,
+  //     employeeId: 342,
+  //   };
+  //   const selectedProducts = this.productData.filter(product => product.selected);
+  //   if (!this.selectedClient) {
+  //     this.presentToast('Please select a client.');
+  //     return;
+  //   }
+  //   if (!this.selectedWarehouse) {
+  //     this.presentToast('Please select a client warehouse.');
+  //     return;
+  //   }
+  //   if (selectedProducts.length === 0) {
+  //     this.presentToast('Please select at least one product.');
+  //     return;
+  //   }
+  //   const deliveryDetails = {
+  //     products: selectedProducts,
+  //     client: this.selectedClient,
+  //     warehouse: this.selectedWarehouse,
+  //     gstNumber: this.gstNumber,
+  //     billingClient: this.billingClient,
+  //     billingWarehouse: this.billingWarehouse,
+  //     billingGstNumber: this.billingGstNumber,
+  //     companyPanNumber: this.companyPanNumber,
+  //     dispatchedThrough: this.dispatchedThrough,
+  //     dispatchedDate: this.dispatchedDate,
+  //     paymentTerms: this.paymentTerms,
+  //     otherReferences: this.otherReferences,
+  //     destination: this.destination,
+  //     motorVehicleNo: this.motorVehicleNo,
+  //   };
+  //   this.dataService.deliverProduct(deliveryDetails, formData).subscribe(
+  //     () => {
+  //       this.presentToast('Products delivered to warehouse successfully!');
+  //       this.showFurtherDelivery = true;
+  //       this.selectedClient = null;
+  //       this.selectedWarehouse = null;
+  //       this.productData.forEach(product => product.selected = false); // Deselect all products
+  //       this.applyFilters(); // Refresh filtered products
+  //       this.closeClientDetailsModal(); // Close the modal
+  //     },
+  //     error => {
+  //       console.error('Error delivering products to warehouse', error);
+  //       this.presentToast('There was an error delivering the products to the warehouse.');
+  //     }
+  //   );
+  // }
 
   deliverProductToSite() {
+      //   const selectedProducts = this.productData.filter(product => product.selected);
+
     if (!this.selectedSite) {
       this.presentToast('Please select a site.');
       return;
@@ -324,23 +338,311 @@ export class DeliveryPage implements OnInit {
     );
   }
 
-  downloadChallan(deliveryDetails: any) {
-    this.dataService.generateChallan(deliveryDetails).subscribe(
-      (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'outward_challan.pdf';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      },
-      error => {
-        console.error('Error generating challan', error);
-        this.presentToast('There was an error generating the challan.');
+  //Original
+
+  // async generateChallan() {
+  //   const doc = new jsPDF();
+
+  //   const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
+
+  //   try {
+  //     const imgData = await this.getBase64ImageFromURL(imageUrl);
+
+  //     const addTemplate = (pageIndex) => {
+  //       doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+  //       doc.setFontSize(12);
+  //       doc.text(`Challan Number: #${this.selectedPurchase.purchaseId}`, 10, 10);
+  //       doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
+  //     };
+
+  //     let pageIndex = 0;
+  //     addTemplate(pageIndex);
+
+  //     doc.setFontSize(10);
+  //     const startX = 10;
+  //     const initialY = 73;
+  //     let startY = initialY;
+  //     const lineHeight = 8;
+  //     const maxPageHeight = 270;
+
+  //     // Add modal data to the PDF
+  //     doc.text(`Client: ${this.selectedClient}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Client Warehouse: ${this.selectedWarehouse}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`GST Number: ${this.gstNumber}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Billing Client: ${this.billingClient}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Billing Warehouse: ${this.billingWarehouse}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Billing GST Number: ${this.billingGstNumber}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Company PAN Number: ${this.companyPanNumber}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Dispatched Through: ${this.dispatchedThrough}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Dispatched Date: ${this.dispatchedDate}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Payment Terms: ${this.paymentTerms}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Destination: ${this.destination}`, startX, startY);
+  //     startY += lineHeight;
+  //     doc.text(`Motor Vehicle No: ${this.motorVehicleNo}`, startX, startY);
+  //     startY += lineHeight * 2; // Add extra space before product details
+
+  //     const itemDetails = {};
+
+  //     this.selectedPurchase.items.forEach((item) => {
+  //       const productName = item.productName;
+  //       const quantity = item.quantity || 1;
+  //       const serialNumbers = item.serialNumbers || [];
+
+  //       if (!itemDetails[productName]) {
+  //         itemDetails[productName] = {
+  //           quantity: 0,
+  //           serialNumbers: []
+  //         };
+  //       }
+  //       itemDetails[productName].quantity += quantity;
+  //       itemDetails[productName].serialNumbers.push(...serialNumbers);
+  //     });
+
+  //     Object.keys(itemDetails).forEach((productName, index) => {
+  //       const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
+  //       const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
+  //       const totalHeight = splitSerialNumbers.length * lineHeight;
+
+  //       if (startY + totalHeight > maxPageHeight) {
+  //         pageIndex++;
+  //         doc.addPage();
+  //         addTemplate(pageIndex);
+  //         doc.setFontSize(10);
+  //         startY = initialY;
+  //       }
+
+  //       doc.text(`${index + 1}`, startX + 6.75, startY);
+  //       doc.text(productName || '', startX + 15, startY);
+  //       doc.text(itemDetails[productName].quantity.toString(), startX + 177, startY);
+  //       doc.text(this.selectedPurchase.challanNo || '', startX + 110, startY);
+  //       doc.text(this.selectedPurchase.storeLocation || '', startX + 140, startY);
+  //       doc.text(this.selectedPurchase.warrantyPeriodMonths || '', startX + 170, startY);
+  //       doc.text(this.selectedPurchase.status || '', startX + 190, startY);
+
+  //       splitSerialNumbers.forEach((line, lineIndex) => {
+  //         doc.text(line, startX + 70, startY + (lineIndex * lineHeight));
+  //       });
+
+  //       startY += totalHeight + lineHeight / 2;
+  //     });
+
+  //     doc.save('Inward-Challan.pdf');
+  //   } catch (error) {
+  //     console.error('Error generating PDF:', error);
+  //   }
+  // }
+
+  // getBase64ImageFromURL(url: string): Promise<string> {
+  //   return new Promise((resolve, reject) => {
+  //     const img = new Image();
+  //     img.crossOrigin = 'Anonymous';
+  //     img.onload = () => {
+  //       const canvas = document.createElement('canvas');
+  //       canvas.width = img.width;
+  //       canvas.height = img.height;
+  //       const ctx = canvas.getContext('2d');
+  //       if (ctx) {
+  //         ctx.drawImage(img, 0, 0);
+  //         const dataURL = canvas.toDataURL('image/jpeg');
+  //         resolve(dataURL);
+  //       } else {
+  //         reject(new Error('Canvas context is null'));
+  //       }
+  //     };
+  //     img.onerror = reject;
+  //     img.src = url;
+  //   });
+  // }
+
+  // deliverProductToWarehouse() {
+  //   const formData = {
+  //     permissionName: 'Tasks',
+  //     employeeIdMiddleware: 342,
+  //     employeeId: 342,
+  //   };
+  //   const selectedProducts = this.productData.filter(product => product.selected);
+  //   if (!this.selectedClient) {
+  //     this.presentToast('Please select a client.');
+  //     return;
+  //   }
+  //   if (!this.selectedWarehouse) {
+  //     this.presentToast('Please select a client warehouse.');
+  //     return;
+  //   }
+  //   if (selectedProducts.length === 0) {
+  //     this.presentToast('Please select at least one product.');
+  //     return;
+  //   }
+  //   const deliveryDetails = {
+  //     products: selectedProducts,
+  //     client: this.selectedClient,
+  //     warehouse: this.selectedWarehouse,
+  //     gstNumber: this.gstNumber,
+  //     billingClient: this.billingClient,
+  //     billingWarehouse: this.billingWarehouse,
+  //     billingGstNumber: this.billingGstNumber,
+  //     companyPanNumber: this.companyPanNumber,
+  //     dispatchedThrough: this.dispatchedThrough,
+  //     dispatchedDate: this.dispatchedDate,
+  //     paymentTerms: this.paymentTerms,
+  //     otherReferences: this.otherReferences,
+  //     destination: this.destination,
+  //     motorVehicleNo: this.motorVehicleNo,
+  //   };
+  //   this.dataService.deliverProduct(deliveryDetails, formData).subscribe(
+  //     () => {
+  //       this.presentToast('Products delivered to warehouse successfully!');
+  //       this.showFurtherDelivery = true;
+  //       this.selectedClient = null;
+  //       this.selectedWarehouse = null;
+  //       this.productData.forEach(product => product.selected = false); // Deselect all products
+  //       this.applyFilters(); // Refresh filtered products
+  //       this.closeClientDetailsModal(); // Close the modal
+  //       this.generateChallan(); // Call generateChallan to create the PDF
+  //     },
+  //     error => {
+  //       console.error('Error delivering products to warehouse', error);
+  //       this.presentToast('There was an error delivering the products to the warehouse.');
+  //     }
+  //   );
+  // }
+
+/// Original
+
+//Testing
+async generateChallan() {
+  const doc = new jsPDF();
+  const imageUrl = 'assets/outwardChallan.jpg';
+
+  try {
+    const imgData = await this.getBase64ImageFromURL(imageUrl);
+
+    const addTemplate = (pageIndex) => {
+      doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+      doc.setFontSize(12);
+      doc.text(`Challan Number: #${this.selectedPurchase.purchaseId}`, 10, 10);
+      doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
+    };
+
+    let pageIndex = 0;
+    addTemplate(pageIndex);
+
+    doc.setFontSize(10);
+    const startX = 10;
+    const initialY = 73;
+    let startY = initialY;
+    const lineHeight = 8;
+    const maxPageHeight = 270;
+
+    doc.text(`${this.selectedClient}`, 15, 55);
+    startY += lineHeight;
+    doc.text(`Client Warehouse: ${this.selectedWarehouse}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`GST Number: ${this.gstNumber}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Billing Client: ${this.billingClient}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Billing Warehouse: ${this.billingWarehouse}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Billing GST Number: ${this.billingGstNumber}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Company PAN Number: ${this.companyPanNumber}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Dispatched Through: ${this.dispatchedThrough}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Dispatched Date: ${this.dispatchedDate}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Payment Terms: ${this.paymentTerms}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Destination: ${this.destination}`, startX, startY);
+    startY += lineHeight;
+    doc.text(`Motor Vehicle No: ${this.motorVehicleNo}`, startX, startY);
+    startY += lineHeight * 2;
+
+    const itemDetails = {};
+
+    this.selectedPurchase.items.forEach((item) => {
+      const productName = item.productName;
+      const quantity = item.quantity || 1;
+      const serialNumbers = item.serialNumbers || [];
+
+      if (!itemDetails[productName]) {
+        itemDetails[productName] = {
+          quantity: 0,
+          serialNumbers: []
+        };
       }
-    );
+      itemDetails[productName].quantity += quantity;
+      itemDetails[productName].serialNumbers.push(...serialNumbers);
+    });
+
+    Object.keys(itemDetails).forEach((productName, index) => {
+      const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
+      const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
+      const totalHeight = splitSerialNumbers.length * lineHeight;
+
+      if (startY + totalHeight > maxPageHeight) {
+        pageIndex++;
+        doc.addPage();
+        addTemplate(pageIndex);
+        doc.setFontSize(10);
+        startY = initialY;
+      }
+
+      doc.text(`${index + 1}`, startX + 6.75, startY);
+      doc.text(productName || '', startX + 15, startY);
+      doc.text(itemDetails[productName].quantity.toString(), startX + 177, startY);
+      // doc.text(this.selectedPurchase.challanNo || '', startX + 110, startY);
+      // doc.text(this.selectedPurchase.storeLocation || '', startX + 140, startY);
+      // doc.text(this.selectedPurchase.warrantyPeriodMonths || '', startX + 170, startY);
+      // doc.text(this.selectedPurchase.status || '', startX + 190, startY);
+
+      splitSerialNumbers.forEach((line, lineIndex) => {
+        doc.text(line, startX + 70, startY + (lineIndex * lineHeight));
+      });
+
+      startY += totalHeight + lineHeight / 2;
+    });
+
+    doc.save('Delivery-Challan.pdf');
+  } catch (error) {
+    console.error('Error generating PDF:', error);
   }
+}
+
+getBase64ImageFromURL(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL('image/jpeg');
+        resolve(dataURL);
+      } else {
+        reject(new Error('Canvas context is null'));
+      }
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+//testing
+
 }
 
 
