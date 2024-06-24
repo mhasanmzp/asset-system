@@ -296,7 +296,7 @@
       <ion-toolbar>
         <ion-title>Add More Data</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="addRow()">
+          <ion-button (click)="addRow2()">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
             Add Row
           </ion-button>
@@ -394,10 +394,10 @@
                 </ion-col>
                 <ion-col size="2" class="ion-align-self-end">
                   <ion-item lines="none" style="display: flex; justify-content: space-around;">
-                    <ion-button fill="clear" (click)="removeRow(i)" style="font-size: 1.2em; --size: 48px; ">
+                    <ion-button fill="clear" (click)="removeRow2(i)" style="font-size: 1.2em; --size: 48px; ">
                       <ion-icon name="trash-bin-outline" style="font-size: 1.2em;" title="Remove row"></ion-icon>
                     </ion-button>
-                    <ion-button fill="clear" (click)="addRow(item)" style="font-size: 1.2em; --size: 48px;">
+                    <ion-button fill="clear" (click)="addRow2(item)" style="font-size: 1.2em; --size: 48px;">
                       <ion-icon name="duplicate" style="font-size: 1.2em;" ></ion-icon>
                     </ion-button>
                   </ion-item>
