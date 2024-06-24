@@ -13,6 +13,7 @@ export class AssetGridViewPage implements OnInit {
   substationData: any[] = [];
   deliveredData: any[] = [];
   filteredDeliveredData: any[] = [];
+  userId=localStorage.getItem("userId");
 
   constructor(private dataService: DataService) {}
 
@@ -24,8 +25,8 @@ export class AssetGridViewPage implements OnInit {
   loadSites() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchSites(formData).then((res: any) => {
@@ -39,8 +40,8 @@ export class AssetGridViewPage implements OnInit {
   loadDeliveredData() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchDeliveredData(formData).then((res: any) => {

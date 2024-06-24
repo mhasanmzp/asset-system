@@ -16,7 +16,7 @@ export class ScrapManagementPage implements OnInit {
   searchQuery: any;
   data: any;
   siteData :any= [];
-
+  userId=localStorage.getItem("userId");
   constructor(
     private assetService: DataService,
     private dataService: DataService // Inject the DataService
@@ -37,8 +37,8 @@ export class ScrapManagementPage implements OnInit {
   loadSites() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchSites(formData).then((res: any) => {
@@ -53,8 +53,8 @@ export class ScrapManagementPage implements OnInit {
   loadCategories() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchCategories(formData).then((res: any) => {
@@ -68,8 +68,8 @@ export class ScrapManagementPage implements OnInit {
   loadScrapProducts() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.getProducts(formData).then((res: any) => {
@@ -106,8 +106,8 @@ export class ScrapManagementPage implements OnInit {
   markAsUnscrap(product: any) {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     product.status = 'In Stock';

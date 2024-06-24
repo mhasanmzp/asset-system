@@ -13,7 +13,7 @@ export class AssetPage implements OnInit {
   data = {
     masterData: '',
   };
-
+  userId=localStorage.getItem("userId");
   categoryInputs: string[] = [''];
   engineerInputs: string[] = [''];
   modelInputs: string[] = [''];
@@ -39,8 +39,8 @@ export class AssetPage implements OnInit {
   loadClients() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchClients(formData).then((res: any) => {
@@ -207,8 +207,8 @@ export class AssetPage implements OnInit {
 
     const payload = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
       data: inputs
     };
 
@@ -421,8 +421,8 @@ export class AssetPage implements OnInit {
   
 //     const payload = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //       data: inputs
 //     };
   

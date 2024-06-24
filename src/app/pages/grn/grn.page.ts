@@ -70,8 +70,8 @@ export class GrnPage implements OnInit {
   loadStores() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchStore(formData).then((res: any) => {
@@ -101,8 +101,8 @@ export class GrnPage implements OnInit {
   loadCategories() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchCategories(formData).then((res: any) => {
@@ -116,8 +116,8 @@ export class GrnPage implements OnInit {
   openDetailsModal(purchaseId: string) {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
       purchaseId: purchaseId
     };
 
@@ -237,8 +237,8 @@ export class GrnPage implements OnInit {
   fetchData() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchData(formData).then((data: any) => {
@@ -258,8 +258,8 @@ export class GrnPage implements OnInit {
   async saveMaterial() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
       ...this.material,
       materialRows: this.materialRows
     };
@@ -288,8 +288,8 @@ export class GrnPage implements OnInit {
   async saveMoreData() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
       purchaseId: this.selectedPurchase.purchaseId,
       oemName: this.selectedPurchase.oemName,
       challanNo: this.material.challanNo,
@@ -534,8 +534,8 @@ export class GrnPage implements OnInit {
 //   loadStores() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchStore(formData).then((res: any) => {
@@ -549,8 +549,8 @@ export class GrnPage implements OnInit {
 //   loadOems() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchOEM(formData).then((res: any) => {
@@ -564,8 +564,8 @@ export class GrnPage implements OnInit {
 //   loadCategories() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchCategories(formData).then((res: any) => {
@@ -579,8 +579,8 @@ export class GrnPage implements OnInit {
 //   openDetailsModal(purchaseId: string) {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //       purchaseId: purchaseId
 //     };
 
@@ -677,8 +677,8 @@ export class GrnPage implements OnInit {
 //   fetchData() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchData(formData).then((data: any) => {
@@ -698,8 +698,8 @@ export class GrnPage implements OnInit {
 //   async saveMaterial() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //       ...this.material,
 //       materialRows: this.materialRows
 //     };
@@ -728,8 +728,8 @@ export class GrnPage implements OnInit {
 //   async saveMoreData() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //       purchaseId: this.selectedPurchase.purchaseId,
 //       oemName: this.selectedPurchase.oemName,
 //       challanNo: this.material.challanNo,

@@ -18,7 +18,7 @@ export class QualityAssurancePage implements OnInit {
   selectedOEM: any = '';
   searchQuery: string = '';
   selectedSubstation: string;
-
+  userId=localStorage.getItem("userId");
   products: any[] = [];
   user: any;
   currentPage: number = 1;
@@ -113,8 +113,8 @@ export class QualityAssurancePage implements OnInit {
   loadOems() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchOEM(formData).then((res: any) => {
@@ -129,8 +129,8 @@ export class QualityAssurancePage implements OnInit {
   loadEngineers() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchEngineers(formData).then((res: any) => {
@@ -144,8 +144,8 @@ export class QualityAssurancePage implements OnInit {
   loadCategories() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchCategories(formData).then((res: any) => {
@@ -160,8 +160,8 @@ export class QualityAssurancePage implements OnInit {
   loadSubstations() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchSites(formData).then((res: any) => {
@@ -175,8 +175,8 @@ export class QualityAssurancePage implements OnInit {
   fetchQAProducts() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
     console.log('formdata', formData);
     this.dataService.fetchQAProducts(formData).then((data: any) => {
@@ -208,8 +208,8 @@ export class QualityAssurancePage implements OnInit {
 
     const payload = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
       engineerName: this.selectedEngineer?.name,  // Assuming selectedEngineer is an object with a 'name' property
       items: selectedProducts.map(product => ({
         purchaseId: product.purchaseId,
@@ -358,8 +358,8 @@ export class QualityAssurancePage implements OnInit {
 //   loadOems() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchOEM(formData).then((res: any) => {
@@ -374,8 +374,8 @@ export class QualityAssurancePage implements OnInit {
 //   loadEngineers() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchEngineers(formData).then((res: any) => {
@@ -389,8 +389,8 @@ export class QualityAssurancePage implements OnInit {
 //   loadCategories() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchCategories(formData).then((res: any) => {
@@ -405,8 +405,8 @@ export class QualityAssurancePage implements OnInit {
 //   loadSubstations() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 
 //     this.dataService.fetchSites(formData).then((res: any) => {
@@ -420,8 +420,8 @@ export class QualityAssurancePage implements OnInit {
 //   fetchQAProducts() {
 //     const formData = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //     };
 //     console.log('formdata', formData);
 //     this.dataService.fetchQAProducts(formData).then((data: any) => {
@@ -446,8 +446,8 @@ export class QualityAssurancePage implements OnInit {
 
 //     const payload = {
 //       permissionName: 'Tasks',
-//       employeeIdMiddleware: 342,
-//       employeeId: 342,
+//       employeeIdMiddleware: this.userId,
+//       employeeId: this.userId,
 //       engineerName: this.selectedEngineer?.name,  // Assuming selectedEngineer is an object with a 'name' property
 //       items: selectedProducts.map(product => ({
 //         purchaseId: product.purchaseId,

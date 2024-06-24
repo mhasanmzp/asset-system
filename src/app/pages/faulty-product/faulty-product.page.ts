@@ -14,6 +14,7 @@ export class FaultyProductPage implements OnInit {
   changedAssets: any[] = [];
   deliveredData: any[] = [];
   substationData: any[] = [];
+  userId=localStorage.getItem("userId");
 
   constructor(
     private modalController: ModalController,
@@ -79,8 +80,8 @@ export class FaultyProductPage implements OnInit {
 
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     const dataToSend = {
@@ -101,8 +102,8 @@ export class FaultyProductPage implements OnInit {
   loadDeliveredData() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchDeliveredData(formData).then((res: any) => {
@@ -116,8 +117,8 @@ export class FaultyProductPage implements OnInit {
   loadSubstations() {
     const formData = {
       permissionName: 'Tasks',
-      employeeIdMiddleware: 342,
-      employeeId: 342,
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
     };
 
     this.dataService.fetchSites(formData).then((res: any) => {
