@@ -254,57 +254,57 @@ export class DeliveryPage implements OnInit {
     this.isClientDetailsModalOpen = false;
   }
 
-  // deliverProductToWarehouse() {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: 342,
-  //     employeeId: 342,
-  //   };
-  //   const selectedProducts = this.productData.filter(product => product.selected);
-  //   if (!this.selectedClient) {
-  //     this.presentToast('Please select a client.');
-  //     return;
-  //   }
-  //   if (!this.selectedWarehouse) {
-  //     this.presentToast('Please select a client warehouse.');
-  //     return;
-  //   }
-  //   if (selectedProducts.length === 0) {
-  //     this.presentToast('Please select at least one product.');
-  //     return;
-  //   }
-  //   const deliveryDetails = {
-  //     products: selectedProducts,
-  //     client: this.selectedClient,
-  //     warehouse: this.selectedWarehouse,
-  //     gstNumber: this.gstNumber,
-  //     billingClient: this.billingClient,
-  //     billingWarehouse: this.billingWarehouse,
-  //     billingGstNumber: this.billingGstNumber,
-  //     companyPanNumber: this.companyPanNumber,
-  //     dispatchedThrough: this.dispatchedThrough,
-  //     dispatchedDate: this.dispatchedDate,
-  //     paymentTerms: this.paymentTerms,
-  //     otherReferences: this.otherReferences,
-  //     destination: this.destination,
-  //     motorVehicleNo: this.motorVehicleNo,
-  //   };
-  //   this.dataService.deliverProduct(deliveryDetails, formData).subscribe(
-  //     () => {
-  //       this.presentToast('Products delivered to warehouse successfully!');
-  //       this.showFurtherDelivery = true;
-  //       this.selectedClient = null;
-  //       this.selectedWarehouse = null;
-  //       this.productData.forEach(product => product.selected = false); // Deselect all products
-  //       this.applyFilters(); // Refresh filtered products
-  //       this.closeClientDetailsModal(); // Close the modal
-  //     },
-  //     error => {
-  //       console.error('Error delivering products to warehouse', error);
-  //       this.presentToast('There was an error delivering the products to the warehouse.');
-  //     }
-  //   );
-  // }
+  deliverProductToWarehouse() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: 342,
+      employeeId: 342,
+    };
+    const selectedProducts = this.productData.filter(product => product.selected);
+    if (!this.selectedClient) {
+      this.presentToast('Please select a client.');
+      return;
+    }
+    if (!this.selectedWarehouse) {
+      this.presentToast('Please select a client warehouse.');
+      return;
+    }
+    if (selectedProducts.length === 0) {
+      this.presentToast('Please select at least one product.');
+      return;
+    }
+    const deliveryDetails = {
+      products: selectedProducts,
+      client: this.selectedClient,
+      warehouse: this.selectedWarehouse,
+      gstNumber: this.gstNumber,
+      billingClient: this.billingClient,
+      billingWarehouse: this.billingWarehouse,
+      billingGstNumber: this.billingGstNumber,
+      companyPanNumber: this.companyPanNumber,
+      dispatchedThrough: this.dispatchedThrough,
+      dispatchedDate: this.dispatchedDate,
+      paymentTerms: this.paymentTerms,
+      otherReferences: this.otherReferences,
+      destination: this.destination,
+      motorVehicleNo: this.motorVehicleNo,
+    };
+    this.dataService.deliverProduct(deliveryDetails, formData).subscribe(
+      () => {
+        this.presentToast('Products delivered to warehouse successfully!');
+        this.showFurtherDelivery = true;
+        this.selectedClient = null;
+        this.selectedWarehouse = null;
+        this.productData.forEach(product => product.selected = false); // Deselect all products
+        this.applyFilters(); // Refresh filtered products
+        this.closeClientDetailsModal(); // Close the modal
+      },
+      error => {
+        console.error('Error delivering products to warehouse', error);
+        this.presentToast('There was an error delivering the products to the warehouse.');
+      }
+    );
+  }
 
   deliverProductToSite() {
       //   const selectedProducts = this.productData.filter(product => product.selected);
