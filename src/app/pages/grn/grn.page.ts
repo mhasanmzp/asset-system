@@ -189,23 +189,23 @@ export class GrnPage implements OnInit {
     }
   }
 
-  addRow2(rowData = null) {
-    const newRow = rowData ? JSON.parse(JSON.stringify(rowData)) : {
-      categoryName: '',
-      productName: '',
-      quantity: '',
-      quantityUnit: '',
-      warrantyPeriodMonths: '',
-      storeLocation: '',
-      serialNumbers: ['']
-    };
-    this.materialRows.push(newRow);
+  addRow2(rowData: any = null) {
+    const newRow = rowData
+      ? { ...rowData, serialNumbers: [...rowData.serialNumbers] }
+      : {
+          categoryName: '',
+          productName: '',
+          quantityUnit: '',
+          warrantyPeriodMonths: '',
+          serialNumbers: ['']
+        };
+    this.moreDataRows.push(newRow);
+    // Optionally recalculate total pages if paging logic is implemented
   }
 
   removeRow2(index: number) {
-    if (this.materialRows.length > 1) {
-      this.materialRows.splice(index, 1);
-    }
+    this.moreDataRows.splice(index, 1);
+    // Optionally recalculate total pages if paging logic is implemented
   }
 
 
