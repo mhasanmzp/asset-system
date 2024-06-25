@@ -386,7 +386,7 @@
                     <ng-container *ngFor="let serial of item.serialNumbers; let j = index">
                       <ion-col size="12">
                         <ion-item>
-                          <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[j]" name="serialNumber{{i}}{{j}}" debounce="1000" type="number" class="small-input" required></ion-input>
+                          <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[j]" name="serialNumber{{i}}{{j}}" debounce="1000" class="small-input" required></ion-input>
                         </ion-item>
                       </ion-col>
                     </ng-container>
