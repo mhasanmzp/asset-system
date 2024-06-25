@@ -2,9 +2,10 @@
   <ion-toolbar>
     <ion-title>Delivery Return & Goods Issue</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="submitReturn()">
-        <ion-icon slot="icon-only" name="save-outline"></ion-icon>
-      </ion-button>
+      <ion-button (click)="submitReturn()" class="custom-blue-button" >
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Submit
+     </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -15,7 +16,7 @@
       <!-- Substation Selection Dropdown -->
       <ion-col size="4">
         <ion-item>
-          <ion-label>Substation</ion-label>
+          <ion-label>Site</ion-label>
           <ion-select [(ngModel)]="selectedSubstation" (ionChange)="selectSubstation($event)">
             <ion-select-option value="">None</ion-select-option> <!-- None option -->
             <ion-select-option *ngFor="let substation of substationData" [value]="substation.siteName">
@@ -41,20 +42,20 @@
                 <ion-row>
                   <ion-col size="1.5"><strong>Serial Number</strong></ion-col>
                   <ion-col size="1.5"><strong>Product Name</strong></ion-col>
-                  <ion-col size="1.5"><strong>Warranty Start Date</strong></ion-col>
+                  <!-- <ion-col size="1.5"><strong>Warranty Start Date</strong></ion-col> -->
                   <ion-col size="1.8" style="margin-left: 10px;"><strong>Warranty End Date</strong></ion-col>
                   <ion-col size="1.7"><strong>Site Name</strong></ion-col>
-                  <ion-col size="1.7"><strong>Status</strong></ion-col>
+                  <ion-col size="2"><strong>Status</strong></ion-col>
                   <ion-col size="1.7"><strong>Action</strong></ion-col>
                 </ion-row>
                 <ion-row *ngFor="let data of filteredAssets()">
-                  <ion-col size="1.6">{{ data.serialNumber }}</ion-col>
-                  <ion-col size="1.6">{{ data.productName }}</ion-col>
-                  <ion-col size="1.6">{{ data.warrantyStartDate }}</ion-col>
-                  <ion-col size="1.6">{{ data.warrantyEndDate }}</ion-col>
-                  <ion-col size="1.6">{{ data.siteName }}</ion-col>
-                  <ion-col size="1.6">{{ data.status }}</ion-col>
-                  <ion-col size="1.5">
+                  <ion-col size="1.6" class="content">{{ data.serialNumber }}</ion-col>
+                  <ion-col size="1.6" class="content" >{{ data.productName }}</ion-col>
+                  <!-- <ion-col size="1.6">{{ data.warrantyStartDate }}</ion-col> -->
+                  <ion-col size="1.6" class="content">{{ data.warrantyEndDate }}</ion-col>
+                  <ion-col size="1.6" class="content">{{ data.siteName }}</ion-col>
+                  <ion-col size="2" class="content">{{ data.status }}</ion-col>
+                  <ion-col size="2.5" class="content" style="text-align: left;">
                     <ion-item>
                       <ion-select [(ngModel)]="data.action" class="action-select" placeholder="Select Action" (ionChange)="onActionChange(data)">
                         <ion-select-option value="null">None</ion-select-option>

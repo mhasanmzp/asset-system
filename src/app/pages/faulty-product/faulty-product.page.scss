@@ -91,4 +91,19 @@
     --border-radius: 4px;
     --width: 50px;
   }
-  
+  .content {
+    font-size: 13px;
+
+  }
+  .custom-transparent-button {
+    --background: transparent;
+    --border-color: #007bff;
+    --border-width: 1px;
+    --border-style: solid;
+    --color: #007bff;
+    --background-activated: rgba(0, 123, 255, 0.1);
+    --background-focused: rgba(0, 123, 255, 0.1);
+    --background-hover: rgba(0, 123, 255, 0.1);
+    --padding-start: 10px;
+    --padding-end: 10px;
+}
