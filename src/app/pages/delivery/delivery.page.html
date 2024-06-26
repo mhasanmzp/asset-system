@@ -214,7 +214,7 @@
   </ion-modal> -->
   
  <!-- Client Details Modal -->
-<ion-modal [isOpen]="isClientDetailsModalOpen" style="--width: 95%; --height: 95%;">
+<ion-modal [isOpen]="isClientDetailsModalOpen" style="--width: 80%; --height: 80%;">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -268,14 +268,34 @@
           <ion-label>Dispatched Through</ion-label>
           <ion-input [(ngModel)]="dispatchedThrough" name="dispatchedThrough" class="styled-input"></ion-input>
         </ion-item>
+        <!-- <ion-item>
+          <ion-label>Bill of Lading/LR-RR No.</ion-label>
+          <ion-input [(ngModel)]="billOfLading" name="billOfLading" class="styled-input"></ion-input>
+        </ion-item> -->
         <ion-item>
-          <ion-label>Dated</ion-label>
+          <ion-label>Order Date</ion-label>
           <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDate" name="dispatchedDate" required></ion-input>
         </ion-item>
+        <!-- <ion-item>
+          <ion-label>Reference No. & Date.</ion-label>
+          <ion-input [(ngModel)]="refNoAndDate" name="refNoAndDate" class="styled-input"></ion-input>
+        </ion-item> -->
         <ion-item>
+          <ion-label>Buyer's Order No:</ion-label>
+          <ion-input [(ngModel)]="buyersOrderNumber" name="buyersOrderNumber" class="styled-input"></ion-input>
+        </ion-item>
+          <ion-item>
+            <ion-label>Dispatch Doc No.</ion-label>
+            <ion-input [(ngModel)]="dispatchDocNo" name="dispatchDocNo" class="styled-input"></ion-input>
+          </ion-item>
+          <ion-item>
           <ion-label>Mode/Terms of Payment</ion-label>
           <ion-input [(ngModel)]="paymentTerms" name="paymentTerms" class="styled-input"></ion-input>
         </ion-item>
+        <ion-item>
+        <ion-label>Terms of Delivery</ion-label>
+        <ion-input [(ngModel)]="termsOfDelivery" name="termsOfDelivery" class="styled-input"></ion-input>
+         </ion-item>
         <ion-item>
           <ion-label>Destination</ion-label>
           <ion-input [(ngModel)]="destination" name="destination" class="styled-input"></ion-input>
