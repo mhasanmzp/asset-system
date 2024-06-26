@@ -51,7 +51,7 @@ export class GrnPage implements OnInit {
     serialNumbers: ['']
   }];
   currentPage = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 6;
 
 
   constructor(
