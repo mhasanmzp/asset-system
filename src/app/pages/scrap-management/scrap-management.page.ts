@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-scrap-management',
@@ -15,17 +16,32 @@ export class ScrapManagementPage implements OnInit {
   selectedCategory: string = '';
   searchQuery: any;
   data: any;
-  siteData :any= [];
-  userId=localStorage.getItem("userId");
+  siteData: any = [];
+  userId = localStorage.getItem('userId');
+
   constructor(
     private assetService: DataService,
-    private dataService: DataService // Inject the DataService
+    private dataService: DataService, // Inject the DataService
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
     this.loadSites();
     this.loadCategories();
     this.loadScrapProducts();
+  }
+
+  async presentToast(
+    message: string,
+    duration: number = 2000,
+    position: 'bottom' | 'top' | 'middle' = 'bottom'
+  ) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: duration,
+      position: 'top'
+    });
+    toast.present();
   }
 
   selectCategory(event: any) {
@@ -41,14 +57,16 @@ export class ScrapManagementPage implements OnInit {
       employeeId: this.userId,
     };
 
-    this.dataService.fetchSites(formData).then((res: any) => {
-      this.siteData = res;
-      console.log("Response ::::::::::::::", res);
-    }).catch(error => {
-      console.error('Error fetching Substations data', error);
-    });
+    this.dataService
+      .fetchSites(formData)
+      .then((res: any) => {
+        this.siteData = res;
+        console.log('Response ::::::::::::::', res);
+      })
+      .catch((error) => {
+        console.error('Error fetching Substations data', error);
+      });
   }
-
 
   loadCategories() {
     const formData = {
@@ -57,12 +75,15 @@ export class ScrapManagementPage implements OnInit {
       employeeId: this.userId,
     };
 
-    this.dataService.fetchCategories(formData).then((res: any) => {
-      this.data2 = res;
-      console.log("Response ::::::::::::::", res);
-    }).catch(error => {
-      console.error('Error fetching Categories data', error);
-    });
+    this.dataService
+      .fetchCategories(formData)
+      .then((res: any) => {
+        this.data2 = res;
+        console.log('Response ::::::::::::::', res);
+      })
+      .catch((error) => {
+        console.error('Error fetching Categories data', error);
+      });
   }
 
   loadScrapProducts() {
@@ -72,19 +93,27 @@ export class ScrapManagementPage implements OnInit {
       employeeId: this.userId,
     };
 
-    this.dataService.getProducts(formData).then((res: any) => {
-      this.products = res;
-      this.filterAssets(); // Initial filter
-      console.log("Products Response:", res);
-    }).catch(error => {
-      console.error('Error fetching products data', error);
-    });
+    this.dataService
+      .getProducts(formData)
+      .then((res: any) => {
+        this.products = res;
+        this.filterAssets(); // Initial filter
+        console.log('Products Response:', res);
+      })
+      .catch((error) => {
+        console.error('Error fetching products data', error);
+      });
   }
 
   filterAssets() {
-    console.log("Filtering assets with selected category:", this.selectedCategory, "and search query:", this.searchQuery);
+    console.log(
+      'Filtering assets with selected category:',
+      this.selectedCategory,
+      'and search query:',
+      this.searchQuery
+    );
 
-    this.filteredProductsList = this.products.filter(product => {
+    this.filteredProductsList = this.products.filter((product) => {
       const matchesSearchQuery = this.searchQuery
         ? product.productName.toLowerCase().includes(this.searchQuery.toLowerCase())
         : true;
@@ -100,7 +129,7 @@ export class ScrapManagementPage implements OnInit {
       return matchesSearchQuery && matchesSubstation && matchesCategory;
     });
 
-    console.log("Filtered Products List:", this.filteredProductsList);
+    console.log('Filtered Products List:', this.filteredProductsList);
   }
 
   markAsUnscrap(product: any) {
@@ -112,14 +141,14 @@ export class ScrapManagementPage implements OnInit {
 
     product.status = 'In Stock';
 
-    this.assetService.updateProduct({...product, ...formData}).then(
+    this.assetService.updateProduct({ ...product, ...formData }).then(
       () => {
-        alert('Product marked as In Stock.');
+        this.presentToast('Product marked as In Stock.');
         this.loadScrapProducts(); // Refresh the product list
       },
-      error => {
+      (error) => {
         console.error('Error marking product as In Stock', error);
-        alert('There was an error marking the product as In Stock.');
+        this.presentToast('There was an error marking the product as In Stock.');
       }
     );
   }

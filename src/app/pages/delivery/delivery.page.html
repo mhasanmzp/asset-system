@@ -37,16 +37,18 @@
                 <ion-searchbar [(ngModel)]="searchQuery" placeholder="Search Products"></ion-searchbar>
                 <ion-grid class="text-black">
                   <ion-row>
-                    <ion-col size="3"><strong>Serial Number</strong></ion-col>
-                    <ion-col size="3"><strong>Product Name</strong></ion-col>
-                    <ion-col size="3"><strong>Status</strong></ion-col>
-                    <ion-col size="3"><strong>Select</strong></ion-col>
+                    <ion-col size="2.5"><strong>Serial Number</strong></ion-col>
+                    <ion-col size="2.5"><strong>Product Name</strong></ion-col>
+                    <ion-col size="2.5"><strong>Store</strong></ion-col>
+                    <ion-col size="2.5"><strong>Status</strong></ion-col>
+                    <ion-col size="1"><strong>Select</strong></ion-col>
                   </ion-row>
                   <ion-row *ngFor="let product of filteredProductList | filter: searchQuery" style="border-bottom: 1px solid #ccc;">
-                    <ion-col size="3">{{ product.SerialNumber }}</ion-col>
-                    <ion-col size="3">{{ product.ProductName }}</ion-col>
-                    <ion-col size="3">{{ product.Status }}</ion-col>
-                    <ion-col size="3">
+                    <ion-col size="2.5">{{ product.SerialNumber }}</ion-col>
+                    <ion-col size="2.5">{{ product.ProductName }}</ion-col>
+                    <ion-col size="2.5">{{ product.inventoryStoreName }}</ion-col>
+                    <ion-col size="2.5">{{ product.Status }}</ion-col>
+                    <ion-col size="1">
                       <ion-checkbox [(ngModel)]="product.selected"></ion-checkbox>
                     </ion-col>
                   </ion-row>

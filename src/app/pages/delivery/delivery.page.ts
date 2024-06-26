@@ -55,7 +55,7 @@ export class DeliveryPage implements OnInit {
     this.loadCategories();
     this.loadClients();
     this.loadSites();
-    this.fetchWarehouseProducts();
+    this.fetchWarehouseProducts()
   }
 
   segmentChanged() {
@@ -331,7 +331,8 @@ export class DeliveryPage implements OnInit {
       async response => {
         // Handle successful response
         await this.presentToast('Product delivered to the warehouse successfully!');
-        this.selectedSegment = 'step2';
+        this.fetchDeliveryProducts()
+        this.selectedSegment = 'step1';
       },
       async error => {
         // Handle error response
@@ -530,9 +531,10 @@ export class DeliveryPage implements OnInit {
     });
   }
 
-  submitAndGenerateChallan() {
-    this.deliverProductToWarehouse()
+ async submitAndGenerateChallan() {
+    await this.deliverProductToWarehouse()
     this.generateChallan()
+    this.closeClientDetailsModal()
   }
 
   deliverProductToSite() {
@@ -553,6 +555,7 @@ export class DeliveryPage implements OnInit {
     this.dataService.furtherDeliverProduct(furtherDeliveryDetails, formData).subscribe(
       () => {
         this.presentToast('Products delivered to site successfully!');
+        this.fetchWarehouseProducts(); // Fetch the latest products
         this.selectedSite = null;
         this.clientWarehouseProductData.forEach(product => product.selected = false); // Deselect all products
         this.applyWarehouseFilters(); // Refresh filtered products
@@ -564,10 +567,8 @@ export class DeliveryPage implements OnInit {
       }
     );
   }
+  
 }
-
-
-
 
 // import { Component, OnInit } from '@angular/core';
 // import { ToastController } from '@ionic/angular';

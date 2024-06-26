@@ -318,6 +318,7 @@ export class GrnPage implements OnInit {
 
         this.closeAddMoreDataModal();
         this.fetchData();
+        
       },
       async error => {
         const toast = await this.toastController.create({

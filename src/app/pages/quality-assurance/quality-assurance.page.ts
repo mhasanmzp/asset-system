@@ -232,6 +232,7 @@ export class QualityAssurancePage implements OnInit {
       // Remove submitted products from the list
       this.products = this.products.filter(product => !product.selection);
       this.changePage(-this.currentPage + 1); // Reset to first page if necessary
+      this.filteredProducts()
     }, async error => {
       this.toastController.create({
         message: 'Failed to submit products. Please try again.',

@@ -96,6 +96,7 @@
     </ion-row>
   </ion-grid>
 
+<!-- Add Data Modal  -->
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddDataModal()">
     <ng-template>
       <ion-header>
@@ -148,7 +149,7 @@
             <ion-row *ngIf="data.masterData === 'OEM'">
               <ion-col size="12">
                 <ion-item *ngFor="let oemInput of oemInputs; let i = index">
-                  <ion-input [(ngModel)]="oemInputs[i]" placeholder="Enter OEM" name="oem{{i}}" debounce="1000"
+                  <ion-input [(ngModel)]="oemInputs[i]" debounce="2000" placeholder="Enter OEM" name="oem{{i}}" 
                     style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                   <ion-button slot="end" (click)="removeOEMInput(i)">
                     <ion-icon name="close-circle"></ion-icon>
