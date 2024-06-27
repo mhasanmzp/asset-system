@@ -14,11 +14,8 @@ export class DataService {
 
   header: any = {}
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { } 
 
-
-
-  
   getOneEmployee(formData) {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + 'getoneEmployee', formData).subscribe(
@@ -81,7 +78,6 @@ export class DataService {
     });
   }
 
-  //////////////////////////////////
   fetchOEM(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + "/asset-oems-dropdown", data, { headers: this.header }).subscribe((resp: any) => {

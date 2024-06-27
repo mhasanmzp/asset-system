@@ -17,12 +17,12 @@ export class AppComponent {
   user: any = {};
   public modules: any = [];
   public appPages = [
-    {
-      title: 'Dashboard',
-      url: 'dashboard',
-      icon: 'bar-chart',
-      permission: 'Dashboard',
-    },
+    // {
+    //   title: 'Dashboard',
+    //   url: 'dashboard',
+    //   icon: 'bar-chart',
+    //   permission: 'Dashboard',
+    // },
    
     
   
@@ -37,7 +37,7 @@ export class AppComponent {
  
   
    
-    { title: 'My Tasks', url: 'tasks', icon: 'list', permission: 'Tasks' },
+    // { title: 'My Tasks', url: 'tasks', icon: 'list', permission: 'Tasks' },
    
 
     {
