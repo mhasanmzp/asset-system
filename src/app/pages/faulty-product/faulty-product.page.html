@@ -2,10 +2,10 @@
   <ion-toolbar>
     <ion-title>Delivery Return & Goods Issue</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="submitReturn()" class="custom-blue-button" >
+      <ion-button (click)="submitReturn()" class="custom-blue-button">
         <ion-icon slot="start" name="save-outline"></ion-icon>
         Submit
-     </ion-button>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -25,6 +25,20 @@
           </ion-select>
         </ion-item>
       </ion-col>
+      <!-- Empty space to push action to the right -->
+      <ion-col size="4"></ion-col>
+      <!-- Action Select Dropdown -->
+      <ion-col size="4" class="action-column">
+        <ion-item class="rounded-action-button">
+          <ion-label>Action</ion-label>
+          <ion-select [(ngModel)]="selectedAction" (ionChange)="onActionChange(selectedAction)">
+            <ion-select-option value="null">None</ion-select-option>
+            <ion-select-option value="Sent Back to the OEM">Sent Back to OEM</ion-select-option>
+            <ion-select-option value="Sent Back to the Site">Sent Back to the Site</ion-select-option>
+            <ion-select-option value="Mark as Scrap">Mark as Scrap</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
     </ion-row>
 
     <ion-row>
@@ -41,29 +55,288 @@
               <ion-grid>
                 <ion-row>
                   <ion-col size="1.5"><strong>Serial Number</strong></ion-col>
-                  <ion-col size="1.5"><strong>Product Name</strong></ion-col>
-                  <!-- <ion-col size="1.5"><strong>Warranty Start Date</strong></ion-col> -->
-                  <ion-col size="1.8" style="margin-left: 10px;"><strong>Warranty End Date</strong></ion-col>
-                  <ion-col size="1.7"><strong>Site Name</strong></ion-col>
-                  <ion-col size="2"><strong>Status</strong></ion-col>
-                  <ion-col size="1.7"><strong>Action</strong></ion-col>
+                  <ion-col size="2.2"><strong>Product Name</strong></ion-col>
+                  <ion-col size="2.2" style="margin-left: 10px;"><strong>Warranty End Date</strong></ion-col>
+                  <ion-col size="2.2"><strong>Site Name</strong></ion-col>
+                  <ion-col size="2.2"><strong>Ststus</strong></ion-col>
+                  <ion-col size="1.5"><strong>Select</strong></ion-col>
                 </ion-row>
                 <ion-row *ngFor="let data of filteredAssets()">
-                  <ion-col size="1.6" class="content">{{ data.serialNumber }}</ion-col>
-                  <ion-col size="1.6" class="content" >{{ data.productName }}</ion-col>
-                  <!-- <ion-col size="1.6">{{ data.warrantyStartDate }}</ion-col> -->
-                  <ion-col size="1.6" class="content">{{ data.warrantyEndDate }}</ion-col>
-                  <ion-col size="1.6" class="content">{{ data.siteName }}</ion-col>
-                  <ion-col size="2" class="content">{{ data.status }}</ion-col>
-                  <ion-col size="2.5" class="content" style="text-align: left;">
-                    <ion-item>
-                      <ion-select [(ngModel)]="data.action" class="action-select" placeholder="Select Action" (ionChange)="onActionChange(data)">
-                        <ion-select-option value="null">None</ion-select-option>
-                        <ion-select-option value="Sent Back to the OEM">Sent Back to OEM</ion-select-option>
-                        <ion-select-option value="Sent Back to the Site">Sent Back to the Site</ion-select-option>
-                        <ion-select-option value="Mark as Scrap">Mark as Scrap</ion-select-option>
-                      </ion-select>
-                    </ion-item>
+                  <ion-col size="1.5" class="content">{{ data.serialNumber }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.productName }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.warrantyEndDate }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.siteName }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.status }}</ion-col>
+                  <ion-col size="1.5" class="content" style="text-align: left;">
+                    <ion-checkbox [(ngModel)]="data.selected" (ionChange)="onSelectChange(data)"></ion-checkbox>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Modals -->
+  <ng-container *ngIf="showOemModal">
+    <ion-modal isOpen="true" style="--width: 80%; --height: 80%;">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Sent Back to OEM</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeModal()">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <form (ngSubmit)="submitOemReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <!-- Form fields duplicated here -->
+            <ion-item>
+              <ion-label>Client</ion-label>
+              <ion-select [(ngModel)]="selectedClientOem" (ionChange)="fetchClientWarehouses()" name="clientOem" placeholder="Select Client" class="styled-input">
+                <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Warehouse</ion-label>
+              <ion-select [(ngModel)]="selectedWarehouseOem" name="warehouseOem" placeholder="Select Warehouse" class="styled-input">
+                <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>GST Number</ion-label>
+              <ion-input [(ngModel)]="gstNumberOem" name="gstNumberOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Billing Client</ion-label>
+              <ion-select [(ngModel)]="billingClientOem" name="billingClientOem" placeholder="Select Client" class="styled-input">
+                <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Billing Warehouse</ion-label>
+              <ion-select [(ngModel)]="billingWarehouseOem" name="billingWarehouseOem" placeholder="Select Warehouse" class="styled-input">
+                <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Billing GST Number</ion-label>
+              <ion-input [(ngModel)]="billingGstNumberOem" name="billingGstNumberOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Company PAN Number</ion-label>
+              <ion-input [(ngModel)]="companyPanNumberOem" name="companyPanNumberOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Dispatched Through</ion-label>
+              <ion-input [(ngModel)]="dispatchedThroughOem" name="dispatchedThroughOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Order Date</ion-label>
+              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateOem" name="dispatchedDateOem" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Buyer's Order No:</ion-label>
+              <ion-input [(ngModel)]="buyersOrderNumberOem" name="buyersOrderNumberOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Dispatch Doc No.</ion-label>
+              <ion-input [(ngModel)]="dispatchDocNoOem" name="dispatchDocNoOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Mode/Terms of Payment</ion-label>
+              <ion-input [(ngModel)]="paymentTermsOem" name="paymentTermsOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Terms of Delivery</ion-label>
+              <ion-input [(ngModel)]="termsOfDeliveryOem" name="termsOfDeliveryOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Destination</ion-label>
+              <ion-input [(ngModel)]="destinationOem" name="destinationOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Motor Vehicle No</ion-label>
+              <ion-input [(ngModel)]="motorVehicleNoOem" name="motorVehicleNoOem" class="styled-input"></ion-input>
+            </ion-item>
+          </form>
+        </ion-content>
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button type="submit" (click)="submitOemReturn()">Submit</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>
+      </ng-template>
+    </ion-modal>
+  </ng-container>
+
+  <ng-container *ngIf="showSiteModal">
+    <ion-modal isOpen="true" style="--width: 80%; --height: 80%;">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Sent Back to Site</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeModal()">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <form (ngSubmit)="submitSiteReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <!-- Form fields duplicated here -->
+            <ion-item>
+              <ion-label>Client</ion-label>
+              <ion-select [(ngModel)]="selectedClientSite" (ionChange)="fetchClientWarehouses()" name="clientSite" placeholder="Select Client" class="styled-input">
+                <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Warehouse</ion-label>
+              <ion-select [(ngModel)]="selectedWarehouseSite" name="warehouseSite" placeholder="Select Warehouse" class="styled-input">
+                <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>GST Number</ion-label>
+              <ion-input [(ngModel)]="gstNumberSite" name="gstNumberSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Billing Client</ion-label>
+              <ion-select [(ngModel)]="billingClientSite" name="billingClientSite" placeholder="Select Client" class="styled-input">
+                <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Billing Warehouse</ion-label>
+              <ion-select [(ngModel)]="billingWarehouseSite" name="billingWarehouseSite" placeholder="Select Warehouse" class="styled-input">
+                <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Billing GST Number</ion-label>
+              <ion-input [(ngModel)]="billingGstNumberSite" name="billingGstNumberSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Company PAN Number</ion-label>
+              <ion-input [(ngModel)]="companyPanNumberSite" name="companyPanNumberSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Dispatched Through</ion-label>
+              <ion-input [(ngModel)]="dispatchedThroughSite" name="dispatchedThroughSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Order Date</ion-label>
+              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateSite" name="dispatchedDateSite" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Buyer's Order No:</ion-label>
+              <ion-input [(ngModel)]="buyersOrderNumberSite" name="buyersOrderNumberSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Dispatch Doc No.</ion-label>
+              <ion-input [(ngModel)]="dispatchDocNoSite" name="dispatchDocNoSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Mode/Terms of Payment</ion-label>
+              <ion-input [(ngModel)]="paymentTermsSite" name="paymentTermsSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Terms of Delivery</ion-label>
+              <ion-input [(ngModel)]="termsOfDeliverySite" name="termsOfDeliverySite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Destination</ion-label>
+              <ion-input [(ngModel)]="destinationSite" name="destinationSite" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Motor Vehicle No</ion-label>
+              <ion-input [(ngModel)]="motorVehicleNoSite" name="motorVehicleNoSite" class="styled-input"></ion-input>
+            </ion-item>
+          </form>
+        </ion-content>
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button type="submit" (click)="submitSiteReturn()">Submit</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>
+      </ng-template>
+    </ion-modal>
+  </ng-container>
+</ion-content>
+
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Delivery Return & Goods Issue</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="submitReturn()" class="custom-blue-button">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Submit
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label>Site</ion-label>
+          <ion-select [(ngModel)]="selectedSubstation" (ionChange)="selectSubstation($event)">
+            <ion-select-option value="">None</ion-select-option> 
+            <ion-select-option *ngFor="let substation of substationData" [value]="substation.siteName">
+              {{ substation.siteName }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4"></ion-col>
+      <ion-col size="4" class="action-column">
+        <ion-item class="rounded-action-button">
+          <ion-label>Action</ion-label>
+          <ion-select [(ngModel)]="selectedAction" (ionChange)="onActionChange(selectedAction)">
+            <ion-select-option value="null">None</ion-select-option>
+            <ion-select-option value="Sent Back to the OEM">Sent Back to OEM</ion-select-option>
+            <ion-select-option value="Sent Back to the Site">Sent Back to the Site</ion-select-option>
+            <ion-select-option value="Mark as Scrap">Mark as Scrap</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Products</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-searchbar [(ngModel)]="searchQuery" placeholder="Search Assets"></ion-searchbar>
+            <div class="scroll-container">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="1.5"><strong>Serial Number</strong></ion-col>
+                  <ion-col size="2.2"><strong>Product Name</strong></ion-col>
+                  <ion-col size="2.2" style="margin-left: 10px;"><strong>Warranty End Date</strong></ion-col>
+                  <ion-col size="2.2"><strong>Site Name</strong></ion-col>
+                  <ion-col size="2.2"><strong>Status</strong></ion-col>
+                  <ion-col size="1.5"><strong>Select</strong></ion-col>
+                </ion-row>
+                <ion-row *ngFor="let data of filteredAssets()">
+                  <ion-col size="1.5" class="content">{{ data.serialNumber }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.productName }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.warrantyEndDate }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.siteName }}</ion-col>
+                  <ion-col size="2.2" class="content">{{ data.status }}</ion-col>
+                  <ion-col size="1.5" class="content" style="text-align: left;">
+                    <ion-checkbox [(ngModel)]="data.selected" (ionChange)="onSelectChange(data)"></ion-checkbox>
                   </ion-col>
                 </ion-row>
               </ion-grid>
@@ -74,3 +347,6 @@
     </ion-row>
   </ion-grid>
 </ion-content>
+
+
+ -->

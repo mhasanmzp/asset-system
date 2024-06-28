@@ -107,3 +107,16 @@
     --padding-start: 10px;
     --padding-end: 10px;
 }
+.rounded-action-button ion-item {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  background-color: #f4f4f4;
+}
+
+.rounded-action-button ion-select {
+  border-radius: 8px;
+  padding: 12px;
+}
+
+

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController, LoadingController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import jsPDF from 'jspdf';
 
@@ -48,7 +48,10 @@ export class DeliveryPage implements OnInit {
   motorVehicleNo: string = '';
   selectedPurchase: any = null;
 
-  constructor(private dataService: DataService, private toastController: ToastController) { }
+  constructor(private dataService: DataService, 
+    private toastController: ToastController,
+    private loadingController: LoadingController // Inject LoadingController
+  ) { }
 
   ngOnInit() {
     this.fetchDeliveryProducts();

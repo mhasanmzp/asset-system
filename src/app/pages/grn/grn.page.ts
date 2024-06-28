@@ -365,24 +365,36 @@ export class GrnPage implements OnInit {
 
   async generateChallan() {
     const doc = new jsPDF();
-
-    const imageUrl = 'assets/challanFormat.jpg'; // Update the path to the actual path where the image is stored
-
+  
+    // const imageUrl = 'assets/challanFormat.jpg'; // Update the path to the actual path where the image is stored
+    const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; // Update the path to the actual path where the image is stored
+  
     try {
       // Load the image as base64
       const imgData = await this.getBase64ImageFromURL(imageUrl);
-
+  
       // Add the image as the background
       const addTemplate = (pageIndex) => {
         doc.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Position the image as per your template layout
         doc.setFontSize(12);
-        doc.text(`Challan Number: #${this.selectedPurchase.purchaseId}`, 10, 10); // Print Challan Number at the top of each page
+        
+        // Calculate the width of the OEM name text and center it
+        const oemName = this.selectedPurchase.oemName || '';
+        const textWidth = doc.getTextWidth(`${oemName}`);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const textX = (pageWidth - textWidth) / 2;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13); // Ensure font size remains the same
+        doc.text(`${oemName}`, textX, 30); // Center-aligned OEM Name at the top
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10); // Ensure font size remains the same
+        doc.text(`Challan Number: #${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
       };
-
+  
       let pageIndex = 0;
       addTemplate(pageIndex); // Add template to the first page
-
+  
       // Add your data over the template
       doc.setFontSize(10);
       const startX = 10;
@@ -391,13 +403,13 @@ export class GrnPage implements OnInit {
       const lineHeight = 8; // Reduce line height to reduce spaces between rows
       const maxPageHeight = 270; // Maximum height for the content on one page before adding a new page
       const itemDetails = {}; // Object to store details for each product
-
+  
       // Aggregate quantities and serial numbers by product name
       this.selectedPurchase.items.forEach((item) => {
         const productName = item.productName;
         const quantity = item.quantity || 1; // Assuming at least 1 quantity if not specified
         const serialNumbers = item.serialNumbers || [];
-
+  
         if (!itemDetails[productName]) {
           itemDetails[productName] = {
             quantity: 0,
@@ -407,16 +419,16 @@ export class GrnPage implements OnInit {
         itemDetails[productName].quantity += quantity;
         itemDetails[productName].serialNumbers.push(...serialNumbers);
       });
-
+  
       // Iterate through aggregated items and add them to the PDF
       Object.keys(itemDetails).forEach((productName, index) => {
         // Split serial numbers into multiple lines if they exceed 95 width
         const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
         const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
-
+  
         // Calculate the total height needed for this product entry
         const totalHeight = splitSerialNumbers.length * lineHeight;
-
+  
         // Check if adding this product will exceed the max page height
         if (startY + totalHeight > maxPageHeight) {
           pageIndex++;
@@ -425,7 +437,7 @@ export class GrnPage implements OnInit {
           doc.setFontSize(10); // Ensure font size remains the same
           startY = initialY; // Reset startY to initialY for the new page
         }
-
+  
         // Add product details
         doc.text(`${index + 1}`, startX + 6.75, startY); // Serial number
         doc.text(productName || '', startX + 15, startY); // Product Name
@@ -434,23 +446,24 @@ export class GrnPage implements OnInit {
         doc.text(this.selectedPurchase.storeLocation || '', startX + 140, startY);
         doc.text(this.selectedPurchase.warrantyPeriodMonths || '', startX + 170, startY);
         doc.text(this.selectedPurchase.status || '', startX + 190, startY);
-
+  
         // Add serial numbers
         splitSerialNumbers.forEach((line, lineIndex) => {
           doc.text(line, startX + 70, startY + (lineIndex * lineHeight));
         });
-
+  
         // Update startY for the next product
         startY += totalHeight + lineHeight / 2; // Add half lineHeight for minimal space between products
       });
-
+  
       // Save the PDF
       doc.save('Inward-Challan.pdf');
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
   }
-
+  
+  
   getBase64ImageFromURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
