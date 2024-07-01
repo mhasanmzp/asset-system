@@ -42,28 +42,7 @@ export class QualityAssurancePage implements OnInit {
     this.loadCategories();
     this.loadEngineers();
     this.fetchQAProducts();
-    this.getEmployeeData()
   }
-
-  // getEmployeeData() {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeId: this.user.employeeId,
-  //     employeeIdMiddleware: this.user.employeeIdMiddleware
-  //   };
-
-  //   this.dataService.getOneEmployee(formData).then(
-  //     (data) => {
-  //       if (data && data[0].length > 0) {
-  //         this.user = data[0];
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching employee data', error);
-  //     }
-  //   );
-  // }
-
 
   selectCategory(event: any) {
     // Handle category selection
@@ -242,26 +221,7 @@ export class QualityAssurancePage implements OnInit {
     });
   }
 
-  getEmployeeData() {
-    const formData = {
-      permissionName: 'Tasks',
-      employeeId: 123, // Replace with actual logged-in user's employeeId
-      employeeIdMiddleware: 456 // Replace with actual logged-in user's employeeIdMiddleware
-    };
-
-    this.dataService.getOneEmployee(formData).then(
-      (data) => {
-        if (data && data[0].length > 0) {
-          this.user = data[0];
-          this.selectedEngineer = { name: this.user.firstName + ' ' + this.user.lastName }; // Set the logged-in user's name
-        }
-      
-      },
-      (error) => {
-        console.error('Error fetching employee data', error);
-      }
-    );
-  }
+ 
 
 }
 

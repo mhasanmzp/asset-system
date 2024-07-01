@@ -10,24 +10,11 @@ export class DataService {
 
 
 
-  private baseUrl = 'https://fbb7-2401-4900-1c63-4862-607f-bf04-1c4f-f0c4.ngrok-free.app'; // Replace with your actual API endpoint
+  private baseUrl = 'https://2783-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 
   constructor(private http: HttpClient) { } 
-
-  getOneEmployee(formData) {
-    return new Promise((resolve, reject) => {
-      this.http.post(this.baseUrl + 'getoneEmployee', formData).subscribe(
-        (resp: any) => {
-          resolve(resp);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
-  }
 
   furtherDeliverProduct(deliveryDetails: any, formData: any): Observable<any> {
     const payload = {
@@ -156,8 +143,6 @@ export class DataService {
     });
   }
 
-  
-
   updateProduct(product: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + "/scrap-management-action", product, { headers: this.header }).subscribe((resp: any) => {
@@ -218,7 +203,7 @@ export class DataService {
     });
   }
 
-  // Methods for saving Category, Engineer, Model, OEM, Project, Site, and Store
+  ///// Methods for saving Category, Engineer, Model, OEM, Site, and Store
 
   saveCategory(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/asset-category`, data);
@@ -283,7 +268,7 @@ export class DataService {
     return this.http.post(`${this.baseUrl}/asset-warehouse`, data);
   }
 
-
+ 
 }
 
 
@@ -383,15 +368,7 @@ export class DataService {
 //     });
 //   }
 
-//   fetchSubstations(data: any): Promise<any> {
-//     return new Promise((resolve, reject) => {
-//       this.http.post(this.baseUrl + "/asset-sites-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
-//         resolve(resp);
-//       }, error => {
-//         reject(error);
-//       });
-//     });
-//   }
+
 
 //   // Add methods for saving Category, Engineer, Model, OEM, Project, Site, and Store
 //   saveCategory(data: any): Observable<any> {

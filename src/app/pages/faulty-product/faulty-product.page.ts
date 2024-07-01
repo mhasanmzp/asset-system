@@ -22,8 +22,8 @@ export class FaultyProductPage implements OnInit {
   oemReason: string = '';
   newSite: string = '';
   // Form data for OEM return
-  selectedClientOem: string = '';
-  selectedWarehouseOem: string = '';
+  selectedOem: string = '';
+  selectedOemAddress: string = '';
   gstNumberOem: string = '';
   billingClientOem: string = '';
   billingWarehouseOem: string = '';
@@ -301,6 +301,7 @@ export class FaultyProductPage implements OnInit {
 
   async submitOemReturn() {
     this.closeModal();
+    this.generateOemChallan()
     // Add any specific logic for OEM return here if needed
     await this.submitReturnToServer();
   }
@@ -348,7 +349,6 @@ export class FaultyProductPage implements OnInit {
       });
   }
 
-  //////
   async generateChallan() {
     const doc = new jsPDF();
     const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
@@ -498,7 +498,7 @@ export class FaultyProductPage implements OnInit {
         }
       });
 
-      doc.text(`${totalQuantity} Nos.`, 166, 197);
+      doc.text(`${totalQuantity}`, 166, 197);
 
       doc.save(`${this.selectedClientSite}-Delivery-Return-Challan.pdf`);
     } catch (error) {
@@ -528,7 +528,162 @@ export class FaultyProductPage implements OnInit {
     });
   }
 
-  // ... rest of the code ...
+  async generateOemChallan() {
+    const doc = new jsPDF();
+    const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
+    let totalQuantity = 0;
+    try {
+      const imgData = await this.getBase64ImageFromURL(imageUrl);
+
+      const addTemplate = (pageIndex) => {
+        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+        doc.setFontSize(10);
+        doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
+      };
+
+      let pageIndex = 0;
+      addTemplate(pageIndex);
+
+      doc.setFontSize(8);
+      const startX = 10;
+      const initialY = 73;
+      let startY = initialY;
+      const lineHeight = 8;
+      const reducedLineHeight = 3.5;
+      const maxPageHeight = 270;
+
+      // Add modal data to the PDF
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${this.selectedOem}`, 13.5, 53.5);
+      startY += lineHeight;
+      doc.setFont("helvetica", "normal");
+
+      doc.setFontSize(8);
+      const wrappedText = doc.splitTextToSize(this.selectedOemAddress, 80); // Adjust 100 as per your required width
+      wrappedText.forEach(line => {
+        if (startY + lineHeight > maxPageHeight) {
+          pageIndex++;
+          doc.addPage();
+          addTemplate(pageIndex);
+          doc.setFontSize(10); // Reset font size on the new page
+          startY = initialY;
+        }
+        doc.text(line, 13.5, 60);
+        startY += lineHeight;
+      });
+      doc.text(`GSTIN/UIN:   ${this.gstNumberOem}`, 13.5, 67.5);
+      startY += lineHeight;
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${this.selectedOem}`, 13.5, 90);
+      startY += lineHeight;
+      doc.setFont("helvetica", "normal");
+
+      doc.setFontSize(8);
+      const wrappedText2 = doc.splitTextToSize(this.selectedOemAddress, 80); // Adjust 100 as per your required width
+      wrappedText2.forEach(line => {
+        if (startY + lineHeight > maxPageHeight) {
+          pageIndex++;
+          doc.addPage();
+          addTemplate(pageIndex);
+          doc.setFontSize(10); // Reset font size on the new page
+          startY = initialY;
+        }
+        doc.text(line, 13.5, 97.5);
+        startY += lineHeight;
+      });
+      doc.text(`GSTIN/UIN:   ${this.gstNumberOem}`, 13.5, 105);
+      startY += lineHeight;
+
+      const itemDetails = {};
+
+      this.changedAssets.forEach((item) => {
+        const productName = item.productName;
+        const quantity = item.quantity || 1;
+
+        if (!itemDetails[productName]) {
+          itemDetails[productName] = {
+            quantity: 0,
+            serialNumbers: []
+          };
+        }
+        itemDetails[productName].quantity += quantity;
+      });
+
+      let randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
+      let formattedDate = new Date().toISOString().slice(0, 10).split('-').reverse().join('-');
+
+      startY += 15;
+
+      Object.keys(itemDetails).forEach((productName, index) => {
+        const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
+        const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
+        const totalHeight = splitSerialNumbers.length * lineHeight;
+
+        if (startY + totalHeight > maxPageHeight) {
+          pageIndex++;
+          doc.addPage();
+          addTemplate(pageIndex);
+          doc.setFontSize(7);
+          startY = initialY + 15;
+        }
+
+        const productNameY = startY;
+        const quantityY = startY;
+        const serialNumbersY = startY;
+
+        doc.setFontSize(10);
+        doc.text(`${index + 1}`, 13.5, productNameY);
+        doc.setFont("helvetica", "bold");
+        doc.text(productName || '', 20, productNameY);
+        doc.setFont("helvetica", "normal");
+        doc.text(itemDetails[productName].quantity.toString(), 167.5, quantityY);
+
+        splitSerialNumbers.forEach(line => {
+          if (startY + lineHeight > maxPageHeight) {
+            pageIndex++;
+            doc.addPage();
+            addTemplate(pageIndex);
+            doc.setFontSize(7);
+            startY = initialY + 15;
+          }
+          doc.text(line, 60, serialNumbersY);
+          startY += reducedLineHeight;
+        });
+
+        totalQuantity += itemDetails[productName].quantity;
+
+        startY += reducedLineHeight / 2;
+
+        if (index === 0) {
+          doc.text(`${this.companyPanNumberOem}`, 60, 224);
+          doc.text(`DN-${randomSixDigitNumber}`, 96.5, 24);
+          doc.text(`${this.buyersOrderNumberOem}`, 96.5, 51.25);
+          doc.text(`${this.dispatchDocNoOem}`, 96.5, 60);
+          doc.text(`${this.termsOfDeliveryOem}`, 96.5, 86);
+          doc.setFontSize(9);
+          doc.text(`${this.dispatchedThroughOem}`, 96.5, 68);
+          doc.text(formattedDate, 137, 24);
+          doc.text(`${this.paymentTermsOem}`, 137, 33.5);
+          doc.text(`${this.dispatchedDateOem}`, 137, 51);
+          doc.text(`${this.destinationOem}`, 137, 68);
+          doc.text(`${this.motorVehicleNoOem}`, 137, 77);
+          let billOfLading = `${this.dispatchDocNoOem} dt. ${formattedDate}`;
+          doc.text(`${billOfLading}`, 96.5, 77);
+          let refNoAndDate = `SO/${randomSixDigitNumber} dt. ${formattedDate}`;
+          doc.text(`${refNoAndDate}`, 96.5, 41.7);
+        }
+      });
+
+      doc.text(`${totalQuantity} `, 166, 197);
+
+      doc.save(`${this.selectedOem}-Delivery-Return-Challan.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  }
 }
   
 

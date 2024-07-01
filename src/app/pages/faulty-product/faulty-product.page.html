@@ -95,22 +95,23 @@
           <form (ngSubmit)="submitOemReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
             <!-- Form fields duplicated here -->
             <ion-item>
-              <ion-label>Client</ion-label>
-              <ion-select [(ngModel)]="selectedClientOem" (ionChange)="fetchClientWarehouses()" name="clientOem" placeholder="Select Client" class="styled-input">
-                <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
+              <ion-label>OEM</ion-label>
+              <ion-select [(ngModel)]="selectedOem" (ionChange)="loadOems()" name="selectedOem" placeholder="Select Client" class="styled-input">
+                <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">{{ oem.oemName }}</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label>Warehouse</ion-label>
-              <ion-select [(ngModel)]="selectedWarehouseOem" name="warehouseOem" placeholder="Select Warehouse" class="styled-input">
+              <ion-label>OEM Address</ion-label>
+              <!-- <ion-select [(ngModel)]="selectedOemAddress" name="selectedOemAddress" placeholder="Select Warehouse" class="styled-input">
                 <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
-              </ion-select>
+              </ion-select> -->
+              <ion-input [(ngModel)]="selectedOemAddress" name="selectedOemAddress" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label>GST Number</ion-label>
               <ion-input [(ngModel)]="gstNumberOem" name="gstNumberOem" class="styled-input"></ion-input>
             </ion-item>
-            <ion-item>
+            <!-- <ion-item>
               <ion-label>Billing Client</ion-label>
               <ion-select [(ngModel)]="billingClientOem" name="billingClientOem" placeholder="Select Client" class="styled-input">
                 <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
@@ -125,7 +126,7 @@
             <ion-item>
               <ion-label>Billing GST Number</ion-label>
               <ion-input [(ngModel)]="billingGstNumberOem" name="billingGstNumberOem" class="styled-input"></ion-input>
-            </ion-item>
+            </ion-item> -->
             <ion-item>
               <ion-label>Company PAN Number</ion-label>
               <ion-input [(ngModel)]="companyPanNumberOem" name="companyPanNumberOem" class="styled-input"></ion-input>
@@ -139,21 +140,17 @@
               <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateOem" name="dispatchedDateOem" required></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Buyer's Order No:</ion-label>
+              <!-- <ion-label>Buyer's Order No:</ion-label>
               <ion-input [(ngModel)]="buyersOrderNumberOem" name="buyersOrderNumberOem" class="styled-input"></ion-input>
             </ion-item>
-            <ion-item>
+            <ion-item> -->
               <ion-label>Dispatch Doc No.</ion-label>
               <ion-input [(ngModel)]="dispatchDocNoOem" name="dispatchDocNoOem" class="styled-input"></ion-input>
             </ion-item>
-            <ion-item>
+            <!-- <ion-item>
               <ion-label>Mode/Terms of Payment</ion-label>
               <ion-input [(ngModel)]="paymentTermsOem" name="paymentTermsOem" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Terms of Delivery</ion-label>
-              <ion-input [(ngModel)]="termsOfDeliveryOem" name="termsOfDeliveryOem" class="styled-input"></ion-input>
-            </ion-item>
+            </ion-item> -->
             <ion-item>
               <ion-label>Destination</ion-label>
               <ion-input [(ngModel)]="destinationOem" name="destinationOem" class="styled-input"></ion-input>
@@ -161,6 +158,10 @@
             <ion-item>
               <ion-label>Motor Vehicle No</ion-label>
               <ion-input [(ngModel)]="motorVehicleNoOem" name="motorVehicleNoOem" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Terms of Delivery</ion-label>
+              <ion-input [(ngModel)]="termsOfDeliveryOem" name="termsOfDeliveryOem" class="styled-input"></ion-input>
             </ion-item>
           </form>
         </ion-content>
@@ -271,6 +272,22 @@
   </ng-container>
 </ion-content>
 
+
+<style>
+  .styled-input {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 8px;
+  }
+  ion-select.styled-input {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --border-width: 1px;
+    --border-style: solid;
+    --border-color: black;
+    --border-radius: 10px;
+  }
+</style>
 <!-- <ion-header>
   <ion-toolbar>
     <ion-title>Delivery Return & Goods Issue</ion-title>
