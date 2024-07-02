@@ -1,0 +1,93 @@
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 16px;
+}
+
+.input-group ion-item {
+  --border-radius: 15px;
+  --background: #f3f3f3;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --margin-top: 0;
+  --margin-bottom: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-group ion-label {
+  font-weight: bold;
+}
+
+.month-select {
+  width: 210px; /* Adjust the width as needed */
+}
+
+.week-select {
+  width: 35px; /* Adjust the width as needed */
+}
+
+
+.table-responsive {
+  padding: 16px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.total-hours-button {
+  margin-right: auto;
+}
+
+.submit-button {
+  margin-left: auto;
+}
+
+.actions {
+  display: flex;
+  gap: 4px; /* Adjust the gap between action buttons as needed */
+}
+
+  
+  .add-row-button,
+  .save-button {
+    --background: #3880ff;
+    --color: white;
+    --border-radius: 5px;
+    --padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .forecast-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .forecast-table th,
+  .forecast-table td {
+    border: 1px solid #ddd;
+    padding: 4px 8px; // Adjusted for smaller height
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .forecast-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .forecast-table th ion-select,
+  .forecast-table td ion-select,
+  .forecast-table td ion-input {
+    width: 100%;
+  }
+  

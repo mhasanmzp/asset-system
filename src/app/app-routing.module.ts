@@ -223,6 +223,10 @@ const routes: Routes = [
     path: 'quality-assurance',
     loadChildren: () => import('./pages/quality-assurance/quality-assurance.module').then( m => m.QualityAssurancePageModule)
   },
+  {
+    path: 'staffing-forecasting',
+    loadChildren: () => import('./pages/staffing-forecasting/staffing-forecasting.module').then( m => m.StaffingForecastingPageModule)
+  },
 
 
 ];

@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Staffing Forecasting</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="input-group">
+    <ion-item>
+      <ion-label>Month</ion-label>
+      <ion-select [(ngModel)]="selectedMonth" (ionChange)="updateDateRange()" placeholder="Select Month" class="month-select">
+        <ion-select-option *ngFor="let month of months">{{ month }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Week : </ion-label>
+      <ion-input type="text" [(ngModel)]="selectedWeek" readonly class="week-select"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Start Date</ion-label>
+      <ion-input type="date" [(ngModel)]="startDate" [min]="minDate" [max]="maxDate" (ionChange)="updateWeekNumber()"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>End Date</ion-label>
+      <ion-input type="date" [(ngModel)]="endDate" [min]="minDate" [max]="maxDate" (ionChange)="updateWeekNumber()"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="table-responsive">
+    <table class="forecast-table">
+      <thead>
+        <tr>
+          <th>Sr. No</th>
+          <th>Team</th>
+          <th>Project</th>
+          <th>Resource Name</th>
+          <th>Date</th>
+          <th>Hours</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of entries; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <ion-select [(ngModel)]="entry.team" placeholder="Select Team">
+              <ion-select-option *ngFor="let team of teams">{{ team }}</ion-select-option>
+            </ion-select>
+          </td>
+          <td>
+            <ion-select [(ngModel)]="entry.projectName" (ionChange)="updateProjectId(entry)" placeholder="Select Project">
+              <ion-select-option *ngFor="let project of projects" [value]="project.projectName">{{ project.projectName }}</ion-select-option>
+            </ion-select>
+          </td>
+          <td>
+            <ion-select [(ngModel)]="entry.resourceName" (ionChange)="updateEmployeeId(entry)" placeholder="Select Resource Name">
+              <ion-select-option *ngFor="let resource of allEmployees" [value]="resource.name">{{ resource.name }}</ion-select-option>
+            </ion-select>
+          </td>
+          <td>
+            <ion-input type="date" [(ngModel)]="entry.date"></ion-input>
+          </td>
+          <td>
+            <ion-input type="number" [(ngModel)]="entry.hours" (ionChange)="updateTotalHours()"></ion-input>
+          </td>
+          <td class="actions">
+            <ion-button fill="clear" (click)="copyRow(i)">
+              <ion-icon name="copy-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="removeRow(i)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="button-container">
+      <ion-button class="total-hours-button" fill="clear" disabled>
+        Total Hours: {{ getTotalHours() }}
+      </ion-button>
+      <ion-button fill="clear" (click)="submitData()">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="addRow()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
