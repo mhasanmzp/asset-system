@@ -603,7 +603,7 @@ export class FaultyProductPage implements OnInit {
           productCounter = 0;
         }
   
-        const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
+        const serialNumbers = itemDetails[productName].serialNumbers.join(' ');
         const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
         const totalHeight = splitSerialNumbers.length * lineHeight;
   
