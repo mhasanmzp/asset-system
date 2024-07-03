@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ModalController, ToastController } from '@ionic/angular';
+import { ModalController, ToastController} from '@ionic/angular';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { DataService } from 'src/app/services/staffing.service'; // Adjust the path as necessary
 import { CommonService } from '../../services/common.service';
@@ -17,12 +18,15 @@ export class StaffingForecastingPage {
   months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   projects: any = [];
   allEmployees: any = [];
+ 
 
   constructor(
     private modalController: ModalController,
     private dataService: DataService,
     private toastController: ToastController,
     private commonService: CommonService,
+    private router: Router,
+
   ) { }
 
   ngOnInit() {
@@ -57,6 +61,7 @@ export class StaffingForecastingPage {
   endDate = '';
   minDate = '';
   maxDate = '';
+  totalHours= 0;
 
   addRow() {
     this.entries.push({
@@ -69,6 +74,21 @@ export class StaffingForecastingPage {
       date: '',
     });
   }
+  
+  resetData(){
+    this.entries = [
+      {
+        team: '',
+        projectName: '',
+        projectId: '', // Add this
+        resourceName: '',
+        employeeId: '', // Add this
+        hours: 0,
+        date: '',
+      },
+    ];
+
+  }
 
   submitData() {
     const formData = {
@@ -79,12 +99,14 @@ export class StaffingForecastingPage {
       selectedWeek: this.selectedWeek,
       startDate: this.startDate,
       endDate: this.endDate,
+      totalHours: this.totalHours,
       entries: this.entries,
     };
 
     this.dataService.saveForecastData(formData).then((res: any) => {
       this.presentToast('Data saved successfully!', 'success');
       console.log('Data saved:', res);
+      this.resetData();
     }).catch(error => {
       this.presentToast('Error saving data.', 'danger');
       console.error('Error saving data', error);
@@ -130,7 +152,9 @@ export class StaffingForecastingPage {
   }
 
   getTotalHours() {
-    return this.entries.reduce((total, entry) => total + (entry.hours || 0), 0);
+    
+    this.totalHours = this.entries.reduce((total, entry) => total + (entry.hours || 0), 0);
+    return this.totalHours;
   }
 
   updateDateRange() {
@@ -173,6 +197,10 @@ export class StaffingForecastingPage {
     if (selectedEmployee) {
       entry.employeeId = selectedEmployee.employeeId;
     }
+  }
+
+  navigateToStaffingReport() {
+    this.router.navigate(['/staffing-report']);
   }
 }
 

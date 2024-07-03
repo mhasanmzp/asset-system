@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Staffing Report</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="navigateToForecasting()">
+        <ion-icon name="arrow-back"></ion-icon>
+        Back
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="input-group">
+    <div class="input-item">
+      <ion-label position="stacked">Employee Name</ion-label>
+      <ion-select [interfaceOptions]="customAlertOptions" interface="popover" placeholder="Select Employee" (ionChange)="filterItems($event, 'employee')" [(ngModel)]="selectedEmployee">
+        <ion-select-option *ngFor="let employee of filteredEmployees" [value]="employee">{{ employee.name }}</ion-select-option>
+      </ion-select>
+    </div>
+    <div class="input-item">
+      <ion-label position="stacked">Start Date</ion-label>
+      <ion-input type="date" [(ngModel)]="startDate" [min]="minDate" [max]="maxDate" (ionChange)="updateWeekNumber()" style="border: 1px solid black; border-radius: 10px;"></ion-input>
+    </div>
+    <div class="input-item">
+      <ion-label position="stacked">End Date</ion-label>
+      <ion-input type="date" [(ngModel)]="endDate" [min]="minDate" [max]="maxDate" (ionChange)="updateWeekNumber()" style="border: 1px solid black; border-radius: 10px;"></ion-input>
+    </div>
+    <div class="input-item">
+      <ion-label position="stacked">Week</ion-label>
+      <ion-input type="text" [(ngModel)]="selectedWeek" readonly class="week-select" style="border: 1px solid black; border-radius: 10px;"></ion-input>
+    </div>
+    <div>
+      <ion-button expand="block" (click)="getData()">Filter</ion-button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="forecast-table">
+      <thead>
+        <tr>
+          <th>Serial No.</th>
+          <th>Week No.</th>
+          <th>Employee Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Weekly Hours Spent</th>
+          <th>View More</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of filteredData; let i = index">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.weekNumber }}</td>
+            <td>{{ item.employeeName }}</td>
+            <td>{{ item.weekStartDate | date }}</td>
+            <td>{{ item.weekEndDate | date }}</td>
+            <td [ngClass]="{'low-hours': item.totalWeekHours < 45, 'high-hours': item.totalWeekHours >= 45}">
+              {{ item.totalWeekHours }}
+            </td>
+            <td><ion-button fill="clear" (click)="toggleProjectDetails(i)">
+              <ion-icon [name]="item.showProjects ? 'chevron-up' : 'chevron-down'"></ion-icon>
+            </ion-button></td>
+          </tr>
+          <tr *ngIf="item.showProjects">
+            <td colspan="6">
+              <table class="project-table">
+                <thead>
+                  <tr>
+                    <th>Project Name</th>
+                    <th *ngFor="let project of getProjectEntries(item.projects)">{{ project.name }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Hours Spent</td>
+                    <td *ngFor="let project of getProjectEntries(item.projects)">{{ project.hours }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

@@ -227,6 +227,10 @@ const routes: Routes = [
     path: 'staffing-forecasting',
     loadChildren: () => import('./pages/staffing-forecasting/staffing-forecasting.module').then( m => m.StaffingForecastingPageModule)
   },
+  {
+    path: 'staffing-report',
+    loadChildren: () => import('./pages/staffing-report/staffing-report.module').then( m => m.StaffingReportPageModule)
+  },
 
 
 ];
