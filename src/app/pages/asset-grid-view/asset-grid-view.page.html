@@ -16,7 +16,7 @@
       <!-- Substation Selection Dropdown -->
       <ion-col size="3">
         <ion-item>
-          <ion-label>Site</ion-label>
+          <ion-label>Installtion Site</ion-label>
           <ion-select [(ngModel)]="selectedSubstation" (ionChange)="onSubstationChange()">
             <ion-select-option value="All">All</ion-select-option>
             <ion-select-option *ngFor="let substation of substationData" [value]="substation.siteName">
@@ -45,9 +45,9 @@
                     <th>Product Name</th>
                     <th>Warranty Start Date</th>
                     <th>Warranty End Date</th>
-                    <th>Site Name</th>
-                    <th>Client</th>
-                    <th>Client Warehouse</th>
+                    <th>Installation Site </th>
+                    <th>Customer</th>
+                    <th>Customer Warehouse</th>
                     <th>QA Engineer</th>
                     <th>Delivery Date</th>
                     <th style="text-align: center;">Status</th>

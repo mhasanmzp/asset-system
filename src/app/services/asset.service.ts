@@ -10,7 +10,7 @@ export class DataService {
 
 
 
-  private baseUrl = 'https://b3f1-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
+  private baseUrl = 'https://1cc0-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 
@@ -37,6 +37,15 @@ export class DataService {
   fetchClientWarehouses(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + '/asset-warehouse-dropdown', data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+  fetchClientWarehousesAll(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + '/asset-warehouse-dropdown-all', data, { headers: this.header }).subscribe((resp: any) => {
         resolve(resp);
       }, error => {
         reject(error);

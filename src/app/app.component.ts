@@ -47,12 +47,12 @@ export class AppComponent {
       permission: 'Leaves',
     },
 
-    {
-      title: 'Staffing Forecasting',
-      url: 'staffing-forecasting',
-      icon: 'people',
-      permission: 'Leaves',
-    },
+    // {
+    //   title: 'Staffing Forecasting',
+    //   url: 'staffing-forecasting',
+    //   icon: 'people',
+    //   permission: 'Leaves',
+    // },
 
 
    

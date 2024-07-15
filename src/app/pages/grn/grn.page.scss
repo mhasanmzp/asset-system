@@ -92,3 +92,20 @@ ion-item {
 .required-asterisk {
   color: red;
 }
+
+
+
+ion-col.serial-number-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.serial-number-row {
+  width: 100%;
+}
+
+.serial-number-text {
+  display: block;
+  text-align: center;
+}

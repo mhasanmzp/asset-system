@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, ToastController } from '@ionic/angular';
+import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -23,6 +23,7 @@ export class GrnPage implements OnInit {
   data: any = [];
   storeData: any = [];
   data2: any = [];
+  
   material: any = {
     grnNo: '',
     grnDate: '',
@@ -58,6 +59,8 @@ export class GrnPage implements OnInit {
     private modalController: ModalController,
     private dataService: DataService,
     private toastController: ToastController,
+    private loadingController: LoadingController,
+
   ) { }
 
   ngOnInit() {
@@ -113,7 +116,13 @@ export class GrnPage implements OnInit {
     });
   }
 
-  openDetailsModal(purchaseId: string) {
+  async openDetailsModal(purchaseId: string) {
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+
+    await loading.present();
+
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -121,7 +130,7 @@ export class GrnPage implements OnInit {
       purchaseId: purchaseId
     };
 
-    this.dataService.getItemsByPurchaseId(formData).then((data: any[]) => {
+    await this.dataService.getItemsByPurchaseId(formData).then(async (data: any[]) => {
       const items = data.map(item => ({
         categoryName: item.categoryName,
         productName: item.productName,
@@ -140,6 +149,7 @@ export class GrnPage implements OnInit {
         challanDate: data[0].purchaseDate,
         items: items
       };
+      await loading.dismiss();
 
       this.isDetailModalOpen = true;
     }).catch(error => {
@@ -166,7 +176,7 @@ export class GrnPage implements OnInit {
 
   closeAddMoreDataModal() {
     this.isAddMoreDataModalOpen = false;
-    this.resetAddMaterialModal()
+    this.resetAddMoreMaterialModal()
 
   }
 
@@ -236,6 +246,36 @@ export class GrnPage implements OnInit {
     }];
   }
 
+  resetAddMoreMaterialModal() {
+    this.material = {
+      grnNo: '',
+      grnDate: '',
+      storeName: '',
+      oemName: '',
+      challanNo: '',
+      challanDate: '',
+      storeAddress: ''
+    };
+    this.materialRows = [{
+      categoryName: '',
+      productName: '',
+      quantity: '',
+      quantityUnit: '',
+      warrantyPeriodMonths: '',
+      storeLocation: '',
+      serialNumbers: ['']
+    }];
+    this.moreDataRows=[{
+      categoryName: '',
+      productName: '',
+      quantity: '',
+      quantityUnit: '',
+      warrantyPeriodMonths: '',
+      storeLocation: '',
+      serialNumbers: ['']
+    }]
+  }
+
   fetchData() {
     const formData = {
       permissionName: 'Tasks',
@@ -257,79 +297,159 @@ export class GrnPage implements OnInit {
     });
   }
 
+  // async saveMaterial() {
+  //   const formData = {
+  //     permissionName: 'Tasks',
+  //     employeeIdMiddleware: this.userId,
+  //     employeeId: this.userId,
+  //     ...this.material,
+  //     materialRows: this.materialRows
+  //   };
+
+  //   this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
+  //     const toast = await this.toastController.create({
+  //       message: 'Asset saved successfully!',
+  //       duration: 5000,
+  //       position: 'bottom'
+  //     });
+  //     await toast.present();
+
+  //     this.closeAddMaterialModal();
+  //     this.fetchData();
+  //     this.resetAddMaterialModal();
+  //   }, async error => {
+  //     const toast = await this.toastController.create({
+  //       message: '',
+  //       duration: 2000,
+  //       position: 'bottom'
+  //     });
+  //     await toast.present();
+  //   });
+  // }
+
   async saveMaterial() {
-    const formData = {
-      permissionName: 'Tasks',
-      employeeIdMiddleware: this.userId,
-      employeeId: this.userId,
-      ...this.material,
-      materialRows: this.materialRows
-    };
+        const formData = {
+          permissionName: 'Tasks',
+          employeeIdMiddleware: this.userId,
+          employeeId: this.userId,
+          ...this.material,
+          // purchaseOrderNo: this.material.purchaseOrderNo, // Include purchaseOrderNo
+          materialRows: this.materialRows.map((row, index) => ({
+            serialNumber: index + 1, // Add serial number
+            ...row
+          }))
+        };
+        this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
+          const toast = await this.toastController.create({
+            message: response.message || 'Items saved successfully!', // Use response message
+            duration: 5000,
+            position: 'bottom',
+            color:'success'
+          });
+          await toast.present();
+          this.closeAddMaterialModal();
+          this.fetchData();
+          this.resetAddMaterialModal();
+        }, async error => {
+          const toast = await this.toastController.create({
+            message: error.error.message || 'Failed to save asset. Please try again.', // Use error message
+            duration: 6000,
+            position: 'bottom',
+            color:'danger'
+          });
+          await toast.present();
+        });
+      }
 
-    this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
-      const toast = await this.toastController.create({
-        message: 'Asset saved successfully!',
-        duration: 5000,
-        position: 'bottom'
-      });
-      await toast.present();
+  // async saveMoreData() {
+  //   const formData = {
+  //     permissionName: 'Tasks',
+  //     employeeIdMiddleware: this.userId,
+  //     employeeId: this.userId,
+  //     purchaseId: this.selectedPurchase.purchaseId,
+  //     oemName: this.selectedPurchase.oemName,
+  //     challanNo: this.material.challanNo,
+  //     challanDate: this.material.challanDate,
+  //     materialRows: this.moreDataRows.map(row => ({
+  //       categoryName: row.categoryName,
+  //       productName: row.productName,
+  //       quantity: row.quantity,
+  //       quantityUnit: row.quantityUnit,
+  //       warrantyPeriodMonths: row.warrantyPeriodMonths,
+  //       storeLocation: row.storeLocation,
+  //       serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
+  //     }))
+  //   };
 
-      this.closeAddMaterialModal();
-      this.fetchData();
-      this.resetAddMaterialModal();
-    }, async error => {
-      const toast = await this.toastController.create({
-        message: 'Failed to save asset. Please try again.',
-        duration: 2000,
-        position: 'bottom'
-      });
-      await toast.present();
-    });
-  }
+  //   this.dataService.submitMoreData(this.material, formData).subscribe(
+  //     async response => {
+  //       const toast = await this.toastController.create({
+  //         message: 'More data saved successfully!',
+  //         duration: 5000,
+  //         position: 'bottom'
+  //       });
+  //       await toast.present();
+
+  //       this.closeAddMoreDataModal();
+  //       this.fetchData();
+        
+  //     },
+  //     async error => {
+  //       const toast = await this.toastController.create({
+  //         message: 'Failed to save more data. Please try again.',
+  //         duration: 2000,
+  //         position: 'bottom'
+  //       });
+  //       await toast.present();
+  //     }
+  //   );
+  // }
 
   async saveMoreData() {
-    const formData = {
-      permissionName: 'Tasks',
-      employeeIdMiddleware: this.userId,
-      employeeId: this.userId,
-      purchaseId: this.selectedPurchase.purchaseId,
-      oemName: this.selectedPurchase.oemName,
-      challanNo: this.material.challanNo,
-      challanDate: this.material.challanDate,
-      materialRows: this.moreDataRows.map(row => ({
-        categoryName: row.categoryName,
-        productName: row.productName,
-        quantity: row.quantity,
-        quantityUnit: row.quantityUnit,
-        warrantyPeriodMonths: row.warrantyPeriodMonths,
-        storeLocation: row.storeLocation,
-        serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
-      }))
-    };
-
-    this.dataService.submitMoreData(this.material, formData).subscribe(
-      async response => {
-        const toast = await this.toastController.create({
-          message: 'More data saved successfully!',
-          duration: 5000,
-          position: 'bottom'
-        });
-        await toast.present();
-
-        this.closeAddMoreDataModal();
-        this.fetchData();
-        
-      },
-      async error => {
-        const toast = await this.toastController.create({
-          message: 'Failed to save more data. Please try again.',
-          duration: 2000,
-          position: 'bottom'
-        });
-        await toast.present();
+        const formData = {
+          permissionName: 'Tasks',
+          employeeIdMiddleware: this.userId,
+          employeeId: this.userId,
+          purchaseId: this.selectedPurchase.purchaseId,
+          oemName: this.selectedPurchase.oemName,
+          challanNo: this.material.challanNo,
+          challanDate: this.material.challanDate,
+          materialRows: this.moreDataRows.map(row => ({
+            categoryName: row.categoryName,
+            productName: row.productName,
+            quantity: row.quantity,
+            quantityUnit: row.quantityUnit,
+            warrantyPeriodMonths: row.warrantyPeriodMonths,
+            storeLocation: row.storeLocation,
+            serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
+          }))
+        };
+        this.dataService.submitMoreData(this.material, formData).subscribe(
+          async response => {
+            const toast = await this.toastController.create({
+              message: response.message || 'Items Added successfully!', // Use response message
+              duration: 6000,
+              position: 'bottom',
+              color: 'success'
+            });
+            await toast.present();
+            this.closeAddMoreDataModal();
+            this.fetchData();
+            this.resetAddMoreMaterialModal();
+          },
+          async error => {
+            const toast = await this.toastController.create({
+              message: error.error.message || 'Failed to save more data. Please try again.', // Use error message
+              duration: 6000,
+              position: 'bottom',
+              color: 'danger'
+            });
+            await toast.present();
+          }
+        );
       }
-    );
-  }
+    
+    
 
   applyFilter() {
     if (this.searchQuery.trim() === '') {
@@ -385,10 +505,10 @@ export class GrnPage implements OnInit {
         const textX = (pageWidth - textWidth) / 2;
         doc.setFont("helvetica", "bold");
         doc.setFontSize(13); // Ensure font size remains the same
-        doc.text(`${oemName}`, textX, 30); // Center-aligned OEM Name at the top
+        doc.text(`OEM:${oemName}`, textX, 28); // Center-aligned OEM Name at the top
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10); // Ensure font size remains the same
-        doc.text(`Challan Number: #${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
+        doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
       };
   

@@ -1,32 +1,87 @@
 .interactive-card {
-    transition: transform 0.3s;
-    cursor: pointer;
-  }
-  
-  .interactive-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .interactive-card ion-card-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .interactive-card ion-card-content ion-icon {
-    font-size: 24px;
-    color: var(--ion-color-primary);
-  }
-  
-  .interactive-card ion-card-content p {
-    margin-left: 10px;
-    color: var(--ion-color-dark);
-  }
-  .rounded-input {
-    --border-radius: 20px; /* Adjust the value as needed */
-  }
-  
-  .rounded-input::part(text-input) {
-    border-radius: var(--border-radius);
-  }
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.interactive-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.interactive-card ion-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.interactive-card ion-card-content ion-icon {
+  font-size: 24px;
+  color: var(--ion-color-primary);
+}
+
+.interactive-card ion-card-content p {
+  margin-left: 10px;
+  color: var(--ion-color-dark);
+}
+
+.rounded-input {
+  --border-radius: 20px; /* Adjust the value as needed */
+}
+
+.rounded-input::part(text-input) {
+  border-radius: var(--border-radius);
+}
+
+.large-modal {
+  --width: 60%;
+  --height: 90%;
+}
+
+/* Highlight styles */
+.selected-option {
+  background-color: var(--ion-color-light);
+  font-weight: bold;
+}
+
+.selected-segment {
+  background-color: var(--ion-color-primary);
+  color: white;
+}
+.selected-option {
+  background-color: #2d0cc2; /* or any color to indicate selection */
+  border-left: 4px solid #007bff; /* Adjust the color as needed */
+}
+
+.selected-segment {
+  background-color: #007bff;
+  color: #ffffff;
+}
+.large-modal .selected {
+  background-color: #d1e7ff;
+  color: #0457d4;
+}
+
+.large-modal .selected-view {
+  background-color: #2f2f2f2f;
+  color: white;
+}
+
+.large-modal .sidebar ion-item.selected {
+  background-color: #3a38ac;
+  color: #0d6efd;
+}
+
+.large-modal .input-field {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.large-modal .add-button.add-inline-button {
+  float: right;
+}
+ 
+.selected {
+  background-color: blue;
+  color: white; /* Optional: To make the text readable */
+}

@@ -39,7 +39,7 @@
                   <ion-row>
                     <ion-col size="2.5"><strong>Serial Number</strong></ion-col>
                     <ion-col size="2.5"><strong>Product Name</strong></ion-col>
-                    <ion-col size="2.5"><strong>Store</strong></ion-col>
+                    <ion-col size="2.5"><strong>Customer Warehouse</strong></ion-col>  
                     <ion-col size="2.5"><strong>Status</strong></ion-col>
                     <ion-col size="1"><strong>Select</strong></ion-col>
                   </ion-row>
@@ -70,7 +70,7 @@
     <ng-container *ngIf="selectedSegment === 'step2'">
       <!-- Client Selection Dropdown -->
       <ion-item class="category-selector">
-        <ion-label>Client</ion-label>
+        <ion-label>Customer</ion-label>
         <ion-select [(ngModel)]="selectedClient" (ionChange)="fetchProductsByClient()" placeholder="Select Client">
           <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
         </ion-select>
@@ -91,7 +91,7 @@
                   <ion-row>
                     <ion-col size="2.4"><strong>Serial Number</strong></ion-col>
                     <ion-col size="2.4"><strong>Product Name</strong></ion-col>
-                    <ion-col size="2.4"><strong>Warehouse</strong></ion-col>
+                    <ion-col size="2.4"><strong>Customer Warehouse</strong></ion-col>
                     <ion-col size="2.4"><strong>Status</strong></ion-col>
                     <ion-col size="2.4"><strong>Select</strong></ion-col>
                   </ion-row>
@@ -118,11 +118,11 @@
               <ion-card-content>
                 <form (ngSubmit)="deliverProductToSite()">
                   <ion-item>
-                    <ion-select [(ngModel)]="selectedSite" name="site" placeholder="Select Site">
+                    <ion-select [(ngModel)]="selectedSite" name="site" placeholder="Select Installation Site">
                       <ion-select-option *ngFor="let site of siteData" [value]="site">{{ site.siteName }}</ion-select-option>
                     </ion-select>
                   </ion-item>
-                  <ion-button expand="block" type="submit">Deliver to Site</ion-button>
+                  <ion-button expand="block" type="submit">Deliver to Installation Site</ion-button>
                 </form>
               </ion-card-content>
             </ion-card>
@@ -220,7 +220,7 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Client Details</ion-title>
+        <ion-title>Customer Details</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="closeClientDetailsModal()">
             <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -231,13 +231,13 @@
     <ion-content>
       <form (ngSubmit)="deliverProductToWarehouse()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
         <ion-item>
-          <ion-label>Client</ion-label>
+          <ion-label>Customer</ion-label>
           <ion-select [(ngModel)]="selectedClient" (ionChange)="fetchClientWarehouses()" name="client" placeholder="Select Client" class="styled-input">
             <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>Warehouse</ion-label>
+          <ion-label>Customer Warehouse</ion-label>
           <ion-select [(ngModel)]="selectedWarehouse" name="warehouse" placeholder="Select Warehouse" class="styled-input">
             <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
           </ion-select>
@@ -247,13 +247,13 @@
           <ion-input [(ngModel)]="gstNumber" name="gstNumber" class="styled-input"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Billing Client</ion-label>
+          <ion-label>Billing Customer</ion-label>
           <ion-select [(ngModel)]="billingClient" name="billingClient" placeholder="Select Client" class="styled-input">
             <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>Billing Warehouse</ion-label>
+          <ion-label>Billing Customer Warehouse</ion-label>
           <ion-select [(ngModel)]="billingWarehouse" name="billingWarehouse" placeholder="Select Warehouse" class="styled-input">
             <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
           </ion-select>
