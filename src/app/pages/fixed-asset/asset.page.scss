@@ -126,3 +126,17 @@
   flex: 3;
   padding: 10px;
 }
+  
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.input-group ion-item {
+  flex: 1;
+}

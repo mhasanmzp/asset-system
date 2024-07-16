@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Asset Management</ion-title>
+    <ion-title>Asset Management Dashboard</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="openAddDataModal()">
         <ion-icon slot="start" name="add-circle-outline"></ion-icon>
@@ -98,7 +98,7 @@
   </ion-grid>
 
   <!-- Modal for adding data -->
-  <ion-modal [isOpen]="isModalOpen" style="width: 90%; height: 90%;">
+  <ion-modal [isOpen]="isModalOpen" style="--width: 60%; --height: 80%;">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -108,7 +108,7 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-
+  
       <ion-content>
         <div class="modal-container">
           <!-- Sidebar for selecting data types -->
@@ -119,28 +119,29 @@
               </li>
             </ul>
           </div>
-      
+  
           <!-- Modal content -->
           <div class="modal-content">
             <div class="segment-buttons">
               <button (click)="currentView = 'add'" [class.active]="currentView === 'add'">Add</button>
               <button (click)="currentView = 'view'" [class.active]="currentView === 'view'">View</button>
             </div>
-      
+  
             <div *ngIf="currentView === 'add'">
               <!-- Add segment content -->
+
               <div *ngIf="data.masterData === 'Category'">
                 <div *ngFor="let input of categoryInputs; let i = index" class="input-row">
-                  <ion-item>
-                    <ion-label position="floating">Category Name</ion-label>
-                    <ion-input [(ngModel)]="input.name"></ion-input>
-                  </ion-item>
-                  <ion-item>
-                    <ion-label position="floating">HSN</ion-label>
-                    <ion-input [(ngModel)]="input.hsn"></ion-input>
-                  </ion-item>
-                  <div class="button-row">
-                    <ion-button slot="end" (click)="removeCategoryInput(i)">
+                  <div class="input-group">
+                    <ion-item>
+                      <ion-label position="floating">Category Name</ion-label>
+                      <ion-input [(ngModel)]="input.name" placeholder="Enter Category Name" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">HSN Number</ion-label>
+                      <ion-input [(ngModel)]="input.hsn" placeholder="Enter HSN Number" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-button *ngIf="i > 0" slot="end" (click)="removeCategoryInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
                     <ion-button fill="clear" size="medium" (click)="addCategoryInput()" class="add-button add-inline-button">
@@ -152,14 +153,12 @@
       
               <div *ngIf="data.masterData === 'OEM'">
                 <div *ngFor="let input of oemInputs; let i = index" class="input-row">
-                  <ion-item>
-                    <ion-label position="floating">OEM Name</ion-label>
-                    <!-- <ion-input [(ngModel)]="input" name="oem{{i}}"></ion-input> -->
-                    <ion-input [(ngModel)]="oemInputs[i]" placeholder="Enter OEM Name" name="oem{{i}}" debounce="1500"></ion-input>
-
-                  </ion-item>
-                  <div class="button-row">
-                    <ion-button slot="end" (click)="removeOEMInput(i)">
+                  <div class="input-group">
+                    <ion-item>
+                      <ion-label position="floating">OEM Name</ion-label>
+                      <ion-input [(ngModel)]="oemInputs[i]" placeholder="Enter OEM Name" name="oem{{i}}" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-button *ngIf="i > 0" slot="end" (click)="removeOEMInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
                     <ion-button fill="clear" size="medium" (click)="addOEMInput()" class="add-button add-inline-button">
@@ -171,14 +170,12 @@
       
               <div *ngIf="data.masterData === 'Installation Site'">
                 <div *ngFor="let input of siteInputs; let i = index" class="input-row">
-                  <ion-item>
-                    <ion-label position="floating">Site Name</ion-label>
-                    <ion-input [(ngModel)]="siteInputs[i]" placeholder="Enter Installation Site" name="site{{i}}" debounce="1500"></ion-input>
-
-                    <!-- <ion-input [ngModel]="input"></ion-input> -->
-                  </ion-item>
-                  <div class="button-row">
-                    <ion-button slot="end" (click)="removeSiteInput(i)">
+                  <div class="input-group">
+                    <ion-item>
+                      <ion-label position="floating">Site Name</ion-label>
+                      <ion-input [(ngModel)]="siteInputs[i]" placeholder="Enter Installation Site" name="site{{i}}" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-button *ngIf="i > 0" slot="end" (click)="removeSiteInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
                     <ion-button fill="clear" size="medium" (click)="addSiteInput()" class="add-button add-inline-button">
@@ -190,18 +187,16 @@
       
               <div *ngIf="data.masterData === 'Warehouse'">
                 <div *ngFor="let input of storeInputs; let i = index" class="input-row">
-                  <ion-item>
-                    <ion-label position="floating">Warehouse Name</ion-label>
-                    <!-- <ion-input [(ngModel)]="input.name"></ion-input> -->
-                    <ion-input [(ngModel)]="storeInputs[i].name" placeholder="Enter Warehouse Name" name="store{{i}}" debounce="1500"></ion-input>
-                  </ion-item>
-                  <ion-item>
-                    <ion-label position="floating">Warehouse Address</ion-label>
-                    <!-- <ion-input [(ngModel)]="input.address"></ion-input> -->
-                    <ion-input [(ngModel)]="storeInputs[i].address" placeholder="Enter Warehouse Address" name="address{{i}}" debounce="1000"></ion-input>
-                  </ion-item>
-                  <div class="button-row">
-                    <ion-button slot="end" (click)="removeStoreInput(i)">
+                  <div class="input-group">
+                    <ion-item>
+                      <ion-label position="floating">Warehouse Name</ion-label>
+                      <ion-input [(ngModel)]="storeInputs[i].name" placeholder="Enter Warehouse Name" name="store{{i}}" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">Warehouse Address</ion-label>
+                      <ion-input [(ngModel)]="storeInputs[i].address" placeholder="Enter Warehouse Address" name="address{{i}}" debounce="1000" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-button *ngIf="i > 0" slot="end" (click)="removeStoreInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
                     <ion-button fill="clear" size="medium" (click)="addStoreInput()" class="add-button add-inline-button">
@@ -213,13 +208,12 @@
       
               <div *ngIf="data.masterData === 'Customer'">
                 <div *ngFor="let input of clientInputs; let i = index" class="input-row">
-                  <ion-item>
-                    <ion-label position="floating">Customer Name</ion-label>
-                    <!-- <ion-input [ngModel]="input"></ion-input> -->
-                    <ion-input [(ngModel)]="clientInputs[i]" placeholder="Enter Customer Name" name="client{{i}}" debounce="1000"></ion-input>
-                  </ion-item>
-                  <div class="button-row">
-                    <ion-button slot="end" (click)="removeClientInput(i)">
+                  <div class="input-group">
+                    <ion-item>
+                      <ion-label position="floating">Customer Name</ion-label>
+                      <ion-input [(ngModel)]="clientInputs[i]" placeholder="Enter Customer Name" name="client{{i}}" debounce="1000" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-button *ngIf="i > 0" slot="end" (click)="removeClientInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
                     <ion-button fill="clear" size="medium" (click)="addClientInput()" class="add-button add-inline-button">
@@ -231,22 +225,18 @@
       
               <div *ngIf="data.masterData === 'Customer Warehouse'">
                 <div *ngFor="let input of warehouseInputs; let i = index" class="input-row">
-                  <ion-item>
-                    <ion-label position="floating">Select Client</ion-label>
-                    <!-- <ion-select [(ngModel)]="selectedClient">
-                      <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option> -->
-                      <ion-select [(ngModel)]="selectedClient" name="selectedClient" required>
+                  <div class="input-group">
+                    <ion-item>
+                      <ion-label position="floating">Select Client</ion-label>
+                      <ion-select [(ngModel)]="selectedClient" name="selectedClient" required style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;">
                         <ion-select-option *ngFor="let client of clients" [value]="client.name">{{client.name}}</ion-select-option>
                       </ion-select>
-                  </ion-item>
-                  <ion-item>
-                    <ion-label position="floating">Customer Warehouse Address</ion-label>
-                    <!-- <ion-input [ngModel]="input"></ion-input> -->
-                    <ion-input [(ngModel)]="warehouseInputs[i]" placeholder="Enter Warehouse Address" name="warehouse{{i}}" debounce="1000"></ion-input>
-
-                  </ion-item>
-                  <div class="button-row">
-                    <ion-button slot="end" (click)="removeWarehouseInput(i)">
+                    </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">Customer Warehouse Address</ion-label>
+                      <ion-input [(ngModel)]="warehouseInputs[i]" placeholder="Enter Warehouse Address" name="warehouse{{i}}" debounce="1000" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-button *ngIf="i > 0" slot="end" (click)="removeWarehouseInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
                     <ion-button fill="clear" size="medium" (click)="addWarehouseInput()" class="add-button add-inline-button">
@@ -254,88 +244,94 @@
                     </ion-button>
                   </div>
                 </div>
-              </div>
-            </div>
-      
-            <!-- <div *ngIf="currentView === 'view'">
+              </div>            </div>
+  
+            <div *ngIf="currentView === 'view'">
+              <!-- View segment content -->
               <ion-list>
-                <ion-item *ngFor="let item of viewData[data.masterData]">
-                  <ion-label>
-                    {{ item.name }}
-                  </ion-label>
-                </ion-item>
+                <ng-container *ngIf="data.masterData === 'Category'">
+                  <ion-item *ngFor="let category of viewData['Category']">
+                    <ion-label>
+                      {{ category.name }}
+                    </ion-label>
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Category', category)">
+                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ng-container>
+  
+                <ng-container *ngIf="data.masterData === 'OEM'">
+                  <ion-item *ngFor="let oem of viewData['OEM']">
+                    <ion-label>
+                      {{ oem.oemName }}
+                    </ion-label>
+                    <ion-button slot="end" fill="clear" (click)="deleteData('OEM', oem)">
+                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ng-container>
+  
+                <ng-container *ngIf="data.masterData === 'Installation Site'">
+                  <ion-item *ngFor="let site of viewData['Site']">
+                    <ion-label>
+                      {{ site.siteName }}
+                    </ion-label>
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Installation Site', site)">
+                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ng-container>
+  
+                <ng-container *ngIf="data.masterData === 'Warehouse'">
+                  <ion-item *ngFor="let store of viewData['Store']">
+                    <ion-label>
+                      {{ store.storeName }}
+                    </ion-label>
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Warehouse', store)">
+                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ng-container>
+  
+                <ng-container *ngIf="data.masterData === 'Customer'">
+                  <ion-item *ngFor="let client of viewData['Client']">
+                    <ion-label>
+                      {{ client.name }}
+                    </ion-label>
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Customer', client)">
+                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ng-container>
+  
+                <ng-container *ngIf="data.masterData === 'Customer Warehouse'">
+                  <ion-item *ngFor="let warehouse of viewData['Warehouse']">
+                    <ion-label>
+                      {{ warehouse.name }}
+                      <br>
+                      <small>{{ warehouse.clientName }}</small>
+                    </ion-label>
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Customer Warehouse', warehouse)">
+                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ng-container>
               </ion-list>
-            </div> -->
-          
-<div *ngIf="currentView === 'view'">
-  <!-- View segment content -->
-  <ion-list>
-    <ng-container *ngIf="data.masterData === 'Category'">
-      <ion-item *ngFor="let category of viewData['Category']">
-        <ion-label>
-          {{ category.name }}
-        </ion-label>
-      </ion-item>
-    </ng-container>
-
-    <ng-container *ngIf="data.masterData === 'OEM'">
-      <ion-item *ngFor="let oem of viewData['OEM']">
-        <ion-label>
-          {{ oem.oemName }}
-        </ion-label>
-      </ion-item>
-    </ng-container>
-
-    <ng-container *ngIf="data.masterData === 'Installation Site'">
-      <ion-item *ngFor="let site of viewData['Site']">
-        <ion-label>
-          {{ site.siteName }}
-        </ion-label>
-      </ion-item>
-    </ng-container>
-
-    <ng-container *ngIf="data.masterData === 'Store'">
-      <ion-item *ngFor="let store of viewData['Store']">
-        <ion-label>
-          {{ store.storeName }}
-        </ion-label>
-      </ion-item>
-    </ng-container>
-
-    <ng-container *ngIf="data.masterData === 'Customer'">
-      <ion-item *ngFor="let client of viewData['Client']">
-        <ion-label>
-          {{ client.name }}
-        </ion-label>
-      </ion-item>
-    </ng-container>
-
-    <ng-container *ngIf="data.masterData === 'Customer Warehouse'">
-      <ion-item *ngFor="let warehouse of viewData['Warehouse']">
-        <ion-label>
-          {{ warehouse.name }}
-          <br>
-          <small>{{ warehouse.clientName }}</small>
-        </ion-label>
-      </ion-item>
-    </ng-container>
-  </ion-list>
-</div>
-
-            
+            </div>
           </div>
         </div>
       </ion-content>
-
+  
       <ion-footer>
         <ion-toolbar>
           <ion-buttons slot="end">
-            <ion-button (click)="saveData()">Save</ion-button>
+            <ion-button [disabled]="currentView === 'view'" (click)="saveData()">Save</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-footer>
     </ng-template>
   </ion-modal>
+  
 </ion-content>
 
 

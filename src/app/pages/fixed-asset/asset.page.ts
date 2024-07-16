@@ -63,7 +63,6 @@ export class AssetPage implements OnInit {
     this.dataService.fetchClients(formData).then((res: any) => {
       this.clients = res;
       this.viewData.Client = res;
-      console.log("here::::::::::::::::::::::::::::::::", this.viewData.Client)
     }).catch(error => {
       console.error('Error fetching clients data', error);
     });
@@ -225,16 +224,19 @@ export class AssetPage implements OnInit {
       await saveObservable.toPromise();
       const toast = await this.toastController.create({
         message: 'Data saved successfully!',
-        duration: 2000,
-        position: 'bottom'
+        duration: 4000,
+        position: 'bottom',
+        color: 'success'
       });
       await toast.present();
       this.closeAddDataModal();
     } catch (error) {
       const toast = await this.toastController.create({
         message: 'Failed to save data!',
-        duration: 2000,
-        position: 'bottom'
+        duration: 4000,
+        position: 'bottom',
+        color: 'danger'
+
       });
       await toast.present();
     }
@@ -315,6 +317,34 @@ export class AssetPage implements OnInit {
   dataTypes = [
     'Category', 'OEM', 'Installation Site', 'Warehouse', 'Customer', 'Customer Warehouse'
   ];
+
+
+  deleteData(type: string, item: any) {
+    // Prepare the payload with additional parameters
+    const payload = {
+      type: type,
+      item: item,
+      permissionName: 'Tasks',              // Add the permissionName
+      employeeIdMiddleware: this.userId,    // Add the employeeIdMiddleware
+      employeeId: this.userId               // Add the employeeId
+    };
+  
+    // Call your API for deletion
+    this.dataService.deleteItem(payload).subscribe(
+      (response) => {
+        // Handle successful deletion
+        console.log('Item deleted successfully:', response);
+        // Update the viewData to remove the deleted item
+        this.viewData[type] = this.viewData[type].filter((data: any) => data !== item);
+      },
+      (error) => {
+        // Handle error
+        console.error('Error deleting item:', error);
+      }
+    );
+  }
+  
+  
 }
 
 
@@ -552,7 +582,7 @@ export class AssetPage implements OnInit {
 //       await saveObservable.toPromise();
 //       const toast = await this.toastController.create({
 //         message: 'Data saved successfully!',
-//         duration: 2000,
+//         duration: 4000,
 //         position: 'bottom'
 //       });
 //       await toast.present();
@@ -560,7 +590,7 @@ export class AssetPage implements OnInit {
 //     } catch (error) {
 //       const toast = await this.toastController.create({
 //         message: 'Failed to save data!',
-//         duration: 2000,
+//         duration: 4000,
 //         position: 'bottom'
 //       });
 //       await toast.present();

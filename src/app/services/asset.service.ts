@@ -289,6 +289,9 @@ export class DataService {
     return this.http.post(`${this.baseUrl}/asset-warehouse`, data);
   }
 
+  deleteItem(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/delete-asset-data`, payload);
+  }
  
 }
 
