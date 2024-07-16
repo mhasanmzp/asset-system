@@ -297,71 +297,146 @@ export class GrnPage implements OnInit {
     });
   }
 
+
   // async saveMaterial() {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: this.userId,
-  //     employeeId: this.userId,
-  //     ...this.material,
-  //     materialRows: this.materialRows
-  //   };
+  //       const formData = {
+  //         permissionName: 'Tasks',
+  //         employeeIdMiddleware: this.userId,
+  //         employeeId: this.userId,
+  //         ...this.material,
+  //         // purchaseOrderNo: this.material.purchaseOrderNo, // Include purchaseOrderNo
+  //         materialRows: this.materialRows.map((row, index) => ({
+  //           serialNumber: index + 1, // Add serial number
+  //           ...row
+  //         }))
+  //       };
+  //       this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
+  //         const toast = await this.toastController.create({
+  //           message: response.message || 'Items saved successfully!', // Use response message
+  //           duration: 5000,
+  //           position: 'bottom',
+  //           color:'success'
+  //         });
+  //         await toast.present();
+  //         this.closeAddMaterialModal();
+  //         this.fetchData();
+  //         this.resetAddMaterialModal();
+  //       }, async error => {
+  //         const toast = await this.toastController.create({
+  //           message: error.error.message || 'Failed to save asset. Please try again.', // Use error message
+  //           duration: 6000,
+  //           position: 'bottom',
+  //           color:'danger'
+  //         });
+  //         await toast.present();
+  //       });
+  //     }
 
-  //   this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
-  //     const toast = await this.toastController.create({
-  //       message: 'Asset saved successfully!',
-  //       duration: 5000,
-  //       position: 'bottom'
-  //     });
-  //     await toast.present();
 
-  //     this.closeAddMaterialModal();
-  //     this.fetchData();
-  //     this.resetAddMaterialModal();
-  //   }, async error => {
-  //     const toast = await this.toastController.create({
-  //       message: '',
-  //       duration: 2000,
-  //       position: 'bottom'
-  //     });
-  //     await toast.present();
-  //   });
-  // }
-
-  async saveMaterial() {
-        const formData = {
-          permissionName: 'Tasks',
-          employeeIdMiddleware: this.userId,
-          employeeId: this.userId,
-          ...this.material,
-          // purchaseOrderNo: this.material.purchaseOrderNo, // Include purchaseOrderNo
-          materialRows: this.materialRows.map((row, index) => ({
-            serialNumber: index + 1, // Add serial number
-            ...row
-          }))
-        };
-        this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
-          const toast = await this.toastController.create({
-            message: response.message || 'Items saved successfully!', // Use response message
-            duration: 5000,
-            position: 'bottom',
-            color:'success'
-          });
-          await toast.present();
-          this.closeAddMaterialModal();
-          this.fetchData();
-          this.resetAddMaterialModal();
-        }, async error => {
-          const toast = await this.toastController.create({
-            message: error.error.message || 'Failed to save asset. Please try again.', // Use error message
-            duration: 6000,
-            position: 'bottom',
-            color:'danger'
-          });
-          await toast.present();
-        });
-      }
 
   // async saveMoreData() {
+  //       const formData = {
+  //         permissionName: 'Tasks',
+  //         employeeIdMiddleware: this.userId,
+  //         employeeId: this.userId,
+  //         purchaseId: this.selectedPurchase.purchaseId,
+  //         oemName: this.selectedPurchase.oemName,
+  //         challanNo: this.material.challanNo,
+  //         challanDate: this.material.challanDate,
+  //         materialRows: this.moreDataRows.map(row => ({
+  //           categoryName: row.categoryName,
+  //           productName: row.productName,
+  //           quantity: row.quantity,
+  //           quantityUnit: row.quantityUnit,
+  //           warrantyPeriodMonths: row.warrantyPeriodMonths,
+  //           storeLocation: row.storeLocation,
+  //           serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
+  //         }))
+  //       };
+  //       this.dataService.submitMoreData(this.material, formData).subscribe(
+  //         async response => {
+  //           const toast = await this.toastController.create({
+  //             message: response.message || 'Items Added successfully!', // Use response message
+  //             duration: 6000,
+  //             position: 'bottom',
+  //             color: 'success'
+  //           });
+  //           await toast.present();
+  //           this.closeAddMoreDataModal();
+  //           this.fetchData();
+  //           this.resetAddMoreMaterialModal();
+  //         },
+  //         async error => {
+  //           const toast = await this.toastController.create({
+  //             message: error.error.message || 'Failed to save more data. Please try again.', // Use error message
+  //             duration: 6000,
+  //             position: 'bottom',
+  //             color: 'danger'
+  //           });
+  //           await toast.present();
+  //         }
+  //       );
+  //     }
+
+
+  async saveMaterial() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
+      ...this.material,
+      // purchaseOrderNo: this.material.purchaseOrderNo, // Include purchaseOrderNo
+      materialRows: this.materialRows.map((row, index) => ({
+        serialNumber: index + 1, // Add serial number
+        ...row
+      }))
+    };
+    this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
+      const toast = await this.toastController.create({
+        message: response.message || 'Items saved successfully!', // Use response message
+        duration: 5000,
+        position: 'bottom',
+        color: 'success'
+      });
+      await toast.present();
+      this.closeAddMaterialModal();
+      this.fetchData();
+      this.resetAddMaterialModal();
+      await this.generateChallan(); // Call generateChallan after saving material
+    }, async error => {
+      const toast = await this.toastController.create({
+        message: error.error.message || 'Failed to save asset. Please try again.', // Use error message
+        duration: 6000,
+        position: 'bottom',
+        color: 'danger'
+      });
+      await toast.present();
+    });
+  }
+  
+
+
+  // saveMoreData() {
+  //   const itemDetails = {}; // Object to store details for each product
+  
+  //   // Aggregate quantities and serial numbers by product name
+  //   this.moreDataRows.forEach((row) => {
+  //     const productName = row.productName.trim(); // Trim to remove any extra spaces
+  //     const quantity = 1; // Assuming each row represents 1 unit, adjust as per your logic
+  //     const serialNumbers = row.serialNumbers || [];
+  
+  //     if (!itemDetails[productName]) {
+  //       itemDetails[productName] = {
+  //         quantity: 0,
+  //         serialNumbers: []
+  //       };
+  //     }
+  
+  //     itemDetails[productName].quantity += quantity; // Increase total quantity
+  //     itemDetails[productName].serialNumbers.push(...serialNumbers); // Add serial numbers
+  //   });
+  
+  //   // Prepare form data with aggregated quantities and serial numbers
   //   const formData = {
   //     permissionName: 'Tasks',
   //     employeeIdMiddleware: this.userId,
@@ -370,87 +445,120 @@ export class GrnPage implements OnInit {
   //     oemName: this.selectedPurchase.oemName,
   //     challanNo: this.material.challanNo,
   //     challanDate: this.material.challanDate,
-  //     materialRows: this.moreDataRows.map(row => ({
-  //       categoryName: row.categoryName,
-  //       productName: row.productName,
-  //       quantity: row.quantity,
-  //       quantityUnit: row.quantityUnit,
-  //       warrantyPeriodMonths: row.warrantyPeriodMonths,
-  //       storeLocation: row.storeLocation,
-  //       serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
+  //     materialRows: Object.keys(itemDetails).map(productName => ({
+  //       categoryName: this.moreDataRows.find(row => row.productName === productName)?.categoryName || '',
+  //       productName: productName,
+  //       quantity: itemDetails[productName].quantity, // Use aggregated quantity
+  //       quantityUnit: this.moreDataRows.find(row => row.productName === productName)?.quantityUnit || '',
+  //       warrantyPeriodMonths: this.moreDataRows.find(row => row.productName === productName)?.warrantyPeriodMonths || '',
+  //       storeLocation: this.moreDataRows.find(row => row.productName === productName)?.storeLocation || '',
+  //       serialNumbers: itemDetails[productName].serialNumbers
   //     }))
   //   };
-
+  
+  //   // Log the form data to ensure it's correct before proceeding
+  //   console.log('Items to be included in the challan:', formData.materialRows);
+  
+  //   // Send form data to backend service
   //   this.dataService.submitMoreData(this.material, formData).subscribe(
   //     async response => {
   //       const toast = await this.toastController.create({
-  //         message: 'More data saved successfully!',
-  //         duration: 5000,
-  //         position: 'bottom'
+  //         message: response.message || 'Items Added successfully!',
+  //         duration: 6000,
+  //         position: 'bottom',
+  //         color: 'success'
   //       });
   //       await toast.present();
-
   //       this.closeAddMoreDataModal();
   //       this.fetchData();
-        
+  //       this.resetAddMoreMaterialModal();
+  //       await this.generateChallanforNew(formData.materialRows); // Pass only the newly added items to generateChallan
   //     },
   //     async error => {
   //       const toast = await this.toastController.create({
-  //         message: 'Failed to save more data. Please try again.',
-  //         duration: 2000,
-  //         position: 'bottom'
+  //         message: error.error.message || 'Failed to save more data. Please try again.',
+  //         duration: 6000,
+  //         position: 'bottom',
+  //         color: 'danger'
   //       });
   //       await toast.present();
   //     }
   //   );
   // }
-
-  async saveMoreData() {
-        const formData = {
-          permissionName: 'Tasks',
-          employeeIdMiddleware: this.userId,
-          employeeId: this.userId,
-          purchaseId: this.selectedPurchase.purchaseId,
-          oemName: this.selectedPurchase.oemName,
-          challanNo: this.material.challanNo,
-          challanDate: this.material.challanDate,
-          materialRows: this.moreDataRows.map(row => ({
-            categoryName: row.categoryName,
-            productName: row.productName,
-            quantity: row.quantity,
-            quantityUnit: row.quantityUnit,
-            warrantyPeriodMonths: row.warrantyPeriodMonths,
-            storeLocation: row.storeLocation,
-            serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
-          }))
+  
+  
+  saveMoreData() {
+    const itemDetails = {}; // Object to store details for each product
+  
+    // Aggregate quantities and serial numbers by product name
+    this.moreDataRows.forEach((row) => {
+      const productName = row.productName.trim(); // Trim to remove any extra spaces
+      const quantity = 1; // Assuming each row represents 1 unit, adjust as per your logic
+      const serialNumbers = row.serialNumbers || [];
+  
+      if (!itemDetails[productName]) {
+        itemDetails[productName] = {
+          quantity: 0,
+          serialNumbers: []
         };
-        this.dataService.submitMoreData(this.material, formData).subscribe(
-          async response => {
-            const toast = await this.toastController.create({
-              message: response.message || 'Items Added successfully!', // Use response message
-              duration: 6000,
-              position: 'bottom',
-              color: 'success'
-            });
-            await toast.present();
-            this.closeAddMoreDataModal();
-            this.fetchData();
-            this.resetAddMoreMaterialModal();
-          },
-          async error => {
-            const toast = await this.toastController.create({
-              message: error.error.message || 'Failed to save more data. Please try again.', // Use error message
-              duration: 6000,
-              position: 'bottom',
-              color: 'danger'
-            });
-            await toast.present();
-          }
-        );
       }
-    
-    
+  
+      itemDetails[productName].quantity += quantity; // Increase total quantity
+      itemDetails[productName].serialNumbers.push(...serialNumbers); // Add serial numbers
+    });
+  
+    // Prepare form data with aggregated quantities and serial numbers
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
+      purchaseId: this.selectedPurchase.purchaseId,
+      oemName: this.selectedPurchase.oemName,
+      challanNo: this.material.challanNo, // Include challanNo here
+      challanDate: this.material.challanDate,
+      materialRows: Object.keys(itemDetails).map(productName => ({
+        challanNo: this.material.challanNo, // Include challanNo for each item
+        categoryName: this.moreDataRows.find(row => row.productName === productName)?.categoryName || '',
+        productName: productName,
+        quantity: itemDetails[productName].quantity, // Use aggregated quantity
+        quantityUnit: this.moreDataRows.find(row => row.productName === productName)?.quantityUnit || '',
+        warrantyPeriodMonths: this.moreDataRows.find(row => row.productName === productName)?.warrantyPeriodMonths || '',
+        storeLocation: this.moreDataRows.find(row => row.productName === productName)?.storeLocation || '',
+        serialNumbers: itemDetails[productName].serialNumbers
+      }))
+    };
+  
+    // Log the form data to ensure it's correct before proceeding
+    console.log('Items to be included in the challan:', formData.materialRows);
 
+    const challanNo = this.material.challanNo;
+
+    // Send form data to backend service
+    this.dataService.submitMoreData(this.material, formData).subscribe(
+      async response => {
+        const toast = await this.toastController.create({
+          message: response.message || 'Items Added successfully!',
+          duration: 6000,
+          position: 'bottom',
+          color: 'success'
+        });
+        await toast.present();
+        this.closeAddMoreDataModal();
+        this.fetchData();
+        this.resetAddMoreMaterialModal();
+        await this.generateChallanforNew(formData.materialRows, challanNo);      },
+      async error => {
+        const toast = await this.toastController.create({
+          message: error.error.message || 'Failed to save more data. Please try again.',
+          duration: 6000,
+          position: 'bottom',
+          color: 'danger'
+        });
+        await toast.present();
+      }
+    );
+  }
+   
   applyFilter() {
     if (this.searchQuery.trim() === '') {
       this.filteredData = this.purchaseData;
@@ -605,4 +713,146 @@ export class GrnPage implements OnInit {
       img.src = url;
     });
   }
+
+
+  async generateChallanforNew(items: any[], challanNo: string) {
+    const doc = new jsPDF();
+    const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; // Update the path to the actual path where the image is stored
+  
+    try {
+      const imgData = await this.getBase64ImageFromURL(imageUrl);
+  
+      const addTemplate = (pageIndex) => {
+        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Position the image as per your template layout
+        doc.setFontSize(12);
+        const oemName = this.selectedPurchase.oemName || '';
+        const textWidth = doc.getTextWidth(`${oemName}`);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const textX = (pageWidth - textWidth) / 2;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13); // Ensure font size remains the same
+        doc.text(`OEM:${oemName}`, textX, 28); // Center-aligned OEM Name at the top
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10); // Ensure font size remains the same
+        doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
+        doc.text(`Challan No: ${challanNo}`, 10, 28); // Print Challan Number at the top of each page
+        doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
+      };
+  
+      let pageIndex = 0;
+      addTemplate(pageIndex);
+  
+      doc.setFontSize(10);
+      const startX = 10;
+      const initialY = 73; // Initial position for the first product
+      let startY = initialY;
+      const lineHeight = 8; // Reduce line height to reduce spaces between rows
+      const maxPageHeight = 270; // Maximum height for the content on one page before adding a new page
+  
+      items.forEach((item, index) => {
+        const serialNumbers = item.serialNumbers.join(', ');
+        const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
+  
+        const totalHeight = splitSerialNumbers.length * lineHeight;
+  
+        if (startY + totalHeight > maxPageHeight) {
+          pageIndex++;
+          doc.addPage();
+          addTemplate(pageIndex); // Add the template to the new page
+          doc.setFontSize(10); // Ensure font size remains the same
+          startY = initialY; // Reset startY to initialY for the new page
+        }
+  
+        doc.text(`${index + 1}`, startX + 6.75, startY); // Serial number
+        doc.text(item.productName || '', startX + 15, startY); // Product Name
+        doc.text(item.quantity.toString(), startX + 177, startY); // Quantity
+        doc.text(this.selectedPurchase.storeLocation || '', startX + 110, startY);
+        doc.text(this.selectedPurchase.warrantyPeriodMonths || '', startX + 140, startY);
+        doc.text(this.selectedPurchase.status || '', startX + 170, startY);
+  
+        splitSerialNumbers.forEach((line, lineIndex) => {
+          doc.text(line, startX + 70, startY + (lineIndex * lineHeight));
+        });
+  
+        startY += totalHeight + lineHeight / 2; // Add half lineHeight for minimal space between products
+      });
+  
+      doc.save('Inward-Challan.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  }
+  
+
+  // async generateChallanforNew(items: any[]) {
+  //   const doc = new jsPDF();
+  //   const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; // Update the path to the actual path where the image is stored
+  
+  //   try {
+  //     const imgData = await this.getBase64ImageFromURL(imageUrl);
+  
+  //     const addTemplate = (pageIndex) => {
+  //       doc.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Position the image as per your template layout
+  //       doc.setFontSize(12);
+  //       const oemName = this.selectedPurchase.oemName || '';
+  //       const textWidth = doc.getTextWidth(`${oemName}`);
+  //       const pageWidth = doc.internal.pageSize.getWidth();
+  //       const textX = (pageWidth - textWidth) / 2;
+  //       doc.setFont("helvetica", "bold");
+  //       doc.setFontSize(13); // Ensure font size remains the same
+  //       doc.text(`OEM:${oemName}`, textX, 28); // Center-aligned OEM Name at the top
+  //       doc.setFont("helvetica", "normal");
+  //       doc.setFontSize(10); // Ensure font size remains the same
+  //       doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
+  //       doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
+  //     };
+  
+  //     let pageIndex = 0;
+  //     addTemplate(pageIndex); 
+  
+  //     doc.setFontSize(10);
+  //     const startX = 10;
+  //     const initialY = 73; // Initial position for the first product
+  //     let startY = initialY;
+  //     const lineHeight = 8; // Reduce line height to reduce spaces between rows
+  //     const maxPageHeight = 270; // Maximum height for the content on one page before adding a new page
+  
+  //     items.forEach((item, index) => {
+  //       const serialNumbers = item.serialNumbers.join(', ');
+  //       const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
+  
+  //       const totalHeight = splitSerialNumbers.length * lineHeight;
+  
+  //       if (startY + totalHeight > maxPageHeight) {
+  //         pageIndex++;
+  //         doc.addPage();
+  //         addTemplate(pageIndex); // Add the template to the new page
+  //         doc.setFontSize(10); // Ensure font size remains the same
+  //         startY = initialY; // Reset startY to initialY for the new page
+  //       }
+  
+  //       doc.text(`${index + 1}`, startX + 6.75, startY); // Serial number
+  //       doc.text(item.productName || '', startX + 15, startY); // Product Name
+  //       doc.text(item.quantity.toString(), startX + 177, startY); // Quantity
+  //       doc.text(this.selectedPurchase.challanNo || '', startX + 110, startY);
+  //       doc.text(this.selectedPurchase.storeLocation || '', startX + 140, startY);
+  //       doc.text(this.selectedPurchase.warrantyPeriodMonths || '', startX + 170, startY);
+  //       doc.text(this.selectedPurchase.status || '', startX + 190, startY);
+  
+  //       splitSerialNumbers.forEach((line, lineIndex) => {
+  //         doc.text(line, startX + 70, startY + (lineIndex * lineHeight));
+  //       });
+  
+  //       startY += totalHeight + lineHeight / 2; // Add half lineHeight for minimal space between products
+  //     });
+  
+  //     doc.save('Inward-Challan.pdf');
+  //   } catch (error) {
+  //     console.error('Error generating PDF:', error);
+  //   }
+  // }
+  
+  
+  
+  
 }
