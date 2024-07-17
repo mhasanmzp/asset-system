@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
-import { ModalController, ToastController } from '@ionic/angular';
+import { ModalController, ToastController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-quality-assurance',
@@ -34,7 +34,9 @@ export class QualityAssurancePage implements OnInit {
   constructor(
     private modalController: ModalController,
     private dataService: DataService, // Inject the DataService
-    private toastController: ToastController
+    private toastController: ToastController,
+    private loadingController: LoadingController,
+
   ) { }
 
   ngOnInit() {
@@ -151,7 +153,12 @@ export class QualityAssurancePage implements OnInit {
     });
   }
 
-  fetchQAProducts() {
+  async fetchQAProducts() {
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+    await loading.present();
+
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -161,8 +168,20 @@ export class QualityAssurancePage implements OnInit {
     this.dataService.fetchQAProducts(formData).then((data: any) => {
       console.log('Delivery DATA :::::::::::::::::::::::::::::::::::::::', data);
       this.products = data;
+      loading.dismiss();
+
     }).catch(error => {
+
       console.error('Error fetching QA Products data', error);
+      loading.dismiss();
+      this.toastController.create({
+        message: 'Failed to load Products, Please Refresh the Page...',
+        duration: 3000,
+        position: 'bottom',
+        color:'danger'
+      }).then(toast => toast.present());
+      return;
+
     });
   }
 
@@ -173,7 +192,8 @@ export class QualityAssurancePage implements OnInit {
     }
   }
 
-  submitSelectedProducts() {
+  async submitSelectedProducts() {
+ 
     const selectedProducts = this.products.filter(product => product.selection);
 
     if (selectedProducts.length === 0) {
@@ -184,7 +204,10 @@ export class QualityAssurancePage implements OnInit {
       }).then(toast => toast.present());
       return;
     }
-
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+    await loading.present();
     const payload = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -205,18 +228,24 @@ export class QualityAssurancePage implements OnInit {
       this.toastController.create({
         message: 'Products submitted successfully!',
         duration: 2000,
-        position: 'bottom'
+        position: 'bottom',
+        color: 'success'
       }).then(toast => toast.present());
-
+      // loading.dismiss();
       // Remove submitted products from the list
       this.products = this.products.filter(product => !product.selection);
       this.changePage(-this.currentPage + 1); // Reset to first page if necessary
       this.filteredProducts()
+      loading.dismiss();
+
     }, async error => {
+      loading.dismiss();
       this.toastController.create({
         message: 'Failed to submit products. Please try again.',
         duration: 2000,
-        position: 'bottom'
+        position: 'bottom',
+        color: 'danger'
+        
       }).then(toast => toast.present());
     });
   }

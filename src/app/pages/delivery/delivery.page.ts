@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController, LoadingController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import jsPDF from 'jspdf';
+import { color } from 'echarts';
 
 @Component({
   selector: 'app-delivery',
@@ -67,7 +68,7 @@ export class DeliveryPage implements OnInit {
     }
   }
 
-  fetchProductsByClient() {
+ async fetchProductsByClient() {
     if (this.selectedClient) {
       const formData = {
         permissionName: 'Tasks',
@@ -75,15 +76,21 @@ export class DeliveryPage implements OnInit {
         employeeId: this.userId,
         clientName: this.selectedClient,
       };
-
+      const loading = await this.loadingController.create({
+        message: 'Loading...',
+      });
+      await loading.present();
       this.dataService.fetchProductsByClient(formData).then((res: any) => {
         this.clientWarehouseProductData = res.productData.map((product) => ({
           ...product,
           selected: false // Add selected property
         }));
+        loading.dismiss();
         console.log("data fetched for client:", res)
       }).catch(error => {
+        loading.dismiss();
         console.error('Error fetching client products data', error);
+        this.presentToast("Cannot fetch the product list, Please refresh the page",4000)
       });
     }
   }
@@ -102,7 +109,11 @@ export class DeliveryPage implements OnInit {
     });
   }
 
-  fetchDeliveryProducts() {
+  async fetchDeliveryProducts() {
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+    await loading.present();
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -111,7 +122,8 @@ export class DeliveryPage implements OnInit {
     console.log('formdata', formData);
     this.dataService.fetchProducts(formData).then((data: any) => {
       console.log('Delivery DATA:', data);
-      this.productData = data.productData.map((product) => ({
+      this.productData = data.productData
+      .map((product) => ({
         ...product,
         SerialNumber: product.serialNumber,
         ProductName: product.productName,
@@ -119,12 +131,19 @@ export class DeliveryPage implements OnInit {
         selected: false // Add selected property
       }));
       this.applyFilters(); // Filter products after loading
+      loading.dismiss();
     }).catch(error => {
       console.error('Error fetching data', error);
+      loading.dismiss();
+
     });
   }
 
-  fetchWarehouseProducts() {
+  async fetchWarehouseProducts() {
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+    await loading.present();
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -139,8 +158,12 @@ export class DeliveryPage implements OnInit {
         selected: false // Add selected property
       }));
       this.applyWarehouseFilters(); // Filter products after loading
+      loading.dismiss();
+
     }).catch(error => {
       console.error('Error fetching warehouse products', error);
+      loading.dismiss();
+
     });
   }
 
@@ -240,7 +263,7 @@ export class DeliveryPage implements OnInit {
       message: message,
       duration: duration,
       position: position,
-      color:"danger"
+      color:'light'
     });
     toast.present();
   }
@@ -254,9 +277,7 @@ export class DeliveryPage implements OnInit {
   }
   
   async deliverProductToWarehouse() {
-    {
-
-    }
+    
     const selectedProducts = this.productData.filter(product => product.selected);
     if (!this.selectedClient) {
       await this.presentToast('Please select a client.');
@@ -286,6 +307,10 @@ export class DeliveryPage implements OnInit {
       status: 'Delivered' // Example status
     };
 
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+    await loading.present();
     // Assuming formData is available in your component
     const formData = {
       selectedClient: this.selectedClient,
@@ -299,7 +324,15 @@ export class DeliveryPage implements OnInit {
     this.dataService.deliverProduct(this.selectedPurchase, formData).subscribe(
       async response => {
         // Handle successful response
-        await this.presentToast('Product delivered to the warehouse successfully!');
+        loading.dismiss();
+        // await this.presentToast('Product delivered to the warehouse successfully!');
+        const toast = await this.toastController.create({
+          message: 'Product delivered to the warehouse successfully!', // Use response message
+          duration: 5000,
+          position: 'bottom',
+          color: 'success'
+        });
+        await toast.present();
         this.fetchDeliveryProducts()
         this.selectedSegment = 'step1';
       },

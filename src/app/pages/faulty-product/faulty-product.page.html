@@ -16,7 +16,7 @@
       <!-- Substation Selection Dropdown -->
       <ion-col size="4">
         <ion-item>
-          <ion-label>Installtion Site</ion-label>
+          <ion-label>Installation Site</ion-label>
           <ion-select [(ngModel)]="selectedSubstation" (ionChange)="selectSubstation($event)">
             <ion-select-option value="">None</ion-select-option> <!-- None option -->
             <ion-select-option *ngFor="let substation of substationData" [value]="substation.siteName">

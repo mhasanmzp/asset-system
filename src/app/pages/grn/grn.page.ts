@@ -20,10 +20,25 @@ export class GrnPage implements OnInit {
   oemsList = [];
   categories = [];
   searchQuery: any;
+  purchaseId: any// Added Purchase Id
+  poData: any = [];
   data: any = [];
   storeData: any = [];
   data2: any = [];
+  selectedPurchaseId: string;
+  selectedOemName: string;
+
   
+  // material: any = {
+  //   grnNo: '',
+  //   grnDate: '',
+  //   storeName: '',
+  //   oemName: '',
+  //   challanNo: '',
+  //   challanDate: '',
+  //   storeAddress: ''
+  // };
+
   material: any = {
     grnNo: '',
     grnDate: '',
@@ -31,8 +46,10 @@ export class GrnPage implements OnInit {
     oemName: '',
     challanNo: '',
     challanDate: '',
-    storeAddress: ''
+    storeAddress: '',
+    // purchaseId: '' // Added Purchase Id
   };
+
   materialRows: any[] = [{
     categoryName: '',
     productName: '',
@@ -68,7 +85,19 @@ export class GrnPage implements OnInit {
     this.loadCategories();
     this.fetchData();
     this.loadStores();
+    this.loadPurchaseId();
   }
+
+
+  onPurchaseIdChange(event: any) {
+    const selectedPo = this.poData.find(po => po.purchaseId === event.detail.value);
+    if (selectedPo) {
+      this.selectedPurchaseId = selectedPo.purchaseId;
+      this.selectedOemName = selectedPo.oemName;
+    }
+  }
+  
+  
 
   loadStores() {
     const formData = {
@@ -101,6 +130,22 @@ export class GrnPage implements OnInit {
     });
   }
 
+  loadPurchaseId() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId
+    };
+    console.log("UserId:::::::::::::::",formData);
+    
+    this.dataService.fetchPurchaseId(formData).then((res: any) => {
+      this.poData = res;
+      console.log("Response ::::::::::::::", res);
+    }).catch(error => {
+      console.error('Error fetching OEM data', error);
+    });
+  }
+
   loadCategories() {
     const formData = {
       permissionName: 'Tasks',
@@ -116,7 +161,8 @@ export class GrnPage implements OnInit {
     });
   }
 
-  async openDetailsModal(purchaseId: string) {
+
+  async openDetailsModal(challanNumber: string) {
     const loading = await this.loadingController.create({
       message: 'Loading...',
     });
@@ -127,10 +173,10 @@ export class GrnPage implements OnInit {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
       employeeId: this.userId,
-      purchaseId: purchaseId
+      challanNumber: challanNumber,
     };
 
-    await this.dataService.getItemsByPurchaseId(formData).then(async (data: any[]) => {
+    await this.dataService.getItemsByChallanNo(formData).then(async (data: any[]) => {
       const items = data.map(item => ({
         categoryName: item.categoryName,
         productName: item.productName,
@@ -139,16 +185,23 @@ export class GrnPage implements OnInit {
         storeLocation: item.storeLocation,
         serialNumbers: item.serialNumber ? [item.serialNumber] : [],
         status: item.status,
-        challanNo: item.challanNumber
+        challanNo: item.challanNumber,
+        // purchaseId: item[0].purchaseId,
+
+      
       }));
 
       this.selectedPurchase = {
-        purchaseId: purchaseId,
+        challanNumber: challanNumber,
         oemName: data[0].oemName,
         storeName: data[0].inventoryStoreName,
         challanDate: data[0].purchaseDate,
-        items: items
+        purchaseId: data[0].purchaseId,
+
+        items: items,
+  
       };
+      console.log("here::::::::::::::::::::::::::::::",this.selectedPurchase)
       await loading.dismiss();
 
       this.isDetailModalOpen = true;
@@ -156,6 +209,7 @@ export class GrnPage implements OnInit {
       console.error('Error fetching data:', error);
     });
   }
+
 
   closeDetailsModal() {
     this.isDetailModalOpen = false;
@@ -276,7 +330,13 @@ export class GrnPage implements OnInit {
     }]
   }
 
-  fetchData() {
+  async fetchData() {
+    
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+    await loading.present();
+
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -291,10 +351,18 @@ export class GrnPage implements OnInit {
         stockableQuantity: purchaseData.usableItems,
         purchaseId: purchaseData.purchaseId
       }));
+      
       this.filteredData = this.purchaseData; // Initialize filtered data
-    }).catch(error => {
+      loading.dismiss();
+
+    }
+  
+  ).catch(error => {
       console.error('Error fetching data', error);
+      loading.dismiss();
+
     });
+
   }
 
 
@@ -380,6 +448,11 @@ export class GrnPage implements OnInit {
 
 
   async saveMaterial() {
+
+    const loading = await this.loadingController.create({
+      message: 'Saving Data...',
+    });
+    await loading.present();
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -398,10 +471,12 @@ export class GrnPage implements OnInit {
         position: 'bottom',
         color: 'success'
       });
+      await loading.dismiss();
       await toast.present();
       this.closeAddMaterialModal();
       this.fetchData();
       this.resetAddMaterialModal();
+      this.loadPurchaseId();
       await this.generateChallan(); // Call generateChallan after saving material
     }, async error => {
       const toast = await this.toastController.create({
@@ -411,11 +486,12 @@ export class GrnPage implements OnInit {
         color: 'danger'
       });
       await toast.present();
+      await loading.dismiss()
+
     });
   }
   
-
-
+  
   // saveMoreData() {
   //   const itemDetails = {}; // Object to store details for each product
   
@@ -441,11 +517,13 @@ export class GrnPage implements OnInit {
   //     permissionName: 'Tasks',
   //     employeeIdMiddleware: this.userId,
   //     employeeId: this.userId,
-  //     purchaseId: this.selectedPurchase.purchaseId,
-  //     oemName: this.selectedPurchase.oemName,
-  //     challanNo: this.material.challanNo,
+  //     purchaseId: this.selectedPurchaseId, // Use the selected purchaseId
+  //     challanNo: this.material.challanNo, // Include challanNo here
   //     challanDate: this.material.challanDate,
+  //     // purchaseId: this.selectedPurchaseId, // Use the selected purchaseId
+  //     oemName: this.selectedOemName, // Use the selected oemName
   //     materialRows: Object.keys(itemDetails).map(productName => ({
+  //       challanNo: this.material.challanNo, // Include challanNo for each item
   //       categoryName: this.moreDataRows.find(row => row.productName === productName)?.categoryName || '',
   //       productName: productName,
   //       quantity: itemDetails[productName].quantity, // Use aggregated quantity
@@ -458,7 +536,9 @@ export class GrnPage implements OnInit {
   
   //   // Log the form data to ensure it's correct before proceeding
   //   console.log('Items to be included in the challan:', formData.materialRows);
-  
+
+  //   const challanNo = this.material.challanNo;
+
   //   // Send form data to backend service
   //   this.dataService.submitMoreData(this.material, formData).subscribe(
   //     async response => {
@@ -472,8 +552,7 @@ export class GrnPage implements OnInit {
   //       this.closeAddMoreDataModal();
   //       this.fetchData();
   //       this.resetAddMoreMaterialModal();
-  //       await this.generateChallanforNew(formData.materialRows); // Pass only the newly added items to generateChallan
-  //     },
+  //       await this.generateChallanforNew(formData.materialRows, challanNo);      },
   //     async error => {
   //       const toast = await this.toastController.create({
   //         message: error.error.message || 'Failed to save more data. Please try again.',
@@ -485,11 +564,13 @@ export class GrnPage implements OnInit {
   //     }
   //   );
   // }
-  
-  
-  saveMoreData() {
+
+ async saveMoreData() {
+    const loading = await this.loadingController.create({
+      message: 'Saving Data...',
+    });
+    await loading.present();
     const itemDetails = {}; // Object to store details for each product
-  
     // Aggregate quantities and serial numbers by product name
     this.moreDataRows.forEach((row) => {
       const productName = row.productName.trim(); // Trim to remove any extra spaces
@@ -512,10 +593,10 @@ export class GrnPage implements OnInit {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
       employeeId: this.userId,
-      purchaseId: this.selectedPurchase.purchaseId,
-      oemName: this.selectedPurchase.oemName,
+      oemName: this.selectedOemName, // Use the selected oemName
       challanNo: this.material.challanNo, // Include challanNo here
       challanDate: this.material.challanDate,
+      purchaseId: this.selectedPurchaseId, // Use the selected purchaseId
       materialRows: Object.keys(itemDetails).map(productName => ({
         challanNo: this.material.challanNo, // Include challanNo for each item
         categoryName: this.moreDataRows.find(row => row.productName === productName)?.categoryName || '',
@@ -529,10 +610,10 @@ export class GrnPage implements OnInit {
     };
   
     // Log the form data to ensure it's correct before proceeding
-    console.log('Items to be included in the challan:', formData.materialRows);
-
+    // console.log('Items to be included in the challan:', formData.materialRows);
+  
     const challanNo = this.material.challanNo;
-
+  
     // Send form data to backend service
     this.dataService.submitMoreData(this.material, formData).subscribe(
       async response => {
@@ -543,10 +624,12 @@ export class GrnPage implements OnInit {
           color: 'success'
         });
         await toast.present();
+        await loading.dismiss()
         this.closeAddMoreDataModal();
         this.fetchData();
         this.resetAddMoreMaterialModal();
-        await this.generateChallanforNew(formData.materialRows, challanNo);      },
+        await this.generateChallanforNew(formData.materialRows, challanNo);
+      },
       async error => {
         const toast = await this.toastController.create({
           message: error.error.message || 'Failed to save more data. Please try again.',
@@ -555,10 +638,12 @@ export class GrnPage implements OnInit {
           color: 'danger'
         });
         await toast.present();
+        await loading.dismiss()
+
       }
     );
   }
-   
+  
   applyFilter() {
     if (this.searchQuery.trim() === '') {
       this.filteredData = this.purchaseData;
@@ -782,75 +867,6 @@ export class GrnPage implements OnInit {
       console.error('Error generating PDF:', error);
     }
   }
-  
-
-  // async generateChallanforNew(items: any[]) {
-  //   const doc = new jsPDF();
-  //   const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; // Update the path to the actual path where the image is stored
-  
-  //   try {
-  //     const imgData = await this.getBase64ImageFromURL(imageUrl);
-  
-  //     const addTemplate = (pageIndex) => {
-  //       doc.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Position the image as per your template layout
-  //       doc.setFontSize(12);
-  //       const oemName = this.selectedPurchase.oemName || '';
-  //       const textWidth = doc.getTextWidth(`${oemName}`);
-  //       const pageWidth = doc.internal.pageSize.getWidth();
-  //       const textX = (pageWidth - textWidth) / 2;
-  //       doc.setFont("helvetica", "bold");
-  //       doc.setFontSize(13); // Ensure font size remains the same
-  //       doc.text(`OEM:${oemName}`, textX, 28); // Center-aligned OEM Name at the top
-  //       doc.setFont("helvetica", "normal");
-  //       doc.setFontSize(10); // Ensure font size remains the same
-  //       doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
-  //       doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
-  //     };
-  
-  //     let pageIndex = 0;
-  //     addTemplate(pageIndex); 
-  
-  //     doc.setFontSize(10);
-  //     const startX = 10;
-  //     const initialY = 73; // Initial position for the first product
-  //     let startY = initialY;
-  //     const lineHeight = 8; // Reduce line height to reduce spaces between rows
-  //     const maxPageHeight = 270; // Maximum height for the content on one page before adding a new page
-  
-  //     items.forEach((item, index) => {
-  //       const serialNumbers = item.serialNumbers.join(', ');
-  //       const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
-  
-  //       const totalHeight = splitSerialNumbers.length * lineHeight;
-  
-  //       if (startY + totalHeight > maxPageHeight) {
-  //         pageIndex++;
-  //         doc.addPage();
-  //         addTemplate(pageIndex); // Add the template to the new page
-  //         doc.setFontSize(10); // Ensure font size remains the same
-  //         startY = initialY; // Reset startY to initialY for the new page
-  //       }
-  
-  //       doc.text(`${index + 1}`, startX + 6.75, startY); // Serial number
-  //       doc.text(item.productName || '', startX + 15, startY); // Product Name
-  //       doc.text(item.quantity.toString(), startX + 177, startY); // Quantity
-  //       doc.text(this.selectedPurchase.challanNo || '', startX + 110, startY);
-  //       doc.text(this.selectedPurchase.storeLocation || '', startX + 140, startY);
-  //       doc.text(this.selectedPurchase.warrantyPeriodMonths || '', startX + 170, startY);
-  //       doc.text(this.selectedPurchase.status || '', startX + 190, startY);
-  
-  //       splitSerialNumbers.forEach((line, lineIndex) => {
-  //         doc.text(line, startX + 70, startY + (lineIndex * lineHeight));
-  //       });
-  
-  //       startY += totalHeight + lineHeight / 2; // Add half lineHeight for minimal space between products
-  //     });
-  
-  //     doc.save('Inward-Challan.pdf');
-  //   } catch (error) {
-  //     console.error('Error generating PDF:', error);
-  //   }
-  // }
   
   
   

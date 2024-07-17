@@ -10,7 +10,7 @@ export class DataService {
 
 
 
-  private baseUrl = 'https://e5bb-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
+  private baseUrl = 'https://79cb-203-92-37-218.ngrok-free.app'; // Replace with your actual API endpoint
 
   header: any = {}
 
@@ -103,6 +103,17 @@ export class DataService {
       });
     });
   }
+
+  fetchPurchaseId(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + "/purchaseId-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
 
   fetchEngineers(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -271,6 +282,17 @@ export class DataService {
       });
     });
   }
+
+  getItemsByChallanNo(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + '/getItemsByChallanNumber', data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
 
   submitMoreData(material: any, formData: any): Observable<any> {
     const payload = {
