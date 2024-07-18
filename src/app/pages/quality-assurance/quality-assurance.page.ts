@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import { ModalController, ToastController, LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quality-assurance',
@@ -36,6 +37,7 @@ export class QualityAssurancePage implements OnInit {
     private dataService: DataService, // Inject the DataService
     private toastController: ToastController,
     private loadingController: LoadingController,
+    private router: Router
 
   ) { }
 
@@ -249,10 +251,13 @@ export class QualityAssurancePage implements OnInit {
       }).then(toast => toast.present());
     });
   }
-
+  navigateToAsset() {
+    this.router.navigate(['/asset']);
+  }
  
 
 }
+
 
 // import { Component, OnInit } from '@angular/core';
 // import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
