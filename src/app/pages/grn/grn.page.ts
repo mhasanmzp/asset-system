@@ -72,7 +72,7 @@ export class GrnPage implements OnInit {
     serialNumbers: ['']
   }];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 6;
 
 
   constructor(
@@ -275,6 +275,8 @@ export class GrnPage implements OnInit {
           serialNumbers: ['']
         };
     this.moreDataRows.push(newRow);
+    this.checkForDuplicates();
+
     // Optionally recalculate total pages if paging logic is implemented
   }
 
@@ -377,7 +379,7 @@ export class GrnPage implements OnInit {
   }
 
 
-  async saveMaterial() {
+  async saveMaterial2() {
     const duplicates = this.checkForDuplicatesInSave();
     if (duplicates.length > 0) {
       const alert = await this.toastController.create({
@@ -505,6 +507,15 @@ export class GrnPage implements OnInit {
   // }
 
  async saveMoreData() {
+  const duplicates = this.checkForDuplicatesInSave();
+  if (duplicates.length > 0) {
+    const alert = await this.toastController.create({
+      message: 'Duplicate serial numbers found: ' + duplicates.join(', '),
+      buttons: ['OK'],
+    });
+    await alert.present();
+    return;
+  }
     const loading = await this.loadingController.create({
       message: 'Saving Data...',
     });
@@ -640,8 +651,10 @@ export class GrnPage implements OnInit {
         doc.text(`OEM:${oemName}`, textX, 28); // Center-aligned OEM Name at the top
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10); // Ensure font size remains the same
-        doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
+        doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20);
         doc.text(`Challan Number: ${this.selectedPurchase.challanNumber}`, 10, 25);
+
+ // Print Challan Number at the top of each page
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
       };
   
@@ -808,11 +821,10 @@ export class GrnPage implements OnInit {
     }
   }
   
-  async saveMaterial2() {
+  async saveMaterial() {
     const duplicates = this.checkForDuplicatesInSave();
     if (duplicates.length > 0) {
       const alert = await this.toastController.create({
-        header: 'Error',
         message: 'Duplicate serial numbers found: ' + duplicates.join(', '),
         buttons: ['OK'],
       });
@@ -841,6 +853,7 @@ export class GrnPage implements OnInit {
       this.fetchData();
       this.resetAddMaterialModal();
       await this.generateChallan();
+      this.loadPurchaseId();
     }, async error => {
       const toast = await this.toastController.create({
         message: error.error.message || 'Failed to save asset. Please try again.',

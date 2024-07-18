@@ -197,16 +197,18 @@
           <form (ngSubmit)="submitSiteReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
             <!-- Form fields duplicated here -->
             <ion-item>
-              <ion-label>Customer</ion-label>
-              <ion-select [(ngModel)]="selectedClientSite" (ionChange)="fetchClientWarehouses()" name="clientSite" placeholder="Select Client" class="styled-input">
-                <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
+              <ion-label>Installation Site</ion-label>
+              <ion-select [(ngModel)]="selectedClientSite" (click)="loadClients()" name="clientSite" placeholder="Select Installation Site" class="styled-input">
+                <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label>Customer Warehouse</ion-label>
-              <ion-select [(ngModel)]="selectedWarehouseSite" name="warehouseSite" placeholder="Select Warehouse" class="styled-input">
+              <ion-label>Site Address</ion-label>
+              <ion-input [(ngModel)]="selectedWarehouseSite" name="warehouseSite" class="styled-input" placeholder="Enter Site Address"></ion-input>
+
+              <!-- <ion-select [(ngModel)]="selectedWarehouseSite" name="warehouseSite" placeholder="Select Warehouse" class="styled-input">
                 <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
-              </ion-select>
+              </ion-select> -->
             </ion-item>
             <ion-item>
               <ion-label>GST Number</ion-label>
@@ -214,15 +216,19 @@
             </ion-item>
             <ion-item>
               <ion-label>Billing Client</ion-label>
-              <ion-select [(ngModel)]="billingClientSite" name="billingClientSite" placeholder="Select Client" class="styled-input">
-                <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
+              <ion-select [(ngModel)]="billingClientSite" name="billingClientSite" placeholder="Select Billing Client" class="styled-input">
+                <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
+
+                <!-- <ion-select-option *ngFor="let client of siteData" [value]="client.SiteName">{{ client.SiteName }}</ion-select-option> -->
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label>Billing Customer Warehouse</ion-label>
-              <ion-select [(ngModel)]="billingWarehouseSite" name="billingWarehouseSite" placeholder="Select Warehouse" class="styled-input">
+              <ion-label>Billing Address</ion-label>
+              <ion-input [(ngModel)]="billingWarehouseSite" name="billingWarehouseSite" class="styled-input" placeholder="Enter Billing Address"></ion-input>
+
+              <!-- <ion-select [(ngModel)]="billingWarehouseSite" name="billingWarehouseSite" placeholder="Select Warehouse" class="styled-input">
                 <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
-              </ion-select>
+              </ion-select> -->
             </ion-item>
             <ion-item>
               <ion-label>Billing GST Number</ion-label>

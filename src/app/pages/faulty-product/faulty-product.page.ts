@@ -40,6 +40,7 @@ export class FaultyProductPage implements OnInit {
   termsOfDeliveryOem: string = '';
   destinationOem: string = '';
   motorVehicleNoOem: string = '';
+  siteData: any[];
 
   // Form data for Site return
   selectedClientSite: string = '';
@@ -82,11 +83,28 @@ export class FaultyProductPage implements OnInit {
     this.loadStores();
     this.loadClients();
     this.fetchClientWarehouses()
+    this.loadSites()
+    
     
   }
 
   navigateToAsset() {
     this.router.navigate(['/asset']);
+  }
+
+  loadSites() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
+    };
+
+    this.dataService.fetchSites(formData).then((res: any) => {
+      this.siteData = res;
+      console.log("Response:", res);
+    }).catch(error => {
+      console.error('Error fetching Substations data', error);
+    });
   }
 
   loadStores() {

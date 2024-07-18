@@ -229,6 +229,12 @@ export class AssetPage implements OnInit {
         color: 'success'
       });
       await toast.present();
+      this.loadClients();
+      this.loadCategories();
+      this.loadOems();
+      this.loadSites();
+      this.loadStores();
+      this.loadWarehouses();
       this.closeAddDataModal();
     } catch (error) {
       const toast = await this.toastController.create({

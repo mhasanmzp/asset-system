@@ -135,11 +135,11 @@
                   <div class="input-group">
                     <ion-item>
                       <ion-label position="floating">Category Name</ion-label>
-                      <ion-input [(ngModel)]="input.name" placeholder="Enter Category Name" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="input.name" placeholder="Enter Category Name" class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-item>
                       <ion-label position="floating">HSN Number</ion-label>
-                      <ion-input [(ngModel)]="input.hsn" placeholder="Enter HSN Number" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="input.hsn" placeholder="Enter HSN Number" class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeCategoryInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
@@ -156,7 +156,7 @@
                   <div class="input-group">
                     <ion-item>
                       <ion-label position="floating">OEM Name</ion-label>
-                      <ion-input [(ngModel)]="oemInputs[i]" placeholder="Enter OEM Name" name="oem{{i}}" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="oemInputs[i]" placeholder="Enter OEM Name" name="oem{{i}}" debounce="1500" class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeOEMInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
@@ -173,7 +173,7 @@
                   <div class="input-group">
                     <ion-item>
                       <ion-label position="floating">Site Name</ion-label>
-                      <ion-input [(ngModel)]="siteInputs[i]" placeholder="Enter Installation Site" name="site{{i}}" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="siteInputs[i]" placeholder="Enter Installation Site" name="site{{i}}" class="input-field" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeSiteInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
@@ -190,11 +190,11 @@
                   <div class="input-group">
                     <ion-item>
                       <ion-label position="floating">Warehouse Name</ion-label>
-                      <ion-input [(ngModel)]="storeInputs[i].name" placeholder="Enter Warehouse Name" name="store{{i}}" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="storeInputs[i].name" placeholder="Enter Warehouse Name" name="store{{i}}" class="input-field" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-item>
                       <ion-label position="floating">Warehouse Address</ion-label>
-                      <ion-input [(ngModel)]="storeInputs[i].address" placeholder="Enter Warehouse Address" name="address{{i}}" debounce="1000" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="storeInputs[i].address" placeholder="Enter Warehouse Address" name="address{{i}}" class="input-field" debounce="1500" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeStoreInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
@@ -211,7 +211,7 @@
                   <div class="input-group">
                     <ion-item>
                       <ion-label position="floating">Customer Name</ion-label>
-                      <ion-input [(ngModel)]="clientInputs[i]" placeholder="Enter Customer Name" name="client{{i}}" debounce="1000" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="clientInputs[i]" placeholder="Enter Customer Name" name="client{{i}}" class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;" debounce="1500"></ion-input>
                     </ion-item>
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeClientInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
@@ -228,13 +228,13 @@
                   <div class="input-group">
                     <ion-item>
                       <ion-label position="floating">Select Client</ion-label>
-                      <ion-select [(ngModel)]="selectedClient" name="selectedClient" required style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;">
+                      <ion-select [(ngModel)]="selectedClient" name="selectedClient" required class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;" debounce="1500">
                         <ion-select-option *ngFor="let client of clients" [value]="client.name">{{client.name}}</ion-select-option>
                       </ion-select>
                     </ion-item>
                     <ion-item>
                       <ion-label position="floating">Customer Warehouse Address</ion-label>
-                      <ion-input [(ngModel)]="warehouseInputs[i]" placeholder="Enter Warehouse Address" name="warehouse{{i}}" debounce="1000" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                      <ion-input [(ngModel)]="warehouseInputs[i]" placeholder="Enter Warehouse Address" name="warehouse{{i}}" debounce="1500" class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeWarehouseInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
@@ -254,9 +254,9 @@
                     <ion-label>
                       {{ category.name }}
                     </ion-label>
-                    <!-- <ion-button slot="end" fill="clear" (click)="deleteData('Category', category)">
-                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
-                    </ion-button> -->
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Category', category)">
+                      <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
                   </ion-item>
                 </ng-container>
   
@@ -265,9 +265,9 @@
                     <ion-label>
                       {{ oem.oemName }}
                     </ion-label>
-                    <!-- <ion-button slot="end" fill="clear" (click)="deleteData('OEM', oem)">
-                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
-                    </ion-button> -->
+                    <ion-button slot="end" fill="clear" (click)="deleteData('OEM', oem)">
+                      <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
                   </ion-item>
                 </ng-container>
   
@@ -276,9 +276,9 @@
                     <ion-label>
                       {{ site.siteName }}
                     </ion-label>
-                    <!-- <ion-button slot="end" fill="clear" (click)="deleteData('Installation Site', site)">
-                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
-                    </ion-button> -->
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Installation Site', site)">
+                      <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
                   </ion-item>
                 </ng-container>
   
@@ -287,9 +287,9 @@
                     <ion-label>
                       {{ store.storeName }}
                     </ion-label>
-                    <!-- <ion-button slot="end" fill="clear" (click)="deleteData('Warehouse', store)">
-                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
-                    </ion-button> -->
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Warehouse', store)">
+                      <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
                   </ion-item>
                 </ng-container>
   
@@ -298,9 +298,9 @@
                     <ion-label>
                       {{ client.name }}
                     </ion-label>
-                    <!-- <ion-button slot="end" fill="clear" (click)="deleteData('Customer', client)">
-                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
-                    </ion-button> -->
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Customer', client)">
+                      <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
                   </ion-item>
                 </ng-container>
   
@@ -311,9 +311,9 @@
                       <br>
                       <small>{{ warehouse.clientName }}</small>
                     </ion-label>
-                    <!-- <ion-button slot="end" fill="clear" (click)="deleteData('Customer Warehouse', warehouse)">
-                      <ion-icon name="trash-bin" slot="icon-only"></ion-icon>
-                    </ion-button> -->
+                    <ion-button slot="end" fill="clear" (click)="deleteData('Customer Warehouse', warehouse)">
+                      <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
                   </ion-item>
                 </ng-container>
               </ion-list>
