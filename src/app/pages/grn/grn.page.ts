@@ -72,7 +72,7 @@ export class GrnPage implements OnInit {
     serialNumbers: ['']
   }];
   currentPage = 1;
-  itemsPerPage = 6;
+  itemsPerPage = 5;
 
 
   constructor(
@@ -641,6 +641,7 @@ export class GrnPage implements OnInit {
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10); // Ensure font size remains the same
         doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
+        doc.text(`Challan Number: ${this.selectedPurchase.challanNumber}`, 10, 25);
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
       };
   
@@ -872,5 +873,24 @@ export class GrnPage implements OnInit {
   onSerialNumberChange(index: number) {
     this.highlightedRows.delete(index);
     this.checkForDuplicates();
+  }
+
+  get paginatedRows2() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.moreDataRows.slice(start, end);
+  }
+get totalPages2() {
+    return Math.ceil(this.moreDataRows.length / this.itemsPerPage);
+  }
+nextPage2() {
+    if (this.currentPage < this.totalPages2) {
+      this.currentPage++;
+    }
+  }
+prevPage2() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
   }
 }
