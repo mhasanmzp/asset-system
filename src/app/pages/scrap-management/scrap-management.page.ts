@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-scrap-management',
@@ -22,13 +24,19 @@ export class ScrapManagementPage implements OnInit {
   constructor(
     private assetService: DataService,
     private dataService: DataService, // Inject the DataService
-    private toastController: ToastController
+    private toastController: ToastController,
+    private router: Router,
+
   ) {}
 
   ngOnInit() {
     this.loadSites();
     this.loadCategories();
     this.loadScrapProducts();
+  }
+
+  navigateToAsset() {
+    this.router.navigate(['/asset']);
   }
 
   async presentToast(

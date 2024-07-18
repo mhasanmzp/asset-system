@@ -1,6 +1,12 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Delivery</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="navigateToAsset()">
+        <ion-icon name="arrow-back"></ion-icon>
+        Back
+      </ion-button>
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -132,88 +138,6 @@
     </ng-container>
   </div>
 
-  <!-- Old Client Details Modal -->
-  <!-- <ion-modal [isOpen]="isClientDetailsModalOpen" style="--width: 95%; --height: 95%;">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Client Details</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="closeClientDetailsModal()">
-              <ion-icon slot="icon-only" name="close"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <form (ngSubmit)="deliverProductToWarehouse()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-          <ion-item>
-            <ion-label>Client</ion-label>
-            <ion-select [(ngModel)]="selectedClient" (ionChange)="fetchClientWarehouses()" name="client" placeholder="Select Client" class="styled-input">
-              <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-label>Warehouse</ion-label>
-            <ion-select [(ngModel)]="selectedWarehouse" name="warehouse" placeholder="Select Warehouse" class="styled-input">
-              <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-label>GST Number</ion-label>
-            <ion-input [(ngModel)]="gstNumber" name="gstNumber" class="styled-input"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Billing Client</ion-label>
-            <ion-select [(ngModel)]="billingClient" name="billingClient" placeholder="Select Client" class="styled-input">
-              <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-label>Billing Warehouse</ion-label>
-            <ion-select [(ngModel)]="billingWarehouse" name="billingWarehouse" placeholder="Select Warehouse" class="styled-input">
-              <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-label>Billing GST Number</ion-label>
-            <ion-input [(ngModel)]="billingGstNumber" name="billingGstNumber" class="styled-input"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Company PAN Number</ion-label>
-            <ion-input [(ngModel)]="companyPanNumber" name="companyPanNumber" class="styled-input"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Dispatched Through</ion-label>
-            <ion-input [(ngModel)]="dispatchedThrough" name="dispatchedThrough" class="styled-input"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Dated</ion-label>
-            <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDate" name="dispatchedDate" required></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Mode/Terms of Payment</ion-label>
-            <ion-input [(ngModel)]="paymentTerms" name="paymentTerms" class="styled-input"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Destination</ion-label>
-            <ion-input [(ngModel)]="destination" name="destination" class="styled-input"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Motor Vehicle No</ion-label>
-            <ion-input [(ngModel)]="motorVehicleNo" name="motorVehicleNo" class="styled-input"></ion-input>
-          </ion-item>
-        </form>
-      </ion-content>
-      <ion-footer>
-        <ion-toolbar>
-          <ion-buttons slot="end">
-            <ion-button type="submit" (click)="deliverProductToWarehouse()">Submit</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-footer>
-    </ng-template>
-  </ion-modal> -->
   
  <!-- Client Details Modal -->
 <ion-modal [isOpen]="isClientDetailsModalOpen" style="--width: 80%; --height: 80%;">

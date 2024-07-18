@@ -3,6 +3,8 @@ import { LoadingController, ModalController, ToastController } from '@ionic/angu
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-grn',
@@ -11,6 +13,7 @@ import 'jspdf-autotable';
 })
 export class GrnPage implements OnInit {
   purchaseData: any[] = [];
+  highlightedRows: Set<number> = new Set();
   userId=localStorage.getItem("userId");
   filteredData: any[] = [];
   isModalOpen = false;
@@ -77,6 +80,8 @@ export class GrnPage implements OnInit {
     private dataService: DataService,
     private toastController: ToastController,
     private loadingController: LoadingController,
+    private router: Router,
+
 
   ) { }
 
@@ -159,6 +164,10 @@ export class GrnPage implements OnInit {
     }).catch(error => {
       console.error('Error fetching categories data', error);
     });
+  }
+
+  navigateToAsset() {
+    this.router.navigate(['/asset']);
   }
 
 
@@ -245,6 +254,8 @@ export class GrnPage implements OnInit {
       serialNumbers: ['']
     };
     this.materialRows.push(newRow);
+    this.checkForDuplicates();
+
   }
 
   removeRow(index: number) {
@@ -366,89 +377,17 @@ export class GrnPage implements OnInit {
   }
 
 
-  // async saveMaterial() {
-  //       const formData = {
-  //         permissionName: 'Tasks',
-  //         employeeIdMiddleware: this.userId,
-  //         employeeId: this.userId,
-  //         ...this.material,
-  //         // purchaseOrderNo: this.material.purchaseOrderNo, // Include purchaseOrderNo
-  //         materialRows: this.materialRows.map((row, index) => ({
-  //           serialNumber: index + 1, // Add serial number
-  //           ...row
-  //         }))
-  //       };
-  //       this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
-  //         const toast = await this.toastController.create({
-  //           message: response.message || 'Items saved successfully!', // Use response message
-  //           duration: 5000,
-  //           position: 'bottom',
-  //           color:'success'
-  //         });
-  //         await toast.present();
-  //         this.closeAddMaterialModal();
-  //         this.fetchData();
-  //         this.resetAddMaterialModal();
-  //       }, async error => {
-  //         const toast = await this.toastController.create({
-  //           message: error.error.message || 'Failed to save asset. Please try again.', // Use error message
-  //           duration: 6000,
-  //           position: 'bottom',
-  //           color:'danger'
-  //         });
-  //         await toast.present();
-  //       });
-  //     }
-
-
-
-  // async saveMoreData() {
-  //       const formData = {
-  //         permissionName: 'Tasks',
-  //         employeeIdMiddleware: this.userId,
-  //         employeeId: this.userId,
-  //         purchaseId: this.selectedPurchase.purchaseId,
-  //         oemName: this.selectedPurchase.oemName,
-  //         challanNo: this.material.challanNo,
-  //         challanDate: this.material.challanDate,
-  //         materialRows: this.moreDataRows.map(row => ({
-  //           categoryName: row.categoryName,
-  //           productName: row.productName,
-  //           quantity: row.quantity,
-  //           quantityUnit: row.quantityUnit,
-  //           warrantyPeriodMonths: row.warrantyPeriodMonths,
-  //           storeLocation: row.storeLocation,
-  //           serialNumber: row.serialNumbers[0] // Convert serialNumbers array to single serialNumber
-  //         }))
-  //       };
-  //       this.dataService.submitMoreData(this.material, formData).subscribe(
-  //         async response => {
-  //           const toast = await this.toastController.create({
-  //             message: response.message || 'Items Added successfully!', // Use response message
-  //             duration: 6000,
-  //             position: 'bottom',
-  //             color: 'success'
-  //           });
-  //           await toast.present();
-  //           this.closeAddMoreDataModal();
-  //           this.fetchData();
-  //           this.resetAddMoreMaterialModal();
-  //         },
-  //         async error => {
-  //           const toast = await this.toastController.create({
-  //             message: error.error.message || 'Failed to save more data. Please try again.', // Use error message
-  //             duration: 6000,
-  //             position: 'bottom',
-  //             color: 'danger'
-  //           });
-  //           await toast.present();
-  //         }
-  //       );
-  //     }
-
-
   async saveMaterial() {
-
+    const duplicates = this.checkForDuplicatesInSave();
+    if (duplicates.length > 0) {
+      const alert = await this.toastController.create({
+        message: 'Duplicate serial numbers found: ' + duplicates.join(', '),
+        color: 'danger',
+        buttons: ['Close'],
+      });
+      await alert.present();
+      return;
+    }
     const loading = await this.loadingController.create({
       message: 'Saving Data...',
     });
@@ -868,7 +807,70 @@ export class GrnPage implements OnInit {
     }
   }
   
+  async saveMaterial2() {
+    const duplicates = this.checkForDuplicatesInSave();
+    if (duplicates.length > 0) {
+      const alert = await this.toastController.create({
+        header: 'Error',
+        message: 'Duplicate serial numbers found: ' + duplicates.join(', '),
+        buttons: ['OK'],
+      });
+      await alert.present();
+      return;
+    }
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
+      ...this.material,
+      materialRows: this.materialRows.map((row) => ({
+        serialNumber: row.serialNumbers[0],
+        ...row
+      }))
+    };
+    this.dataService.submitMaterial(this.material, formData).subscribe(async response => {
+      const toast = await this.toastController.create({
+        message: response.message || 'Items saved successfully!',
+        duration: 5000,
+        position: 'bottom',
+        color: 'success'
+      });
+      await toast.present();
+      this.closeAddMaterialModal();
+      this.fetchData();
+      this.resetAddMaterialModal();
+      await this.generateChallan();
+    }, async error => {
+      const toast = await this.toastController.create({
+        message: error.error.message || 'Failed to save asset. Please try again.',
+        duration: 6000,
+        position: 'bottom',
+        color: 'danger'
+      });
+      await toast.present();
+    });
+  }
   
+  checkForDuplicatesInSave() {
+    const serialNumbers = this.materialRows.map(row => row.serialNumbers[0]);
+    const duplicates = serialNumbers.filter((item, index) => serialNumbers.indexOf(item) !== index && item);
+    return [...new Set(duplicates)];
+  }
   
-  
+  checkForDuplicates() {
+    this.highlightedRows.clear();
+    const serialNumbersSet = new Set<string>();
+    this.materialRows.forEach((row, index) => {
+      const serialNumber = row.serialNumbers[0];
+      if (serialNumbersSet.has(serialNumber) && serialNumber) {
+        this.highlightedRows.add(index);
+      } else {
+        serialNumbersSet.add(serialNumber);
+      }
+    });
+  }
+  onSerialNumberChange(index: number) {
+    this.highlightedRows.delete(index);
+    this.checkForDuplicates();
+  }
 }

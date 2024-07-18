@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController, LoadingController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 import jsPDF from 'jspdf';
-import { color } from 'echarts';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-delivery',
@@ -51,7 +51,9 @@ export class DeliveryPage implements OnInit {
 
   constructor(private dataService: DataService, 
     private toastController: ToastController,
-    private loadingController: LoadingController // Inject LoadingController
+    private loadingController: LoadingController, // Inject LoadingController
+    private router: Router,
+
   ) { }
 
   ngOnInit() {
@@ -60,6 +62,10 @@ export class DeliveryPage implements OnInit {
     this.loadClients();
     this.loadSites();
     this.fetchWarehouseProducts()
+  }
+
+  navigateToAsset() {
+    this.router.navigate(['/asset']);
   }
 
   segmentChanged() {

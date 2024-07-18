@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { DataService } from 'src/app/services/asset.service';
+import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
+
+
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -20,11 +24,21 @@ export class AssetGridViewPage implements OnInit {
   filteredDeliveredData: any[] = [];
   userId = localStorage.getItem("userId");
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private loadingController: LoadingController,
+    private router: Router,
+
+
+  ) {}
 
   ngOnInit() {
     this.loadSites();
     this.loadDeliveredData();
+  }
+
+  navigateToAsset() {
+    this.router.navigate(['/asset']);
   }
 
   loadSites() {
@@ -42,7 +56,12 @@ export class AssetGridViewPage implements OnInit {
     });
   }
 
-  loadDeliveredData() {
+  async loadDeliveredData() {
+     
+    const loading = await this.loadingController.create({
+      message: 'Loading...',
+    });
+    await loading.present();
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
@@ -52,10 +71,13 @@ export class AssetGridViewPage implements OnInit {
     this.dataService.fetchDeliveredData(formData).then((res: any) => {
       this.deliveredData = res;
       this.filteredDeliveredData = res;
+      loading.dismiss()
       // this.filterDeliveredData();  // Initial filter
       console.log("Response ::::::::::::::", res);
     }).catch(error => {
       console.error('Error fetching Delivered data', error);
+      loading.dismiss()
+
     });
   }
 
