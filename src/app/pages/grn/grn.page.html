@@ -63,7 +63,7 @@
   </ion-grid>
 
 
-  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 95%; --height: 95%;">
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 95%; --height: 95%; --background: white">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -80,12 +80,12 @@
       </ion-header>
       <ion-content>
         <form (ngSubmit)="saveMaterial()" #materialForm="ngForm">
-          <ion-grid style="background-color:#2f2f2f2f; border-radius: 10px;">
+          <ion-grid class="input-group"  style="border: 1px solid black; border-radius: 10px; color: #ccc;">
             <ion-row>
               <ion-col size="2">
                 <ion-item>
                   <ion-label position="stacked">Purchase Order No <span class="required-asterisk">*</span></ion-label>
-                  <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.purchaseOrderNo" name="purchaseOrderNo"></ion-input>
+                  <ion-input style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;" [(ngModel)]="material.purchaseOrderNo" name="purchaseOrderNo"></ion-input>
                 </ion-item>
               </ion-col>
               <ion-col size="1.7">
@@ -104,7 +104,7 @@
               <ion-col size="1.7">
                 <ion-item>
                   <ion-label position="stacked">Store <span class="required-asterisk">*</span></ion-label>
-                  <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.storeName" name="storeName" placeholder="Select Store" required>
+                  <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;" [(ngModel)]="material.storeName" name="storeName" placeholder="Select Store" required>
                     <ion-select-option *ngFor="let store of storeData" [value]="store.storeName">{{ store.storeName }}</ion-select-option>
                   </ion-select>
                 </ion-item>
@@ -112,7 +112,7 @@
               <ion-col size="2">
                 <ion-item>
                   <ion-label position="stacked">OEM <span class="required-asterisk">*</span></ion-label>
-                  <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.oemName" name="oemName" placeholder=" Select OEM" required>
+                  <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;" [(ngModel)]="material.oemName" name="oemName" placeholder=" Select OEM" required>
                     <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">{{ oem.oemName }}</ion-select-option>
                   </ion-select>
                 </ion-item>
@@ -232,157 +232,7 @@
   </ion-modal>
   
 
-   <!-- <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 95%; --height: 95%;">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Add Goods</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="addRow()">Add Row
-              <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
-            </ion-button>
-            <ion-button (click)="closeAddMaterialModal()">
-              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <form (ngSubmit)="saveMaterial()" #materialForm="ngForm">
-          <ion-grid style="background-color:#2f2f2f2f; border-radius: 10px;">
-            <ion-row>
-              <ion-col size="2">
-                <ion-item>
-                  <ion-label position="stacked">Purchase Order No <span class="required-asterisk">*</span></ion-label>
-                  <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.purchaseOrderNo" name="purchaseOrderNo"></ion-input>
-                </ion-item>
-              </ion-col>
-              <ion-col size="1.7">
-                <ion-item>
-                  <ion-label position="stacked">Purchase Order Date <span class="required-asterisk">*</span></ion-label>
-                  <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="material.grnDate" name="grnDate" required></ion-input>
-                </ion-item>
-              </ion-col>
-              <ion-col size="1.7">
-                <ion-item>
-                  <ion-label position="stacked">Store <span class="required-asterisk">*</span></ion-label>
-                  <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.storeName" name="storeName" placeholder="Select Store" required>
-                    <ion-select-option *ngFor="let store of storeData" [value]="store.storeName">{{ store.storeName }}</ion-select-option>
-                  </ion-select>
-                </ion-item>
-              </ion-col>
-              <ion-col size="2">
-                <ion-item>
-                  <ion-label position="stacked">OEM <span class="required-asterisk">*</span></ion-label>
-                  <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.oemName" name="oemName" placeholder=" Select OEM" required>
-                    <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">{{ oem.oemName }}</ion-select-option>
-                  </ion-select>
-                </ion-item>
-              </ion-col>
-              <ion-col size="2">
-                <ion-item>
-                  <ion-label position="stacked">Challan Number <span class="required-asterisk">*</span></ion-label>
-                  <ion-input style="border: 1px solid black; border-radius: 10px;" type="text" [(ngModel)]="material.challanNo" name="challanNo" required></ion-input>
-                </ion-item>
-              </ion-col>
-              <ion-col size="2">
-                <ion-item>
-                  <ion-label position="stacked">Challan Date <span class="required-asterisk">*</span></ion-label>
-                  <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="material.challanDate" name="challanDate" required></ion-input>
-                </ion-item>
-              </ion-col>
-      
-            </ion-row>
-          </ion-grid>
-          <div style="overflow-x: auto;">
-            <ion-grid>
-              <ion-row>
-                <ion-col size="0.5"><strong>S.No</strong></ion-col>
-                <ion-col size="1.9" style="margin-left: 25px;"><strong>Category</strong></ion-col>
-                <ion-col size="1.9"><strong>Product Name</strong></ion-col>
-                <ion-col size="1.9"><strong>Unit</strong></ion-col>
-                <ion-col size="2"><strong>Warranty Period (Months)</strong></ion-col>
-                <ion-col size="2"><strong>Serial Number</strong></ion-col>
-                <ion-col size="1.5"><strong>Actions</strong></ion-col>
-              </ion-row>
-  <ng-container *ngFor="let item of paginatedRows; let i = index">
-    <ion-row [ngClass]="{ 'highlight-row': highlightedRows.has(i) }">
-    <ion-col size="0.5">
-      <ion-item lines="none">
-        <ion-label>{{ i + 1 }}</ion-label>
-      </ion-item>
-    </ion-col>
-    <ion-col size="1.9">
-      <ion-item>
-        <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.categoryName" name="categoryName{{i}}" placeholder="Select Category" required>
-          <ion-select-option *ngFor="let category of data2" [value]="category.id">{{ category.name }}</ion-select-option>
-        </ion-select>
-      </ion-item>
-    </ion-col>
-    <ion-col size="2">
-      <ion-item>
-        <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.productName" name="productName{{i}}" class="small-input" required></ion-input>
-      </ion-item>
-    </ion-col>
-      <ion-col size="2">
-        <ion-item>
-          <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" interface="popover" placeholder="Select Unit" [(ngModel)]="item.quantityUnit" name="quantityUnit{{i}}" required>
-          <ion-select-option value="KG">KG</ion-select-option>
-          <ion-select-option value="Metre">Metre</ion-select-option>
-          <ion-select-option value="Units">Units</ion-select-option>
-          <ion-select-option value="Grams">Grams</ion-select-option>
-          <ion-select-option value="Pieces">Pieces</ion-select-option>
-          <ion-select-option value="Dozen">Dozen</ion-select-option>
-          <ion-select-option value="Bag">Bag</ion-select-option>
-          <ion-select-option value="Box">Box</ion-select-option>
-        </ion-select>
-      </ion-item>
-    </ion-col>
-    <ion-col size="2">
-      <ion-item>
-        <ion-input style="border: 1px solid black; border-radius: 10px;" type="number" [(ngModel)]="item.warrantyPeriodMonths" name="warrantyPeriodMonths{{i}}" class="small-input" required></ion-input>
-      </ion-item>
-    </ion-col>
-    <ion-col size="2">
-      <ion-item>
-        <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[0]" name="serialNumber{{i}}" class="small-input" (ionChange)="onSerialNumberChange(i)"></ion-input>
-      </ion-item>
-    </ion-col>
-    <ion-col size="1.5" class="ion-text-center">
-      <ion-item lines="none" style="display: flex; justify-content: space-around;">
-        <ion-button fill="clear" (click)="removeRow(i)" style="font-size: 1.2em; --size: 48px;">
-          <ion-icon name="trash-bin-outline" style="font-size: 1.2em;"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" (click)="addRow(item)" style="font-size: 1.2em; --size: 48px;">
-          <ion-icon name="duplicate" style="font-size: 1.2em;"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-col>
-  </ion-row>
-</ng-container>
-
-</ion-grid>
-<ion-grid>
-<ion-row>
-  <ion-col size="12" class="ion-text-center">
-    <ion-button fill="clear" [disabled]="currentPage === 1" (click)="prevPage()">
-      Previous
-    </ion-button>
-    <ion-button fill="clear" [disabled]="currentPage === totalPages" (click)="nextPage()">
-      Next
-    </ion-button>
-  </ion-col>
-  <ion-col size="12" class="ion-text-end">
-    <ion-button type="submit" [disabled]="!materialForm.form.valid">Save</ion-button>
-  </ion-col>
-</ion-row>
-</ion-grid>
-</div>
-</form>
-</ion-content>
-</ng-template>
-</ion-modal>  -->
-
+ 
 <!-- Detail Modal -->
 <ion-modal [isOpen]="isDetailModalOpen" (didDismiss)="closeDetailsModal()" class="large-modal-detail">
   <ng-template>
@@ -618,8 +468,8 @@
     </ion-header>
     <ion-content>
       <form #materialForm="ngForm" (ngSubmit)="saveMoreData()">
-        <ion-grid>
-          <ion-row>
+        <ion-grid >
+          <ion-row style="border: 1px solid black; border-radius: 10px; color: #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
             <!-- <ion-col size="3">
               <ion-item>
                 <ion-select [(ngModel)]="selectedPurchaseId" value="selectedPurchaseId" (ionChange)="onPurchaseIdChange($event)" placeholder="Select Purchase Order No">
@@ -630,7 +480,7 @@
             <ion-col size="3">
             <ion-item>
               <ion-label position="stacked">Purchase Order Number <span class="required-asterisk">*</span></ion-label>
-              <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="selectedPurchaseId" value="selectedPurchaseId" (ionChange)="onPurchaseIdChange($event)" placeholder="Select Purchase Order No" required>
+              <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;" [(ngModel)]="selectedPurchaseId" value="selectedPurchaseId" (ionChange)="onPurchaseIdChange($event)" placeholder="Select Purchase Order No" required>
                 <ion-select-option *ngFor="let po of poData" [value]="po.purchaseId">{{ po.purchaseId }}</ion-select-option>
               </ion-select>
             </ion-item>
@@ -639,19 +489,19 @@
             <ion-col size="3">
               <ion-item>
                 <ion-label position="stacked">Challan No.<span class="required-asterisk">*</span></ion-label>
-                <ion-input style="border: 1px solid black; border-radius: 10px;" type="text" [(ngModel)]="material.challanNo" name="challanNo" required></ion-input>
+                <ion-input style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;" type="text" [(ngModel)]="material.challanNo" name="challanNo" required></ion-input>
               </ion-item>
             </ion-col>
             <ion-col size="3">
               <ion-item>
                 <ion-label position="stacked">Challan Date<span class="required-asterisk">*</span></ion-label>
-                <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="material.challanDate" name="challanDate" required></ion-input>
+                <ion-input style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;" type="date" [(ngModel)]="material.challanDate" name="challanDate" required></ion-input>
               </ion-item>
             </ion-col>
             <ion-col size="3">
               <ion-item>
                 <ion-label position="stacked">Store <span class="required-asterisk">*</span></ion-label>
-                <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="material.storeName" name="storeName" placeholder=" Select Store" required>
+                <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;" [(ngModel)]="material.storeName" name="storeName" placeholder=" Select Store" required>
                   <ion-select-option *ngFor="let store of storeData" [value]="store.storeName">{{ store.storeName }}</ion-select-option>
                 </ion-select>
               </ion-item>
@@ -663,7 +513,7 @@
               </ion-item>
             </ion-col> -->
           </ion-row>
-          <ion-row style="margin-left: 35px;">
+          <ion-row style="margin-left: 35px; margin-top: 20px;">
             <ion-col size="0.8"><strong>S.No</strong></ion-col>
             <ion-col size="1.9"><strong>Category</strong></ion-col>
             <ion-col size="1.9"><strong>Product Name</strong></ion-col>

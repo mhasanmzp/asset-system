@@ -31,17 +31,6 @@ export class GrnPage implements OnInit {
   selectedPurchaseId: string;
   selectedOemName: string;
 
-  
-  // material: any = {
-  //   grnNo: '',
-  //   grnDate: '',
-  //   storeName: '',
-  //   oemName: '',
-  //   challanNo: '',
-  //   challanDate: '',
-  //   storeAddress: ''
-  // };
-
   material: any = {
     grnNo: '',
     grnDate: '',
@@ -72,7 +61,7 @@ export class GrnPage implements OnInit {
     serialNumbers: ['']
   }];
   currentPage = 1;
-  itemsPerPage = 6;
+  itemsPerPage = 5;
 
 
   constructor(
