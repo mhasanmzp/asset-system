@@ -906,4 +906,10 @@ prevPage2() {
       this.currentPage--;
     }
   }
+
+  updateChallanMinDate() {
+    if (this.material.grnDate) {
+      this.material.challanDate = '';
+    }
+  }
 }

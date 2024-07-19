@@ -63,11 +63,11 @@
   </ion-grid>
 
 
-  <!-- <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 95%; --height: 95%;">
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 95%; --height: 95%;">
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Add Asset</ion-title>
+          <ion-title>Add Goods</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="addRow()">Add Row
               <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
@@ -91,7 +91,14 @@
               <ion-col size="1.7">
                 <ion-item>
                   <ion-label position="stacked">Purchase Order Date <span class="required-asterisk">*</span></ion-label>
-                  <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="material.grnDate" name="grnDate" required></ion-input>
+                  <ion-input
+                    style="border: 1px solid black; border-radius: 10px;" 
+                    type="date" 
+                    [(ngModel)]="material.grnDate" 
+                    name="grnDate" 
+                    (ionChange)="updateChallanMinDate()" 
+                    required>
+                  </ion-input>
                 </ion-item>
               </ion-col>
               <ion-col size="1.7">
@@ -119,10 +126,16 @@
               <ion-col size="2">
                 <ion-item>
                   <ion-label position="stacked">Challan Date <span class="required-asterisk">*</span></ion-label>
-                  <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="material.challanDate" name="challanDate" required></ion-input>
+                  <ion-input
+                    style="border: 1px solid black; border-radius: 10px;" 
+                    type="date" 
+                    [(ngModel)]="material.challanDate" 
+                    name="challanDate" 
+                    [min]="material.grnDate" 
+                    required>
+                  </ion-input>
                 </ion-item>
               </ion-col>
-      
             </ion-row>
           </ion-grid>
           <div style="overflow-x: auto;">
@@ -137,7 +150,7 @@
                 <ion-col size="1.5"><strong>Actions</strong></ion-col>
               </ion-row>
               <ng-container *ngFor="let item of paginatedRows; let i = index">
-                <ion-row>
+                <ion-row [ngClass]="{ 'highlight-row': highlightedRows.has(i) }">
                   <ion-col size="0.5">
                     <ion-item lines="none">
                       <ion-label>{{ i + 1 }}</ion-label>
@@ -155,9 +168,9 @@
                       <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.productName" name="productName{{i}}" class="small-input" required></ion-input>
                     </ion-item>
                   </ion-col>
-                    <ion-col size="2">
-                      <ion-item>
-                        <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" interface="popover" placeholder="Select Unit" [(ngModel)]="item.quantityUnit" name="quantityUnit{{i}}" required>
+                  <ion-col size="2">
+                    <ion-item>
+                      <ion-select class="custom-select" style="border: 1px solid black; border-radius: 10px;" interface="popover" placeholder="Select Unit" [(ngModel)]="item.quantityUnit" name="quantityUnit{{i}}" required>
                         <ion-select-option value="KG">KG</ion-select-option>
                         <ion-select-option value="Metre">Metre</ion-select-option>
                         <ion-select-option value="Units">Units</ion-select-option>
@@ -176,7 +189,7 @@
                   </ion-col>
                   <ion-col size="2">
                     <ion-item>
-                      <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumber" name="serialNumber{{i}}" class="small-input"></ion-input>
+                      <ion-input style="border: 1px solid black; border-radius: 10px;" [(ngModel)]="item.serialNumbers[0]" name="serialNumber{{i}}" class="small-input" (ionChange)="onSerialNumberChange(i)"></ion-input>
                     </ion-item>
                   </ion-col>
                   <ion-col size="1.5" class="ion-text-center">
@@ -191,11 +204,11 @@
                   </ion-col>
                 </ion-row>
               </ng-container>
-              <ion-row>
+              <!-- <ion-row>
                 <ion-col size="12" class="ion-text-end">
                   <ion-button type="submit" [disabled]="!materialForm.form.valid">Save</ion-button>
                 </ion-col>
-              </ion-row>
+              </ion-row> -->
             </ion-grid>
             <ion-grid>
               <ion-row>
@@ -207,19 +220,23 @@
                     Next
                   </ion-button>
                 </ion-col>
+                <ion-col size="12" class="ion-text-end">
+                  <ion-button type="submit" [disabled]="!materialForm.form.valid">Save</ion-button>
+                </ion-col>
               </ion-row>
             </ion-grid>
           </div>
         </form>
       </ion-content>
     </ng-template>
-  </ion-modal> -->
+  </ion-modal>
+  
 
-    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 95%; --height: 95%;">
+   <!-- <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeAddMaterialModal()" style="--width: 95%; --height: 95%;">
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Add Asset</ion-title>
+          <ion-title>Add Goods</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="addRow()">Add Row
               <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
@@ -343,11 +360,7 @@
     </ion-col>
   </ion-row>
 </ng-container>
-<!-- <ion-row>
-  <ion-col size="12" class="ion-text-end">
-    <ion-button type="submit" [disabled]="!materialForm.form.valid">Save</ion-button>
-  </ion-col>
-</ion-row> -->
+
 </ion-grid>
 <ion-grid>
 <ion-row>
@@ -368,7 +381,7 @@
 </form>
 </ion-content>
 </ng-template>
-</ion-modal> 
+</ion-modal>  -->
 
 <!-- Detail Modal -->
 <ion-modal [isOpen]="isDetailModalOpen" (didDismiss)="closeDetailsModal()" class="large-modal-detail">
