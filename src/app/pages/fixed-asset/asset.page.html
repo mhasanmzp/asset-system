@@ -275,8 +275,8 @@
                 <ng-container *ngIf="data.masterData === 'Category'">
                   <!-- Column headings -->
                   <div class="header-row">
-                    <ion-label class="header-item category-header" style="margin-left: 20px;">Category</ion-label>
-                    <ion-label class="header-item category-header" style="margin-left: 70px;">HSN Number</ion-label>
+                    <ion-label class="header-item category-header" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Category</ion-label>
+                    <ion-label class="header-item category-header" style="margin-left: 70px;border: 1px solid;border-radius: 10px; font-size: large;">HSN Number</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
@@ -308,14 +308,14 @@
                 <ng-container *ngIf="data.masterData === 'OEM'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item">OEM Name</ion-label>
+                    <ion-label class="header-item"style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">OEM Name</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
                   <!-- Data rows -->
                   <ion-item *ngFor="let oem of viewData['OEM']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
-                      <ion-label class="data-item">
+                      <ion-label class="data-item" >
                         {{ oem.oemName }}
                       </ion-label>
                       <ion-button slot="end" fill="clear" (click)="startEdit(i)">
@@ -335,7 +335,7 @@
                 <ng-container *ngIf="data.masterData === 'Installation Site'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item">Site Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;" >Site Name</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
@@ -362,8 +362,8 @@
                 <ng-container *ngIf="data.masterData === 'Warehouse'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item">Warehouse Name</ion-label>
-                    <ion-label class="header-item">Warehouse Address</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 50px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Address</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
@@ -395,7 +395,7 @@
                 <ng-container *ngIf="data.masterData === 'Customer'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item">Customer Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Customer Name</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
@@ -422,8 +422,8 @@
                 <ng-container *ngIf="data.masterData === 'Customer Warehouse'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item">Client Name</ion-label>
-                    <ion-label class="header-item">Warehouse Address</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Client Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Address</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
                 
