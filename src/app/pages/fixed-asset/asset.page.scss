@@ -130,13 +130,26 @@
 .input-row {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0px;
 }
 .input-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0px;
 }
 .input-group ion-item {
   flex: 1;
+}
+.header-row, .data-row {
+  display: flex;
+  align-items: left;
+  justify-content: left;
+}
+.header-item, .data-item {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+}
+.data-item {
+  margin: 0 0px;
 }

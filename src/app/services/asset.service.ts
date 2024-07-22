@@ -314,6 +314,9 @@ export class DataService {
   deleteItem(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/delete-asset-data`, payload);
   }
+  updateItem(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/update-asset-data`, payload);
+  }
  
 }
 
