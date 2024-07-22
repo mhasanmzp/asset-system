@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ToastController, LoadingController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
 
 @Component({
@@ -42,7 +42,9 @@ export class AssetPage implements OnInit {
 
   constructor(
     private toastController: ToastController,
-    private dataService: DataService
+    private dataService: DataService,
+    private loadingController: LoadingController,
+
   ) { }
 
   ngOnInit() {
@@ -369,13 +371,18 @@ export class AssetPage implements OnInit {
     this.editIndex = index;
   }
 
-  submitUpdate(type: string, item: any) {
+  async submitUpdate(type: string, item: any) {
     // Perform the update logic here
-    this.updateData(type, item);
-    this.editIndex = null; // Reset the edit index after submitting the update
+   await this.updateData(type, item);
   }
 
+
+
+
+
+
   refreshData() {
+    
     this.loadClients();
     this.loadCategories();
     this.loadOems();
@@ -384,9 +391,22 @@ export class AssetPage implements OnInit {
     this.loadWarehouses();
   }
 
-  updateData(type: string, item: any) {
+  async updateData(type: string, item: any) {
+
+    this.editIndex = null; // Reset the edit index after submitting the update
+    const toast = await this.toastController.create({
+      message: 'Data Updated Successfully!',
+      duration: 4000,
+      position: 'bottom',
+      color: 'success'
+  
+    });
+
+    const loading = await this.loadingController.create({
+      message: 'Saving Data...',
+    });
+    await loading.present();
     // Prepare the payload with additional parameters
-    console.log("type:", type, "item:", item);
     const payload = {
       option: type,
       item: item,
@@ -400,11 +420,19 @@ export class AssetPage implements OnInit {
       (response) => {
         // Handle successful update
         console.log('Item updated successfully:', response);
-        this.refreshData(); // Refresh data to show the updated item
+         loading.present();
+
+        this.refreshData(); 
+        loading.dismiss();
+        // Refresh data to show the updated item
+        toast.present();
+
+
       },
       (error) => {
         // Handle error
         console.error('Error updating item:', error);
+
       }
     );
   }
