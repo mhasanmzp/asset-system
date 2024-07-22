@@ -325,45 +325,89 @@ export class AssetPage implements OnInit {
     'Category', 'OEM', 'Installation Site', 'Warehouse', 'Customer', 'Customer Warehouse'
   ];
 
-  startEdit (index: number) {
-    this.editIndex = index;
-  };
+  // startEdit (index: number) {
+  //   this.editIndex = index;
+  // };
 
+
+  // submitUpdate(type: string, item: any) {
+  //   // Perform the update logic here
+  //   this.updateData(type, item);
+  //   this.editIndex = null; // Reset the edit index after submitting the update
+  // };
+
+
+  // updateData(type: string, item: any) {
+  //   // Prepare the payload with additional parameters
+  //   console.log("type:",type,"item:",item)
+  //   const payload = {
+  //     option: type,
+  //     item: item,
+  //     permissionName: 'Tasks',              // Add the permissionName
+  //     employeeIdMiddleware: this.userId,    // Add the employeeIdMiddleware
+  //     employeeId: this.userId               // Add the employeeId
+  //   };
+
+ 
+  //   // Call your API for deletion
+  //   this.dataService.updateItem(payload).subscribe(
+  //     (response) => {
+  //       // Handle successful deletion
+  //       console.log('Item updated successfully:', response);
+  //       // Update the viewData to remove the deleted item
+  //       this.viewData[type] = this.viewData[type].filter((data: any) => data !== item);
+  //     },
+  //     (error) => {
+  //       // Handle error
+  //       console.error('Error deleting item:', error);
+  //     }
+  //   );
+  // }
+  
+
+  startEdit(index: number) {
+    this.editIndex = index;
+  }
 
   submitUpdate(type: string, item: any) {
     // Perform the update logic here
     this.updateData(type, item);
     this.editIndex = null; // Reset the edit index after submitting the update
-  };
+  }
 
+  refreshData() {
+    this.loadClients();
+    this.loadCategories();
+    this.loadOems();
+    this.loadSites();
+    this.loadStores();
+    this.loadWarehouses();
+  }
 
   updateData(type: string, item: any) {
     // Prepare the payload with additional parameters
-    console.log("type:",type,"item:",item)
+    console.log("type:", type, "item:", item);
     const payload = {
       option: type,
       item: item,
-      permissionName: 'Tasks',              // Add the permissionName
-      employeeIdMiddleware: this.userId,    // Add the employeeIdMiddleware
-      employeeId: this.userId               // Add the employeeId
+      permissionName: 'Tasks', // Add the permissionName
+      employeeIdMiddleware: this.userId, // Add the employeeIdMiddleware
+      employeeId: this.userId // Add the employeeId
     };
 
- 
-    // Call your API for deletion
+    // Call your API for updating the item
     this.dataService.updateItem(payload).subscribe(
       (response) => {
-        // Handle successful deletion
+        // Handle successful update
         console.log('Item updated successfully:', response);
-        // Update the viewData to remove the deleted item
-        this.viewData[type] = this.viewData[type].filter((data: any) => data !== item);
+        this.refreshData(); // Refresh data to show the updated item
       },
       (error) => {
         // Handle error
-        console.error('Error deleting item:', error);
+        console.error('Error updating item:', error);
       }
     );
   }
-  
   
 }
 

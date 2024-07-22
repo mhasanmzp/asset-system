@@ -275,14 +275,11 @@
                 <ng-container *ngIf="data.masterData === 'Category'">
                   <!-- Column headings -->
                   <div class="header-row">
-                    <ion-label class="header-item"
-                      style="border: 1px solid;border-radius: 10px; margin-left: 75px; font-size: large;">Category</ion-label>
-                    <ion-label class="header-item"
-                      style="border: 1px solid ;border-radius: 10px; margin-left: 75px; font-size: large;">HSN
-                      Number</ion-label>
+                    <ion-label class="header-item category-header">Category</ion-label>
+                    <ion-label class="header-item category-header">HSN Number</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-
+            
                   <!-- Data rows -->
                   <ion-item *ngFor="let category of viewData['Category']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
@@ -298,25 +295,23 @@
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="category.name" placeholder="Enter Category Name"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                        class="editable-input"></ion-input>
                       <ion-input [(ngModel)]="category.hsnNumber" placeholder="Enter HSN Number"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                        class="editable-input"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('Category', category)">
                         Submit
                       </ion-button>
                     </ng-container>
                   </ion-item>
                 </ng-container>
-
-
-
+            
                 <ng-container *ngIf="data.masterData === 'OEM'">
                   <!-- Column heading -->
                   <div class="header-row">
                     <ion-label class="header-item">OEM Name</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-
+            
                   <!-- Data rows -->
                   <ion-item *ngFor="let oem of viewData['OEM']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
@@ -329,21 +324,21 @@
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="oem.oemName" placeholder="Enter OEM Name"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                        class="editable-input"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('OEM', oem)">
                         Submit
                       </ion-button>
                     </ng-container>
                   </ion-item>
                 </ng-container>
-
+            
                 <ng-container *ngIf="data.masterData === 'Installation Site'">
                   <!-- Column heading -->
                   <div class="header-row">
                     <ion-label class="header-item">Site Name</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-
+            
                   <!-- Data rows -->
                   <ion-item *ngFor="let site of viewData['Site']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
@@ -356,16 +351,14 @@
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="site.siteName" placeholder="Enter Site Name"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                        class="editable-input"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('Installation Site', site)">
                         Submit
                       </ion-button>
                     </ng-container>
                   </ion-item>
                 </ng-container>
-
-
-
+            
                 <ng-container *ngIf="data.masterData === 'Warehouse'">
                   <!-- Column heading -->
                   <div class="header-row">
@@ -373,7 +366,7 @@
                     <ion-label class="header-item">Warehouse Address</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-
+            
                   <!-- Data rows -->
                   <ion-item *ngFor="let store of viewData['Store']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
@@ -389,23 +382,23 @@
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="store.storeName" placeholder="Enter Warehouse Name"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                        class="editable-input"></ion-input>
                       <ion-input [(ngModel)]="store.address" placeholder="Enter Warehouse Address"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                        class="editable-input"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('Warehouse', store)">
                         Submit
                       </ion-button>
                     </ng-container>
                   </ion-item>
                 </ng-container>
-
+            
                 <ng-container *ngIf="data.masterData === 'Customer'">
                   <!-- Column heading -->
                   <div class="header-row">
                     <ion-label class="header-item">Customer Name</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-
+            
                   <!-- Data rows -->
                   <ion-item *ngFor="let client of viewData['Client']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
@@ -418,16 +411,14 @@
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="client.name" placeholder="Enter Customer Name"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                        class="editable-input"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer', client)">
                         Submit
                       </ion-button>
                     </ng-container>
                   </ion-item>
                 </ng-container>
-
-
-          
+            
                 <ng-container *ngIf="data.masterData === 'Customer Warehouse'">
                   <!-- Column heading -->
                   <div class="header-row">
@@ -435,7 +426,7 @@
                     <ion-label class="header-item">Warehouse Address</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-
+                
                   <!-- Data rows -->
                   <ion-item *ngFor="let warehouse of viewData['Warehouse']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
@@ -450,11 +441,14 @@
                       </ion-button>
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
-                      <ion-input [(ngModel)]="warehouse.name" placeholder="Enter Warehouse Name"
-                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
-                      <ion-label class="data-item">
-                        {{ warehouse.clientName }}
-                      </ion-label>
+                      <div class="data-item">
+                        <ion-input [(ngModel)]="warehouse.clientName" placeholder="Enter Client Name"
+                          class="rounded-input"></ion-input>
+                      </div>
+                      <div class="data-item">
+                        <ion-input [(ngModel)]="warehouse.name" placeholder="Enter Warehouse Address"
+                          class="rounded-input"></ion-input>
+                      </div>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer Warehouse', warehouse)">
                         Submit
                       </ion-button>
@@ -463,6 +457,7 @@
                 </ng-container>
               </ion-list>
             </div>
+            
           </div>
         </div>
       </ion-content>
