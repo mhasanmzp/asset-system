@@ -353,10 +353,9 @@ export class GrnPage implements OnInit {
         stockableQuantity: purchaseData.usableItems,
         purchaseId: purchaseData.purchaseId
       }));
-      
-      this.filteredData = this.purchaseData; // Initialize filtered data
-      loading.dismiss();
 
+      this.filteredData = this.purchaseData;
+      loading.dismiss();
     }
   
   ).catch(error => {
@@ -548,9 +547,6 @@ export class GrnPage implements OnInit {
       }))
     };
   
-    // Log the form data to ensure it's correct before proceeding
-    // console.log('Items to be included in the challan:', formData.materialRows);
-  
     const challanNo = this.material.challanNo;
   
     // Send form data to backend service
@@ -642,8 +638,6 @@ export class GrnPage implements OnInit {
         doc.setFontSize(10); // Ensure font size remains the same
         doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20);
         doc.text(`Challan Number: ${this.selectedPurchase.challanNumber}`, 10, 25);
-
- // Print Challan Number at the top of each page
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
       };
   
