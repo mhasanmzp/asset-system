@@ -356,13 +356,6 @@
           <ion-grid>
             <ion-row
               style="border: 1px solid black; border-radius: 10px; color: #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-              <!-- <ion-col size="3">
-              <ion-item>
-                <ion-select [(ngModel)]="selectedPurchaseId" value="selectedPurchaseId" (ionChange)="onPurchaseIdChange($event)" placeholder="Select Purchase Order No">
-                  <ion-select-option *ngFor="let po of poData" [value]="po.purchaseId">{{ po.purchaseId }}</ion-select-option>
-                </ion-select>
-             </ion-item>
-            </ion-col> -->
               <ion-col size="3">
                 <ion-item>
                   <ion-label position="stacked">Purchase Order Number <span
@@ -404,12 +397,7 @@
                   </ion-select>
                 </ion-item>
               </ion-col>
-              <!-- <ion-col size="3">
-              <ion-item>
-                <ion-label position="stacked">Store Address</ion-label>
-                <ion-input style="border: 1px solid black; border-radius: 10px;" type="text" [(ngModel)]="material.storeAddress" name="storeAddress" required></ion-input>
-              </ion-item>
-            </ion-col> ------------->
+      
             </ion-row>
             <ion-row style="margin-left: 35px; margin-top: 20px;">
               <ion-col size="0.8"><strong>S.No</strong></ion-col>
@@ -420,11 +408,9 @@
               <ion-col size="2"><strong>Serial Number</strong></ion-col>
               <ion-col size="1.5"><strong>Actions</strong></ion-col>
             </ion-row>
-            <!-- <ng-container *ngFor="let item of paginatedRows2; let i = index"> -->
             <ng-container *ngFor="let item of paginatedRows2; let i = index">
               <ion-row [ngClass]="{ 'highlight-row': highlightedRows.has(i) }">
 
-                <!-- <ion-row> -->
                 <ion-col size="0.8">
                   <ion-item lines="none">
                     <ion-label>{{ i + 1 }}</ion-label>
@@ -507,6 +493,5 @@
       </ion-content>
     </ng-template>
   </ion-modal>
-
 
 </ion-content>
