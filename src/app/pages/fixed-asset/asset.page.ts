@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController, LoadingController } from '@ionic/angular';
 import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-asset',
@@ -14,6 +15,7 @@ export class AssetPage implements OnInit {
   };
   userId = localStorage.getItem("userId");
   editIndex: number | null = null;
+  // viewData: any = {};
 
   // Define data arrays for different sections
   categories = [];
@@ -30,6 +32,8 @@ export class AssetPage implements OnInit {
   modelInputs: string[] = [''];
   // oemInputs: string[] = [''];
   oemInputs: any
+  originalData: any = {};
+  
 
   projectInputs: string[] = [''];
   siteInputs: string[] = [''];
@@ -44,6 +48,7 @@ export class AssetPage implements OnInit {
     private toastController: ToastController,
     private dataService: DataService,
     private loadingController: LoadingController,
+    private modalController: ModalController
 
   ) { }
 
@@ -148,7 +153,17 @@ export class AssetPage implements OnInit {
 
   closeAddDataModal() {
     this.isModalOpen = false;
+    this.modalController.dismiss(); 
     this.resetInputs();
+    this.resetData();
+    this.originalData = {}; // Reset the original data
+  }
+
+  resetData() {
+    this.data.masterData = null; // Reset the selected segment
+    // this.viewData = {}; // Reset the viewData object
+    this.editIndex = null; // Reset the edit index
+    // Reset other properties as needed
   }
 
   resetInputs() {
@@ -327,48 +342,11 @@ export class AssetPage implements OnInit {
     'Category', 'OEM', 'Installation Site', 'Warehouse', 'Customer', 'Customer Warehouse'
   ];
 
-  // startEdit (index: number) {
-  //   this.editIndex = index;
-  // };
-
-
-  // submitUpdate(type: string, item: any) {
-  //   // Perform the update logic here
-  //   this.updateData(type, item);
-  //   this.editIndex = null; // Reset the edit index after submitting the update
-  // };
-
-
-  // updateData(type: string, item: any) {
-  //   // Prepare the payload with additional parameters
-  //   console.log("type:",type,"item:",item)
-  //   const payload = {
-  //     option: type,
-  //     item: item,
-  //     permissionName: 'Tasks',              // Add the permissionName
-  //     employeeIdMiddleware: this.userId,    // Add the employeeIdMiddleware
-  //     employeeId: this.userId               // Add the employeeId
-  //   };
-
- 
-  //   // Call your API for deletion
-  //   this.dataService.updateItem(payload).subscribe(
-  //     (response) => {
-  //       // Handle successful deletion
-  //       console.log('Item updated successfully:', response);
-  //       // Update the viewData to remove the deleted item
-  //       this.viewData[type] = this.viewData[type].filter((data: any) => data !== item);
-  //     },
-  //     (error) => {
-  //       // Handle error
-  //       console.error('Error deleting item:', error);
-  //     }
-  //   );
-  // }
   
 
   startEdit(index: number) {
     this.editIndex = index;
+    this.originalData = JSON.parse(JSON.stringify(this.viewData[this.data.masterData][index]));
   }
 
   async submitUpdate(type: string, item: any) {
@@ -390,6 +368,7 @@ export class AssetPage implements OnInit {
     this.loadStores();
     this.loadWarehouses();
   }
+  type : String
 
   async updateData(type: string, item: any) {
 
@@ -435,6 +414,17 @@ export class AssetPage implements OnInit {
 
       }
     );
+  }
+
+ 
+
+
+  cancelEdit() {
+    if (this.editIndex !== null) {
+      this.viewData[this.data.masterData][this.editIndex] = this.originalData; // Restore the original data
+    }
+    this.editIndex = null;
+    this.originalData = {};
   }
   
 }

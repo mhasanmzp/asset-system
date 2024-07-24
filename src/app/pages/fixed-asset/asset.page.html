@@ -98,7 +98,7 @@
   </ion-grid>
 
   <!-- Modal for adding data -->
-  <ion-modal [isOpen]="isModalOpen" style="--width: 60%; --height: 80%;">
+  <ion-modal [isOpen]="isModalOpen" style="--width: 70%; --height: 80%;">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -298,8 +298,11 @@
                         class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
                       <ion-input [(ngModel)]="category.hsnNumber" placeholder="Enter HSN Number"
                         class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
-                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Category', category)">
-                        Submit
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Category', category)" title="Save">
+                        <ion-icon name="bookmark" ></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
                       </ion-button>
                     </ng-container>
                   </ion-item>
@@ -325,8 +328,11 @@
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="oem.oemName" placeholder="Enter OEM Name"
                         class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
-                      <ion-button slot="end" fill="clear" (click)="submitUpdate('OEM', oem)">
-                        Submit
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('OEM', oem)" title="Save">
+                        <ion-icon name="bookmark"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
                       </ion-button>
                     </ng-container>
                   </ion-item>
@@ -352,8 +358,11 @@
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="site.siteName" placeholder="Enter Site Name"
                         class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
-                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Installation Site', site)">
-                        Submit
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Installation Site', site)" title="Save">
+                        <ion-icon name="bookmark"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
                       </ion-button>
                     </ng-container>
                   </ion-item>
@@ -385,8 +394,11 @@
                         class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
                       <ion-input [(ngModel)]="store.address" placeholder="Enter Warehouse Address"
                         class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
-                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Warehouse', store)">
-                        Submit
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Warehouse', store)" title="Save">
+                        <ion-icon name="bookmark"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
                       </ion-button>
                     </ng-container>
                   </ion-item>
@@ -412,8 +424,11 @@
                     <ng-container *ngIf="editIndex === i">
                       <ion-input [(ngModel)]="client.name" placeholder="Enter Customer Name"
                         class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
-                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer', client)">
-                        Submit
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer', client)" title="Save">
+                        <ion-icon name="bookmark"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
                       </ion-button>
                     </ng-container>
                   </ion-item>
@@ -442,20 +457,26 @@
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
                       <div class="data-item">
-                        <ion-input [(ngModel)]="warehouse.clientName" placeholder="Enter Client Name"
-                          class="rounded-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
+                        <ion-label class="data-item">
+                          {{ warehouse.clientName }}
+                        </ion-label>
                       </div>
                       <div class="data-item">
                         <ion-input [(ngModel)]="warehouse.name" placeholder="Enter Warehouse Address"
-                          class="rounded-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
+                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
                       </div>
-                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer Warehouse', warehouse)">
-                        Submit
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer Warehouse', warehouse)" title="Save">
+                        <ion-icon name="bookmark"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
                       </ion-button>
                     </ng-container>
                   </ion-item>
                 </ng-container>
+                
               </ion-list>
+
             </div>
             
           </div>

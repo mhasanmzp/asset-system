@@ -422,78 +422,7 @@ export class GrnPage implements OnInit {
   }
   
   
-  // saveMoreData() {
-  //   const itemDetails = {}; // Object to store details for each product
-  
-  //   // Aggregate quantities and serial numbers by product name
-  //   this.moreDataRows.forEach((row) => {
-  //     const productName = row.productName.trim(); // Trim to remove any extra spaces
-  //     const quantity = 1; // Assuming each row represents 1 unit, adjust as per your logic
-  //     const serialNumbers = row.serialNumbers || [];
-  
-  //     if (!itemDetails[productName]) {
-  //       itemDetails[productName] = {
-  //         quantity: 0,
-  //         serialNumbers: []
-  //       };
-  //     }
-  
-  //     itemDetails[productName].quantity += quantity; // Increase total quantity
-  //     itemDetails[productName].serialNumbers.push(...serialNumbers); // Add serial numbers
-  //   });
-  
-  //   // Prepare form data with aggregated quantities and serial numbers
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: this.userId,
-  //     employeeId: this.userId,
-  //     purchaseId: this.selectedPurchaseId, // Use the selected purchaseId
-  //     challanNo: this.material.challanNo, // Include challanNo here
-  //     challanDate: this.material.challanDate,
-  //     // purchaseId: this.selectedPurchaseId, // Use the selected purchaseId
-  //     oemName: this.selectedOemName, // Use the selected oemName
-  //     materialRows: Object.keys(itemDetails).map(productName => ({
-  //       challanNo: this.material.challanNo, // Include challanNo for each item
-  //       categoryName: this.moreDataRows.find(row => row.productName === productName)?.categoryName || '',
-  //       productName: productName,
-  //       quantity: itemDetails[productName].quantity, // Use aggregated quantity
-  //       quantityUnit: this.moreDataRows.find(row => row.productName === productName)?.quantityUnit || '',
-  //       warrantyPeriodMonths: this.moreDataRows.find(row => row.productName === productName)?.warrantyPeriodMonths || '',
-  //       storeLocation: this.moreDataRows.find(row => row.productName === productName)?.storeLocation || '',
-  //       serialNumbers: itemDetails[productName].serialNumbers
-  //     }))
-  //   };
-  
-  //   // Log the form data to ensure it's correct before proceeding
-  //   console.log('Items to be included in the challan:', formData.materialRows);
-
-  //   const challanNo = this.material.challanNo;
-
-  //   // Send form data to backend service
-  //   this.dataService.submitMoreData(this.material, formData).subscribe(
-  //     async response => {
-  //       const toast = await this.toastController.create({
-  //         message: response.message || 'Items Added successfully!',
-  //         duration: 6000,
-  //         position: 'bottom',
-  //         color: 'success'
-  //       });
-  //       await toast.present();
-  //       this.closeAddMoreDataModal();
-  //       this.fetchData();
-  //       this.resetAddMoreMaterialModal();
-  //       await this.generateChallanforNew(formData.materialRows, challanNo);      },
-  //     async error => {
-  //       const toast = await this.toastController.create({
-  //         message: error.error.message || 'Failed to save more data. Please try again.',
-  //         duration: 6000,
-  //         position: 'bottom',
-  //         color: 'danger'
-  //       });
-  //       await toast.present();
-  //     }
-  //   );
-  // }
+ 
 
  async saveMoreData() {
   const duplicates = this.checkForDuplicatesInSave();
