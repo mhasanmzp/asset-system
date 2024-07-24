@@ -835,6 +835,12 @@ export class AssetPage implements OnInit {
     }
     this.editIndex = null;
     this.originalData = {};
+    this.loadClients();
+    this.loadCategories();
+    this.loadOems();
+    this.loadSites();
+    this.loadStores();
+    this.loadWarehouses();
   }
 }
 
