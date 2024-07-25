@@ -179,10 +179,7 @@ const routes: Routes = [
         (m) => m.ProjectTypeListPageModule
       ),
   },
-  // {
-  //   path: 'asset',
-  //   loadChildren: () => import("./pages/fixed-asset/fixed-asset.module").then(m => m.AssetPageRoutingModuleModule)
-  // },
+
   {
     path: 'grn',
     loadChildren: () => import('./pages/grn/grn.module').then(m => m.GrnPageModule)
@@ -219,7 +216,8 @@ const routes: Routes = [
   {
     path: 'asset-grid-view',
     loadChildren: () => import('./pages/asset-grid-view/asset-grid-view.module').then( m => m.AssetGridViewPageModule)
-  },  {
+  },
+  {
     path: 'quality-assurance',
     loadChildren: () => import('./pages/quality-assurance/quality-assurance.module').then( m => m.QualityAssurancePageModule)
   },

@@ -447,7 +447,6 @@ export class AssetPage implements OnInit {
   userId = localStorage.getItem("userId");
   editIndex: number | null = null;
 
-  // Define data arrays for different sections
   categories = [];
   oems = [];
   sites = [];
@@ -456,7 +455,6 @@ export class AssetPage implements OnInit {
   warehouses = [];
   viewData: any = {};
 
-  // Define input arrays for ADD functionality
   categoryInputs = [{ name: '', hsn: '' }];
   engineerInputs: string[] = [''];
   modelInputs: string[] = [''];
@@ -470,7 +468,7 @@ export class AssetPage implements OnInit {
   warehouseInputs: string[] = [''];
 
   selectedClient: any;
-  currentView: string = 'add'; // Set default view
+  currentView: string = 'add'; 
 
   constructor(
     private toastController: ToastController,
@@ -587,12 +585,11 @@ export class AssetPage implements OnInit {
   }
 
   resetData() {
-    this.data.masterData = null; // Reset the selected segment
-    this.editIndex = null; // Reset the edit index
+    this.data.masterData = null; 
+    this.editIndex = null; 
   }
 
   resetInputs() {
-    // Reset all input arrays
     this.categoryInputs = [{ name: '', hsn: '' }];
     this.oemInputs = [''];
     this.projectInputs = [''];
@@ -604,9 +601,9 @@ export class AssetPage implements OnInit {
   }
 
   selectDataType(type: string) {
-    this.data.masterData = type; // Set the selected data type
+    this.data.masterData = type; 
     this.resetInputs();
-    this.currentView = 'add'; // Default to 'add' segment when selecting a new data type
+    this.currentView = 'add'; 
   }
 
   async saveData() {
@@ -772,7 +769,6 @@ export class AssetPage implements OnInit {
   }
 
   async submitUpdate(type: string, item: any) {
-    // Perform the update logic here
     await this.updateData(type, item);
   }
 
@@ -786,7 +782,7 @@ export class AssetPage implements OnInit {
   }
 
   async updateData(type: string, item: any) {
-    this.editIndex = null; // Reset the edit index after submitting the update
+    this.editIndex = null; 
     const toast = await this.toastController.create({
       message: 'Data Updated Successfully!',
       duration: 4000,
@@ -798,24 +794,21 @@ export class AssetPage implements OnInit {
       message: 'Saving Data...',
     });
     await loading.present();
-    // Prepare the payload with additional parameters
+   
     const payload = {
       option: type,
       item: item,
-      permissionName: 'Tasks', // Add the permissionName
-      employeeIdMiddleware: this.userId, // Add the employeeIdMiddleware
-      employeeId: this.userId // Add the employeeId
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId, 
+      employeeId: this.userId 
     };
 
-    // Call your API for updating the item
     this.dataService.updateItem(payload).subscribe(
       (response) => {
-        // Handle successful update
         console.log('Item updated successfully:', response);
         loading.dismiss();
 
         this.refreshData(); 
-        // Refresh data to show the updated item
         toast.present();
       },
       (error) => {

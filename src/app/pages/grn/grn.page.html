@@ -67,7 +67,8 @@
       <ion-col style="width: 170px; margin-left: 30px;">{{ item.oemName }}</ion-col>
       <!-- <ion-col style="width: 300px; margin-left: 30px;">{{ item.productName }}</ion-col> -->
       <ion-col style="width: 120px; margin-left: 50px;">{{ item.totalItems }}</ion-col>
-      <ion-col style="width: 170px; margin-left: 40px;">{{(item.totalItems)-(item.stockableQuantity+item.quantityRejected) }}</ion-col>
+      <ion-col style="width: 170px; margin-left: 40px;">{{item.underQAReview}}</ion-col>
+      <!-- <ion-col style="width: 170px; margin-left: 40px;">{{(item.totalItems)-(item.stockableQuantity+item.quantityRejected) }}</ion-col> -->
       <ion-col style="width: 170px; margin-left: 40px;">{{ item.quantityRejected }}</ion-col>
       <ion-col style="width: 170px; margin-right: -40px;">{{ item.stockableQuantity }}</ion-col>
     </ion-row>
@@ -388,7 +389,7 @@
               </ion-col>
               <ion-col size="3">
                 <ion-item>
-                  <ion-label position="stacked">Store <span class="required-asterisk">*</span></ion-label>
+                  <ion-label position="stacked">Warehouse <span class="required-asterisk">*</span></ion-label>
                   <ion-select class="custom-select"
                     style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;"
                     [(ngModel)]="material.storeName" name="storeName" placeholder=" Select Store" required>

@@ -553,7 +553,7 @@ export class DeliveryPage implements OnInit {
     };
     this.dataService.furtherDeliverProduct(furtherDeliveryDetails, formData).subscribe(
       () => {
-        this.presentToast('Products delivered to Istallation Site successfully!');
+        this.presentToast('Products delivered to Installation Site successfully!');
         this.fetchWarehouseProducts(); // Fetch the latest products
         this.selectedSite = null;
         this.clientWarehouseProductData.forEach(product => product.selected = false); // Deselect all products
