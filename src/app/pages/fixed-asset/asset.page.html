@@ -323,25 +323,35 @@
                 </ng-container>
             
                 <ng-container *ngIf="data.masterData === 'OEM'">
-                  <!-- Column heading -->
+                  <!-- Column headings -->
                   <div class="header-row">
-                    <ion-label class="header-item"style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">OEM Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      OEM Name
+                    </ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      Address
+                    </ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-            
+                
                   <!-- Data rows -->
                   <ion-item *ngFor="let oem of viewData['OEM']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
-                      <ion-label class="data-item" >
+                      <ion-label class="data-item">
                         {{ oem.oemName }}
+                      </ion-label>
+                      <ion-label class="data-item">
+                        {{ oem.address }}
                       </ion-label>
                       <ion-button slot="end" fill="clear" (click)="startEdit(i)">
                         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
                       </ion-button>
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
-                      <ion-input [(ngModel)]="oem.oemName" placeholder="Enter OEM Name"
-                        class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
+                      <ion-input [(ngModel)]="oem.oemName" placeholder="Enter OEM Name" class="editable-input"
+                        style="border: 0.5px solid; border-radius: 10px;"></ion-input>
+                      <ion-input [(ngModel)]="oem.address" placeholder="Enter Address" class="editable-input"
+                        style="border: 0.5px solid; border-radius: 10px;"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('OEM', oem)" title="Save">
                         <ion-icon name="bookmark"></ion-icon>
                       </ion-button>
@@ -355,23 +365,33 @@
                 <ng-container *ngIf="data.masterData === 'Installation Site'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;" >Site Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      Site Name
+                    </ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      Address
+                    </ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
-            
+                
                   <!-- Data rows -->
                   <ion-item *ngFor="let site of viewData['Site']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
                       <ion-label class="data-item">
                         {{ site.siteName }}
                       </ion-label>
+                      <ion-label class="data-item">
+                        {{ site.address }}
+                      </ion-label>
                       <ion-button slot="end" fill="clear" (click)="startEdit(i)">
                         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
                       </ion-button>
                     </ng-container>
                     <ng-container *ngIf="editIndex === i">
-                      <ion-input [(ngModel)]="site.siteName" placeholder="Enter Site Name"
-                        class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
+                      <ion-input [(ngModel)]="site.siteName" placeholder="Enter Site Name" class="editable-input"
+                        style="border: 0.5px solid; border-radius: 10px;"></ion-input>
+                      <ion-input [(ngModel)]="site.address" placeholder="Enter Address" class="editable-input"
+                        style="border: 0.5px solid; border-radius: 10px;"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('Installation Site', site)" title="Save">
                         <ion-icon name="bookmark"></ion-icon>
                       </ion-button>
@@ -381,6 +401,7 @@
                     </ng-container>
                   </ion-item>
                 </ng-container>
+                
             
                 <ng-container *ngIf="data.masterData === 'Warehouse'">
                   <!-- Column heading -->

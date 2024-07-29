@@ -88,6 +88,16 @@ export class FaultyProductPage implements OnInit {
     
   }
 
+  onSiteChange() {
+    const selectedSiteData = this.siteData.find(site => site.siteName === this.selectedClientSite);
+    this.selectedWarehouseSite = selectedSiteData ? selectedSiteData.address : '';
+  }
+
+  onOemChange() {
+    const selectedOemData = this.data.find(oem => oem.oemName === this.selectedOem);
+    this.selectedOemAddress = selectedOemData ? selectedOemData.address : '';
+  }
+
   navigateToAsset() {
     this.router.navigate(['/asset']);
   }
@@ -332,10 +342,38 @@ export class FaultyProductPage implements OnInit {
     await this.submitReturnToServer();
   }
 
+  resetSiteModal() {
+    this.selectedClientSite = '';
+    this.selectedWarehouseSite = '';
+    this.gstNumberSite = '';
+    this.companyPanNumberSite = '';
+    this.dispatchedThroughSite = '';
+    this.dispatchedDateSite = '';
+    this.buyersOrderNumberSite = '';
+    this.dispatchDocNoSite = '';
+    this.paymentTermsSite = '';
+    this.termsOfDeliverySite = '';
+    this.destinationSite = '';
+    this.motorVehicleNoSite = '';
+  }
+
+  resetOemModal() {
+    this.selectedOem = '';
+    this.selectedOemAddress = '';
+    this.gstNumberOem = '';
+    this.companyPanNumberOem = '';
+    this.dispatchedThroughOem = '';
+    this.dispatchedDateOem = '';
+    this.dispatchDocNoOem = '';
+    this.destinationOem = '';
+    this.motorVehicleNoOem = '';
+    this.termsOfDeliveryOem = '';
+  }
+
   async submitSiteReturn() {
     this.closeModal();
     this.generateChallan();
-    // Add any specific logic for Site return here if needed
+    this.resetSiteModal();
     await this.submitReturnToServer();
   }
 
