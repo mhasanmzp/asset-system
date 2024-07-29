@@ -415,17 +415,17 @@ export class FaultyProductPage implements OnInit {
   
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
-        doc.text(`${this.billingClientSite}`, 13.5, 90);
+        doc.text(`${this.selectedClientSite}`, 13.5, 90);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
   
-        const wrappedText2 = doc.splitTextToSize(this.billingWarehouseSite, 80);
+        const wrappedText2 = doc.splitTextToSize(this.selectedWarehouseSite, 80);
         startY = 97.5;
         wrappedText2.forEach(line => {
           doc.text(line, 13.5, startY);
           startY += 8;
         });
-        doc.text(`GSTIN/UIN:   ${this.billingGstNumberSite}`, 13.5, startY);
+        doc.text(`GSTIN/UIN:   ${this.gstNumberSite}`, 13.5, startY);
       };
   
       let pageIndex = 0;

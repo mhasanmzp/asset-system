@@ -23,7 +23,7 @@ export class GrnPage implements OnInit {
   oemsList = [];
   categories = [];
   searchQuery: any;
-  purchaseId: any// Added Purchase Id
+  purchaseId: any
   poData: any = [];
   data: any = [];
   storeData: any = [];
@@ -266,19 +266,17 @@ export class GrnPage implements OnInit {
     this.moreDataRows.push(newRow);
     this.checkForDuplicates();
 
-    // Optionally recalculate total pages if paging logic is implemented
+   
   }
 
   removeRow2(index: number) {
     if(this.moreDataRows.length>1){
       this.moreDataRows.splice(index, 1);
     }
-    // Optionally recalculate total pages if paging logic is implemented
   }
 
 
   updateSerialNumbersArray(row) {
-    // Do nothing here to keep serialNumbers array unchanged
   }
 
   resetAddMaterialModal() {
@@ -406,7 +404,7 @@ export class GrnPage implements OnInit {
       this.fetchData();
       this.resetAddMaterialModal();
       this.loadPurchaseId();
-      await this.generateChallan(); // Call generateChallan after saving material
+      await this.generateChallan(); 
     }, async error => {
       const toast = await this.toastController.create({
         message: error.error.message || 'Failed to save asset. Please try again.', // Use error message
@@ -437,11 +435,10 @@ export class GrnPage implements OnInit {
       message: 'Saving Data...',
     });
     await loading.present();
-    const itemDetails = {}; // Object to store details for each product
-    // Aggregate quantities and serial numbers by product name
+    const itemDetails = {}; 
     this.moreDataRows.forEach((row) => {
-      const productName = row.productName.trim(); // Trim to remove any extra spaces
-      const quantity = 1; // Assuming each row represents 1 unit, adjust as per your logic
+      const productName = row.productName.trim(); 
+      const quantity = 1; 
       const serialNumbers = row.serialNumbers || [];
   
       if (!itemDetails[productName]) {
@@ -451,24 +448,23 @@ export class GrnPage implements OnInit {
         };
       }
   
-      itemDetails[productName].quantity += quantity; // Increase total quantity
-      itemDetails[productName].serialNumbers.push(...serialNumbers); // Add serial numbers
+      itemDetails[productName].quantity += quantity; 
+      itemDetails[productName].serialNumbers.push(...serialNumbers); 
     });
   
-    // Prepare form data with aggregated quantities and serial numbers
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
       employeeId: this.userId,
-      oemName: this.selectedOemName, // Use the selected oemName
-      challanNo: this.material.challanNo, // Include challanNo here
+      oemName: this.selectedOemName, 
+      challanNo: this.material.challanNo, 
       challanDate: this.material.challanDate,
-      purchaseId: this.selectedPurchaseId, // Use the selected purchaseId
+      purchaseId: this.selectedPurchaseId, 
       materialRows: Object.keys(itemDetails).map(productName => ({
-        challanNo: this.material.challanNo, // Include challanNo for each item
+        challanNo: this.material.challanNo, 
         categoryName: this.moreDataRows.find(row => row.productName === productName)?.categoryName || '',
         productName: productName,
-        quantity: itemDetails[productName].quantity, // Use aggregated quantity
+        quantity: itemDetails[productName].quantity, 
         quantityUnit: this.moreDataRows.find(row => row.productName === productName)?.quantityUnit || '',
         warrantyPeriodMonths: this.moreDataRows.find(row => row.productName === productName)?.warrantyPeriodMonths || '',
         storeLocation: this.moreDataRows.find(row => row.productName === productName)?.storeLocation || '',
@@ -478,7 +474,6 @@ export class GrnPage implements OnInit {
   
     const challanNo = this.material.challanNo;
   
-    // Send form data to backend service
     this.dataService.submitMoreData(this.material, formData).subscribe(
       async response => {
         const toast = await this.toastController.create({
@@ -543,49 +538,43 @@ export class GrnPage implements OnInit {
   async generateChallan() {
     const doc = new jsPDF();
   
-    // const imageUrl = 'assets/challanFormat.jpg'; // Update the path to the actual path where the image is stored
-    const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; // Update the path to the actual path where the image is stored
+    const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; 
   
     try {
-      // Load the image as base64
       const imgData = await this.getBase64ImageFromURL(imageUrl);
   
-      // Add the image as the background
       const addTemplate = (pageIndex) => {
-        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Position the image as per your template layout
+        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297); 
         doc.setFontSize(12);
         
-        // Calculate the width of the OEM name text and center it
         const oemName = this.selectedPurchase.oemName || '';
         const textWidth = doc.getTextWidth(`${oemName}`);
         const pageWidth = doc.internal.pageSize.getWidth();
         const textX = (pageWidth - textWidth) / 2;
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(13); // Ensure font size remains the same
-        doc.text(`OEM:${oemName}`, textX, 28); // Center-aligned OEM Name at the top
+        doc.setFontSize(13); 
+        doc.text(`OEM:${oemName}`, textX, 28); 
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(10); // Ensure font size remains the same
+        doc.setFontSize(10); 
         doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20);
         doc.text(`Challan Number: ${this.selectedPurchase.challanNumber}`, 10, 25);
-        doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
+        doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); 
       };
   
       let pageIndex = 0;
-      addTemplate(pageIndex); // Add template to the first page
+      addTemplate(pageIndex); 
   
-      // Add your data over the template
       doc.setFontSize(10);
       const startX = 10;
-      const initialY = 73; // Initial position for the first product
+      const initialY = 73; 
       let startY = initialY;
-      const lineHeight = 8; // Reduce line height to reduce spaces between rows
-      const maxPageHeight = 270; // Maximum height for the content on one page before adding a new page
-      const itemDetails = {}; // Object to store details for each product
+      const lineHeight = 8;
+      const maxPageHeight = 270; 
+      const itemDetails = {}; 
   
-      // Aggregate quantities and serial numbers by product name
       this.selectedPurchase.items.forEach((item) => {
         const productName = item.productName;
-        const quantity = item.quantity || 1; // Assuming at least 1 quantity if not specified
+        const quantity = item.quantity || 1; 
         const serialNumbers = item.serialNumbers || [];
   
         if (!itemDetails[productName]) {
@@ -598,25 +587,20 @@ export class GrnPage implements OnInit {
         itemDetails[productName].serialNumbers.push(...serialNumbers);
       });
   
-      // Iterate through aggregated items and add them to the PDF
       Object.keys(itemDetails).forEach((productName, index) => {
-        // Split serial numbers into multiple lines if they exceed 95 width
         const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
         const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
   
-        // Calculate the total height needed for this product entry
         const totalHeight = splitSerialNumbers.length * lineHeight;
   
-        // Check if adding this product will exceed the max page height
         if (startY + totalHeight > maxPageHeight) {
           pageIndex++;
           doc.addPage();
-          addTemplate(pageIndex); // Add the template to the new page
-          doc.setFontSize(10); // Ensure font size remains the same
-          startY = initialY; // Reset startY to initialY for the new page
+          addTemplate(pageIndex); 
+          doc.setFontSize(10); 
+          startY = initialY; 
         }
   
-        // Add product details
         doc.text(`${index + 1}`, startX + 6.75, startY); // Serial number
         doc.text(productName || '', startX + 15, startY); // Product Name
         doc.text(itemDetails[productName].quantity.toString(), startX + 177, startY); // Quantity
@@ -625,16 +609,13 @@ export class GrnPage implements OnInit {
         doc.text(this.selectedPurchase.warrantyPeriodMonths || '', startX + 170, startY);
         doc.text(this.selectedPurchase.status || '', startX + 190, startY);
   
-        // Add serial numbers
         splitSerialNumbers.forEach((line, lineIndex) => {
           doc.text(line, startX + 70, startY + (lineIndex * lineHeight));
         });
   
-        // Update startY for the next product
-        startY += totalHeight + lineHeight / 2; // Add half lineHeight for minimal space between products
+        startY += totalHeight + lineHeight / 2; 
       });
   
-      // Save the PDF
       doc.save('Inward-Challan.pdf');
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -680,13 +661,13 @@ export class GrnPage implements OnInit {
         const pageWidth = doc.internal.pageSize.getWidth();
         const textX = (pageWidth - textWidth) / 2;
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(13); // Ensure font size remains the same
-        doc.text(`OEM:${oemName}`, textX, 28); // Center-aligned OEM Name at the top
+        doc.setFontSize(13); 
+        doc.text(`OEM:${oemName}`, textX, 28); 
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(10); // Ensure font size remains the same
-        doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); // Print Challan Number at the top of each page
-        doc.text(`Challan No: ${challanNo}`, 10, 28); // Print Challan Number at the top of each page
-        doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' }); // Print Page Number at the top right of each page
+        doc.setFontSize(10); 
+        doc.text(`Purchase Order ID: ${this.selectedPurchase.purchaseId}`, 10, 20); 
+        doc.text(`Challan No: ${challanNo}`, 10, 28); 
+        doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
       };
   
       let pageIndex = 0;
@@ -694,10 +675,10 @@ export class GrnPage implements OnInit {
   
       doc.setFontSize(10);
       const startX = 10;
-      const initialY = 73; // Initial position for the first product
+      const initialY = 73; 
       let startY = initialY;
-      const lineHeight = 8; // Reduce line height to reduce spaces between rows
-      const maxPageHeight = 270; // Maximum height for the content on one page before adding a new page
+      const lineHeight = 8; 
+      const maxPageHeight = 270; 
   
       items.forEach((item, index) => {
         const serialNumbers = item.serialNumbers.join(', ');
@@ -708,7 +689,7 @@ export class GrnPage implements OnInit {
         if (startY + totalHeight > maxPageHeight) {
           pageIndex++;
           doc.addPage();
-          addTemplate(pageIndex); // Add the template to the new page
+          addTemplate(pageIndex); 
           doc.setFontSize(10); // Ensure font size remains the same
           startY = initialY; // Reset startY to initialY for the new page
         }

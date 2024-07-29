@@ -101,20 +101,21 @@
           <form (ngSubmit)="submitOemReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
             <!-- Form fields duplicated here -->
             <ion-item>
-              <ion-label>OEM</ion-label>
-              <ion-select [(ngModel)]="selectedOem" (ionChange)="loadOems()" name="selectedOem" placeholder="Select Client" class="styled-input">
+              <ion-label position="stacked">OEM</ion-label>
+              <ion-select [(ngModel)]="selectedOem" (ionChange)="loadOems()" name="selectedOem" placeholder="Select Client" class="styled-input" 
+              style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;"              >
                 <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">{{ oem.oemName }}</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label>OEM Address</ion-label>
+              <ion-label position="stacked">OEM Address</ion-label>
               <!-- <ion-select [(ngModel)]="selectedOemAddress" name="selectedOemAddress" placeholder="Select Warehouse" class="styled-input">
                 <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
               </ion-select> -->
               <ion-input [(ngModel)]="selectedOemAddress" name="selectedOemAddress" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>GST Number</ion-label>
+              <ion-label position="stacked">GST Number</ion-label>
               <ion-input [(ngModel)]="gstNumberOem" name="gstNumberOem" class="styled-input"></ion-input>
             </ion-item>
             <!-- <ion-item>
@@ -134,23 +135,23 @@
               <ion-input [(ngModel)]="billingGstNumberOem" name="billingGstNumberOem" class="styled-input"></ion-input>
             </ion-item> -->
             <ion-item>
-              <ion-label>Company PAN Number</ion-label>
+              <ion-label position="stacked">Company PAN Number</ion-label>
               <ion-input [(ngModel)]="companyPanNumberOem" name="companyPanNumberOem" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Dispatched Through</ion-label>
+              <ion-label position="stacked">Dispatched Through</ion-label>
               <ion-input [(ngModel)]="dispatchedThroughOem" name="dispatchedThroughOem" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Order Date</ion-label>
-              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateOem" name="dispatchedDateOem" required></ion-input>
+              <ion-label position="stacked">Order Date</ion-label>
+              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateOem" name="dispatchedDateOem" class="styled-input" required></ion-input>
             </ion-item>
             <ion-item>
               <!-- <ion-label>Buyer's Order No:</ion-label>
               <ion-input [(ngModel)]="buyersOrderNumberOem" name="buyersOrderNumberOem" class="styled-input"></ion-input>
             </ion-item>
             <ion-item> -->
-              <ion-label>Dispatch Doc No.</ion-label>
+              <ion-label position="stacked">Dispatch Doc No.</ion-label>
               <ion-input [(ngModel)]="dispatchDocNoOem" name="dispatchDocNoOem" class="styled-input"></ion-input>
             </ion-item>
             <!-- <ion-item>
@@ -158,15 +159,15 @@
               <ion-input [(ngModel)]="paymentTermsOem" name="paymentTermsOem" class="styled-input"></ion-input>
             </ion-item> -->
             <ion-item>
-              <ion-label>Destination</ion-label>
+              <ion-label position="stacked">Destination</ion-label>
               <ion-input [(ngModel)]="destinationOem" name="destinationOem" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Motor Vehicle No</ion-label>
+              <ion-label position="stacked">Motor Vehicle No</ion-label>
               <ion-input [(ngModel)]="motorVehicleNoOem" name="motorVehicleNoOem" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Terms of Delivery</ion-label>
+              <ion-label position="stacked">Terms of Delivery</ion-label>
               <ion-input [(ngModel)]="termsOfDeliveryOem" name="termsOfDeliveryOem" class="styled-input"></ion-input>
             </ion-item>
           </form>
@@ -197,13 +198,13 @@
           <form (ngSubmit)="submitSiteReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
             <!-- Form fields duplicated here -->
             <ion-item>
-              <ion-label>Installation Site</ion-label>
+              <ion-label position="stacked">Installation Site</ion-label>
               <ion-select [(ngModel)]="selectedClientSite" (click)="loadClients()" name="clientSite" placeholder="Select Installation Site" class="styled-input">
                 <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label>Site Address</ion-label>
+              <ion-label position="stacked">Site Address</ion-label>
               <ion-input [(ngModel)]="selectedWarehouseSite" name="warehouseSite" class="styled-input" placeholder="Enter Site Address"></ion-input>
 
               <!-- <ion-select [(ngModel)]="selectedWarehouseSite" name="warehouseSite" placeholder="Select Warehouse" class="styled-input">
@@ -211,63 +212,57 @@
               </ion-select> -->
             </ion-item>
             <ion-item>
-              <ion-label>GST Number</ion-label>
+              <ion-label position="stacked">GST Number</ion-label>
               <ion-input [(ngModel)]="gstNumberSite" name="gstNumberSite" class="styled-input"></ion-input>
             </ion-item>
-            <ion-item>
+            <!-- <ion-item>
               <ion-label>Billing Client</ion-label>
               <ion-select [(ngModel)]="billingClientSite" name="billingClientSite" placeholder="Select Billing Client" class="styled-input">
                 <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
-
-                <!-- <ion-select-option *ngFor="let client of siteData" [value]="client.SiteName">{{ client.SiteName }}</ion-select-option> -->
               </ion-select>
             </ion-item>
             <ion-item>
               <ion-label>Billing Address</ion-label>
               <ion-input [(ngModel)]="billingWarehouseSite" name="billingWarehouseSite" class="styled-input" placeholder="Enter Billing Address"></ion-input>
-
-              <!-- <ion-select [(ngModel)]="billingWarehouseSite" name="billingWarehouseSite" placeholder="Select Warehouse" class="styled-input">
-                <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
-              </ion-select> -->
             </ion-item>
             <ion-item>
               <ion-label>Billing GST Number</ion-label>
               <ion-input [(ngModel)]="billingGstNumberSite" name="billingGstNumberSite" class="styled-input"></ion-input>
-            </ion-item>
+            </ion-item> -->
             <ion-item>
-              <ion-label>Company PAN Number</ion-label>
+              <ion-label position="stacked">Company PAN Number</ion-label>
               <ion-input [(ngModel)]="companyPanNumberSite" name="companyPanNumberSite" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Dispatched Through</ion-label>
+              <ion-label position="stacked">Dispatched Through</ion-label>
               <ion-input [(ngModel)]="dispatchedThroughSite" name="dispatchedThroughSite" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Order Date</ion-label>
-              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateSite" name="dispatchedDateSite" required></ion-input>
+              <ion-label position="stacked">Order Date</ion-label>
+              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateSite" class="styled-input"  name="dispatchedDateSite" required></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Buyer's Order No:</ion-label>
+              <ion-label position="stacked">Buyer's Order No:</ion-label>
               <ion-input [(ngModel)]="buyersOrderNumberSite" name="buyersOrderNumberSite" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Dispatch Doc No.</ion-label>
+              <ion-label position="stacked">Dispatch Doc No.</ion-label>
               <ion-input [(ngModel)]="dispatchDocNoSite" name="dispatchDocNoSite" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Mode/Terms of Payment</ion-label>
+              <ion-label position="stacked">Mode/Terms of Payment</ion-label>
               <ion-input [(ngModel)]="paymentTermsSite" name="paymentTermsSite" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Terms of Delivery</ion-label>
+              <ion-label position="stacked">Terms of Delivery</ion-label>
               <ion-input [(ngModel)]="termsOfDeliverySite" name="termsOfDeliverySite" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Destination</ion-label>
+              <ion-label position="stacked">Destination</ion-label>
               <ion-input [(ngModel)]="destinationSite" name="destinationSite" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Motor Vehicle No</ion-label>
+              <ion-label position="stacked">Motor Vehicle No</ion-label>
               <ion-input [(ngModel)]="motorVehicleNoSite" name="motorVehicleNoSite" class="styled-input"></ion-input>
             </ion-item>
           </form>
