@@ -28,11 +28,11 @@ export class AssetPage implements OnInit {
   categoryInputs = [{ name: '', hsn: '' }];
   engineerInputs: string[] = [''];
   modelInputs: string[] = [''];
-  oemInputs: any;
+  oemInputs: [{ name: '', address: '' }];
   originalData: any = {};
 
   projectInputs: string[] = [''];
-  siteInputs: string[] = [''];
+  siteInputs: [{name:'',address:''}];
   storeInputs = [{ name: '', address: '' }];
   clientInputs: string[] = [''];
   warehouseInputs: string[] = [''];
@@ -292,9 +292,9 @@ export class AssetPage implements OnInit {
 
   resetInputs() {
     this.categoryInputs = [{ name: '', hsn: '' }];
-    this.oemInputs = [''];
+    this.oemInputs = [{name:'',address:''}];
     this.projectInputs = [''];
-    this.siteInputs = [''];
+    this.siteInputs = [{name:'',address:''}];
     this.storeInputs = [{ name: '', address: '' }];
     this.clientInputs = [''];
     this.warehouseInputs = [''];
@@ -314,10 +314,12 @@ export class AssetPage implements OnInit {
         inputs = this.categoryInputs.map(item => ({ category: item.name, hsn: item.hsn }));
         break;
       case 'OEM':
-        inputs = this.oemInputs.map(item => ({ oem: item }));
+        console.log(this.oemInputs);
+        
+        inputs = this.oemInputs.map(item => ({ name: item.name, address:item.address }));
         break;
       case 'Installation Site':
-        inputs = this.siteInputs.map(item => ({ site: item }));
+        inputs = this.siteInputs.map(item => ({ name: item.name,address:item.address }));
         break;
       case 'Warehouse':
         inputs = this.storeInputs.map(item => ({ store: item }));
@@ -413,7 +415,7 @@ export class AssetPage implements OnInit {
   }
 
   addOEMInput() {
-    this.oemInputs.push('');
+    this.oemInputs.push({name:'',address:''});
   }
 
   removeOEMInput(index: number) {
@@ -429,7 +431,7 @@ export class AssetPage implements OnInit {
   }
 
   addSiteInput() {
-    this.siteInputs.push('');
+    this.siteInputs.push({name:'',address:''});
   }
 
   removeSiteInput(index: number) {

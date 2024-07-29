@@ -10,7 +10,7 @@ export class DataService {
 
 
 
-  private baseUrl = 'https://api.hr.timesofpeople.com';
+  private baseUrl = 'https://771d-203-92-37-218.ngrok-free.app';
 
   header: any = {}
 
