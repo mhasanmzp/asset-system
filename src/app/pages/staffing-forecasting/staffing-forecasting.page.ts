@@ -91,7 +91,6 @@ export class StaffingForecastingPage {
     };
     this.dataService.saveForecastData(formData).then((res: any) => {
       this.presentToast('Data saved successfully!', 'success');
-      // console.log('Data saved:', res);
       this.resetData();
     }).catch(error => {
       this.presentToast('Error saving data.', 'danger');
@@ -106,58 +105,34 @@ export class StaffingForecastingPage {
     };
     this.dataService.fetchProjects(formData).then((res: any) => {
       this.projects = res;
-      // console.log("Response ::::::::::::::", res);
     }).catch(error => {
       console.error('Error fetching store data', error);
     });
   }
-  // fetchEmployees() {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: this.userId,
-  //     employeeId: this.userId,
-  //   };
-  //   this.dataService.fetchAllEmployees(formData).then((res: any) => {
-  //     this.allEmployees = res;
-  //     // console.log("Response ::::::::::::::", res);
-  //   }).catch(error => {
-  //     console.error('Error fetching store data', error);
-  //   });
-  // }
+
 
   copyRow(index: number) {
-    // Create a new row as a copy of the selected row
-    const newRow = { ...this.entries[index] };
-  
-    // Increment the date by one day if it exists
+      const newRow = { ...this.entries[index] };
+
     if (newRow.date) {
-      // Parse the current date using moment
       const currentDate = moment(newRow.date, 'YYYY-MM-DD');
-      
-      // Add one day
       const incrementedDate = currentDate.add(1, 'days');
-      
-      // Format the new date as 'YYYY-MM-DD' and set it to newRow.date
       newRow.date = incrementedDate.format('YYYY-MM-DD');
     }
   
-    // Insert the new row after the copied row
     this.entries.splice(index + 1, 0, newRow);
   }
   
 
-  // copyRow(index: number) {
-  //   const newRow = { ...this.entries[index] };
-  //   this.entries.splice(index + 1, 0, newRow);
-  // }
-  
   removeRow(index: number) {
     this.entries.splice(index, 1);
   }
+
   getTotalHours() {
     this.totalHours = this.entries.reduce((total, entry) => total + (entry.hours || 0), 0);
     return this.totalHours;
   }
+
   updateDateRange() {
     if (this.selectedMonth) {
       const monthIndex = this.months.indexOf(this.selectedMonth);
@@ -169,6 +144,7 @@ export class StaffingForecastingPage {
       this.selectedWeek = '';
     }
   }
+
   updateWeekNumber() {
     if (this.startDate && this.endDate) {
       const startWeek = moment(this.startDate).isoWeek();
@@ -182,22 +158,26 @@ export class StaffingForecastingPage {
       this.selectedWeek = '';
     }
   }
+
   updateProjectId(entry) {
     const selectedProject = this.projects.find(project => project.projectName === entry.projectName);
     if (selectedProject) {
       entry.projectId = selectedProject.projectId;
     }
   }
+
   navigateToStaffingReport() {
     this.router.navigate(['/staffing-report']);
   }
+
   updateEmployeeId(entry: { resourceName: string, employeeId: string }) {
     const selectedEmployee = this.allEmployees.find(employee => employee.name === entry.resourceName);
     if (selectedEmployee) {
       entry.employeeId = selectedEmployee.employeeId;
-      console.log("data________", entry.employeeId);
+      // console.log("data________", entry.employeeId);
     }
   }
+
     fetchEmployees() {
     const formData = {
       permissionName: 'Tasks',
@@ -221,6 +201,7 @@ export class StaffingForecastingPage {
         event.target.value = '45';
     }
 }
+
 }
 
 
