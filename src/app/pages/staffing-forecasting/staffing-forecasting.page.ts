@@ -15,6 +15,7 @@ export class StaffingForecastingPage {
   months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   projects: any = [];
   allEmployees: any = [];
+  errorMessage: string;
   constructor(
     private modalController: ModalController,
     private dataService: CommonService,
@@ -77,6 +78,67 @@ export class StaffingForecastingPage {
       },
     ];
   }
+
+  async validateAndSubmit() {
+    this.errorMessage = '';
+
+    // Validate fields
+    if (!this.startDate) {
+      this.errorMessage = 'Start Date is required.';
+      await this.presentToast(this.errorMessage,"danger");
+      return;
+    }
+
+    if (!this.endDate) {
+      this.errorMessage = 'End Date is required.';
+      await this.presentToast(this.errorMessage,"danger");
+      return;
+    }
+
+    if (!this.selectedWeek) {
+      this.errorMessage = 'Week is required.';
+      await this.presentToast(this.errorMessage,"danger");
+      return;
+    }
+
+    for (let entry of this.entries) {
+      if (!entry.team) {
+        this.errorMessage = 'Team is required for all entries.';
+        await this.presentToast(this.errorMessage,"danger");
+        return;
+      }
+
+      if (!entry.projectName) {
+        this.errorMessage = 'Project Name is required for all entries.';
+        await this.presentToast(this.errorMessage,"danger");
+        return;
+      }
+
+      if (!entry.resourceName) {
+        this.errorMessage = 'Resource Name is required for all entries.';
+        await this.presentToast(this.errorMessage,"danger");
+        return;
+      }
+
+      if (!entry.date) {
+        this.errorMessage = 'Date is required for all entries.';
+        await this.presentToast(this.errorMessage,"danger");
+        return;
+      }
+
+      if (!entry.hours) {
+        this.errorMessage = 'Hours are required for all entries.';
+        await this.presentToast(this.errorMessage,"danger");
+        return;
+      }
+    }
+
+    // If all validations pass, call the API
+    this.submitData();
+  }
+
+
+
   submitData() {
     const formData = {
       permissionName: 'Tasks',
@@ -111,19 +173,7 @@ export class StaffingForecastingPage {
       console.error('Error fetching store data', error);
     });
   }
-  // fetchEmployees() {
-  //   const formData = {
-  //     permissionName: 'Tasks',
-  //     employeeIdMiddleware: this.userId,
-  //     employeeId: this.userId,
-  //   };
-  //   this.dataService.fetchAllEmployees(formData).then((res: any) => {
-  //     this.allEmployees = res;
-  //     // console.log("Response ::::::::::::::", res);
-  //   }).catch(error => {
-  //     console.error('Error fetching store data', error);
-  //   });
-  // }
+ 
 
   copyRow(index: number) {
     // Create a new row as a copy of the selected row
@@ -146,10 +196,7 @@ export class StaffingForecastingPage {
   }
   
 
-  // copyRow(index: number) {
-  //   const newRow = { ...this.entries[index] };
-  //   this.entries.splice(index + 1, 0, newRow);
-  // }
+ 
   
   removeRow(index: number) {
     this.entries.splice(index, 1);
@@ -221,6 +268,7 @@ export class StaffingForecastingPage {
         event.target.value = '45';
     }
 }
+
 }
 
 

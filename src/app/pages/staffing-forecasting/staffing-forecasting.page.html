@@ -9,6 +9,7 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
   <div class="input-group" style="border: 1px solid black; border-radius: 10px; padding: 16px; gap: 16px;">
     <div class="input-item">
@@ -30,6 +31,7 @@
       <ion-input type="text" [(ngModel)]="selectedWeek" readonly class="week-select"></ion-input>
     </div>
   </div>
+
   <div class="table-responsive">
     <table class="forecast-table">
       <thead>
@@ -53,7 +55,6 @@
           </td>
           <td>
             <select [(ngModel)]="entry.projectName" (click)="updateProjectId(entry)" placeholder="Select Project" class="borderArea">
-              <!-- <ion-select-option *ngFor="let project of projects" [value]="project.projectName">{{ project.projectName }}</ion-select-option> -->
               <option value="">Select</option>
               <option *ngFor="let project of projects" [value]="project.projectName">
                 {{ project.projectName }}
@@ -62,7 +63,6 @@
           </td>
           <td>
             <select [(ngModel)]="entry.resourceName" (click)="updateEmployeeId(entry)" (click)="fetchEmployees()" placeholder="Select Resource Name" class="borderArea">
-              <!-- <ion-select-option *ngFor="let resource of allEmployees" [value]="resource.name">{{ resource.name }}</ion-select-option> -->
               <option value="">Select</option>
               <option *ngFor="let resource of allEmployees" [value]="resource.name">
                 {{ resource.name }}
@@ -73,7 +73,6 @@
             <ion-input type="date" [(ngModel)]="entry.date" class="borderArea"></ion-input>
           </td>
           <td>
-            <!-- <ion-input type="number" [(ngModel)]="entry.hours" class="borderArea"></ion-input> -->
             <ion-input type="number" [(ngModel)]="entry.hours" (ionInput)="onInput($event)" class="borderArea"></ion-input>
           </td>
           <td class="actions">
@@ -88,14 +87,20 @@
       </tbody>
     </table>
   </div>
+
+  <!-- <ion-button expand="full" (click)="validateAndSubmit()">Submit</ion-button> -->
+
+  <ion-toast *ngIf="errorMessage" [message]="errorMessage" [duration]="2000" [position]="'bottom'"></ion-toast>
 </ion-content>
+
+
 <ion-footer>
   <ion-toolbar>
     <div class="button-container">
       <ion-button class="total-hours-button" fill="clear" disabled>
         Total Hours: {{ getTotalHours() }}
       </ion-button>
-      <ion-button fill="clear" (click)="submitData()"> Submit
+      <ion-button fill="clear" (click)="validateAndSubmit()"> Submit
         <ion-icon name="save"></ion-icon>
       </ion-button>
       <ion-button fill="clear" (click)="addRow()">
