@@ -81,61 +81,73 @@ export class StaffingForecastingPage {
 
   async validateAndSubmit() {
     this.errorMessage = '';
-
+    let hasError = false;
+  
     // Validate fields
     if (!this.startDate) {
       this.errorMessage = 'Start Date is required.';
-      await this.presentToast(this.errorMessage,"danger");
-      return;
+      await this.presentToast(this.errorMessage, "danger");
+      hasError = true;
     }
-
-    if (!this.endDate) {
+  
+    else if (!this.endDate) {
       this.errorMessage = 'End Date is required.';
-      await this.presentToast(this.errorMessage,"danger");
-      return;
+      await this.presentToast(this.errorMessage, "danger");
+      hasError = true;
     }
-
-    if (!this.selectedWeek) {
+  
+    else if (!this.selectedWeek) {
       this.errorMessage = 'Week is required.';
-      await this.presentToast(this.errorMessage,"danger");
-      return;
+      await this.presentToast(this.errorMessage, "danger");
+      hasError = true;
     }
-
-    for (let entry of this.entries) {
+  
+   else for (let [index, entry] of this.entries.entries()) {
+      console.log(index);
+  
       if (!entry.team) {
-        this.errorMessage = 'Team is required for all entries.';
-        await this.presentToast(this.errorMessage,"danger");
-        return;
+        this.errorMessage = `Team is required for all entries. Error at row's Serial Number: ${index + 1}`;
+        await this.presentToast(this.errorMessage, "danger");
+        hasError = true;
+        break;
       }
-
+  
       if (!entry.projectName) {
-        this.errorMessage = 'Project Name is required for all entries.';
-        await this.presentToast(this.errorMessage,"danger");
-        return;
+        this.errorMessage = `Project Name is required for all entries. Error at row's entry ${index + 1}`;
+        await this.presentToast(this.errorMessage, "danger");
+        hasError = true;
+        break;
       }
-
+  
       if (!entry.resourceName) {
-        this.errorMessage = 'Resource Name is required for all entries.';
-        await this.presentToast(this.errorMessage,"danger");
-        return;
+        this.errorMessage = `Resource Name is required for all entries. Error at row's entry ${index + 1}`;
+        await this.presentToast(this.errorMessage, "danger");
+        hasError = true;
+        break;
       }
-
+  
       if (!entry.date) {
-        this.errorMessage = 'Date is required for all entries.';
-        await this.presentToast(this.errorMessage,"danger");
-        return;
+        this.errorMessage = `Date is required for all entries. Error at row's entry ${index + 1}`;
+        await this.presentToast(this.errorMessage, "danger");
+        hasError = true;
+        break;
       }
-
+  
       if (!entry.hours) {
-        this.errorMessage = 'Hours are required for all entries.';
-        await this.presentToast(this.errorMessage,"danger");
-        return;
+        this.errorMessage = `Hours are required for all entries. Error at row's entry ${index + 1}`;
+        await this.presentToast(this.errorMessage, "danger");
+        hasError = true;
+        break;
       }
     }
-
-    // If all validations pass, call the API
-    this.submitData();
+  
+    // If no errors were found, call the API
+    if (!hasError) {
+      this.submitData();
+    }
   }
+  
+  
 
 
 
