@@ -16,7 +16,7 @@
   <div class="input-group">
     <div class="input-item">
       <ion-label position="stacked">Employee Name</ion-label>
-      <select
+      <select style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;"
         [(ngModel)]="selectedEmployee"
         (change)="updateEmployeeId($event.target.value)"
         class="styled-select"
