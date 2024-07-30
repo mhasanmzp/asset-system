@@ -13,7 +13,7 @@
   <div class="input-group" style="border: 1px solid black; border-radius: 10px; padding: 16px; gap: 16px;">
     <div class="input-item">
       <ion-label position="stacked">Month</ion-label>
-      <ion-select [(ngModel)]="selectedMonth" (ionChange)="updateDateRange()" placeholder="Select Month" class="month-select">
+      <ion-select [(ngModel)]="selectedMonth" (ionChange)="updateDateRange()" placeholder="Select Month" class="month-select" style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;">
         <ion-select-option *ngFor="let month of months">{{ month }}</ion-select-option>
       </ion-select>
     </div>
