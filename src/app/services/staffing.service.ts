@@ -27,6 +27,32 @@ export class DataService {
     });
   }
 
+  fetchPreviewData(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + "/project-dropdown", data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  
+  // fetchPreviewData(data) {
+  //   return new Promise((resolve, reject) => {
+  //     this.http
+  //       .post(this.apiUrl + 'preview-data', data, { headers: headers })
+  //       .subscribe(
+  //         (resp: any) => {
+  //           resolve(resp);
+  //         },
+  //         (error) => {
+  //           reject(error);
+  //         }
+  //       );
+  //   });
+  // }
+
   fetchAllEmployees(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + "/employees-dropdown", data, { headers: this.header }).subscribe((resp: any) => {

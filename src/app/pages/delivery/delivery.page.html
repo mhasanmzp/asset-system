@@ -155,43 +155,43 @@
     <ion-content>
       <form (ngSubmit)="deliverProductToWarehouse()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
         <ion-item>
-          <ion-label>Customer</ion-label>
+          <ion-label position="stacked">Customer</ion-label>
           <ion-select [(ngModel)]="selectedClient" (ionChange)="fetchClientWarehouses()" name="client" placeholder="Select Client" class="styled-input">
             <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>Customer Warehouse</ion-label>
+          <ion-label position="stacked">Customer Warehouse</ion-label>
           <ion-select [(ngModel)]="selectedWarehouse" name="warehouse" placeholder="Select Warehouse" class="styled-input">
             <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>GST Number</ion-label>
+          <ion-label position="stacked">GST Number</ion-label>
           <ion-input [(ngModel)]="gstNumber" name="gstNumber" class="styled-input"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Billing Customer</ion-label>
+          <ion-label position="stacked">Billing Customer</ion-label>
           <ion-select [(ngModel)]="billingClient" name="billingClient" placeholder="Select Client" class="styled-input">
             <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>Billing Customer Warehouse</ion-label>
+          <ion-label position="stacked">Billing Customer Warehouse</ion-label>
           <ion-select [(ngModel)]="billingWarehouse" name="billingWarehouse" placeholder="Select Warehouse" class="styled-input">
             <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>Billing GST Number</ion-label>
+          <ion-label position="stacked">Billing GST Number</ion-label>
           <ion-input [(ngModel)]="billingGstNumber" name="billingGstNumber" class="styled-input"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Company PAN Number</ion-label>
+          <ion-label position="stacked">Company PAN Number</ion-label>
           <ion-input [(ngModel)]="companyPanNumber" name="companyPanNumber" class="styled-input"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Dispatched Through</ion-label>
+          <ion-label position="stacked">Dispatched Through</ion-label>
           <ion-input [(ngModel)]="dispatchedThrough" name="dispatchedThrough" class="styled-input"></ion-input>
         </ion-item>
         <!-- <ion-item>
@@ -199,35 +199,35 @@
           <ion-input [(ngModel)]="billOfLading" name="billOfLading" class="styled-input"></ion-input>
         </ion-item> -->
         <ion-item>
-          <ion-label>Order Date</ion-label>
-          <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDate" name="dispatchedDate" required></ion-input>
+          <ion-label position="stacked">Order Date</ion-label>
+          <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" class="styled-input" [(ngModel)]="dispatchedDate" name="dispatchedDate" required></ion-input>
         </ion-item>
         <!-- <ion-item>
           <ion-label>Reference No. & Date.</ion-label>
           <ion-input [(ngModel)]="refNoAndDate" name="refNoAndDate" class="styled-input"></ion-input>
         </ion-item> -->
         <ion-item>
-          <ion-label>Buyer's Order No:</ion-label>
+          <ion-label position="stacked">Buyer's Order No:</ion-label>
           <ion-input [(ngModel)]="buyersOrderNumber" name="buyersOrderNumber" class="styled-input"></ion-input>
         </ion-item>
           <ion-item>
-            <ion-label>Dispatch Doc No.</ion-label>
+            <ion-label position="stacked">Dispatch Doc No.</ion-label>
             <ion-input [(ngModel)]="dispatchDocNo" name="dispatchDocNo" class="styled-input"></ion-input>
           </ion-item>
           <ion-item>
-          <ion-label>Mode/Terms of Payment</ion-label>
+          <ion-label position="stacked">Mode/Terms of Payment</ion-label>
           <ion-input [(ngModel)]="paymentTerms" name="paymentTerms" class="styled-input"></ion-input>
         </ion-item>
         <ion-item>
-        <ion-label>Terms of Delivery</ion-label>
+        <ion-label position="stacked">Terms of Delivery</ion-label>
         <ion-input [(ngModel)]="termsOfDelivery" name="termsOfDelivery" class="styled-input"></ion-input>
          </ion-item>
         <ion-item>
-          <ion-label>Destination</ion-label>
+          <ion-label position="stacked">Destination</ion-label>
           <ion-input [(ngModel)]="destination" name="destination" class="styled-input"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Motor Vehicle No</ion-label>
+          <ion-label position="stacked">Motor Vehicle No</ion-label>
           <ion-input [(ngModel)]="motorVehicleNo" name="motorVehicleNo" class="styled-input"></ion-input>
         </ion-item>
       </form>

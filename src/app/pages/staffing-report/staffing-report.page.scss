@@ -1,67 +1,94 @@
 .input-group {
-    display: flex;
-    justify-content: space-between;
-    padding: 16px;
-    gap: 16px;
-  }
-  
-  .input-item {
-    display: flex;
-    flex-direction: column;
-    width: calc(25% - 16px);
-  }
-  
-  .input-item ion-label {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  
-  .input-item ion-select,
-  .input-item ion-button {
-    border-radius: 10px;
-    --background: #f3f3f3;
-    // --padding-start: 12px;
-    // --padding-end: 12px;
-    --padding-top: 3px;
-    --padding-bottom: 3px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid black;
-    height: 36px; /* Adjust the height as needed */
-  }
-  
-  .table-responsive {
-    padding: 16px;
-    overflow-x: auto;
-  }
-  
-  .forecast-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .forecast-table th,
-  .forecast-table td {
-    border: 1px solid #ddd;
-    padding: 4px 8px;
-    text-align: center;
-    vertical-align: middle;
-  }
-  
-  
-  .forecast-table th {
-    background-color: #f2f2f2;
-  }
-  
-  .forecast-table th ion-select,
-  .forecast-table td ion-select,
-  .forecast-table td ion-input {
-    width: 100%;
-  }
-  .low-hours {
-    color: #ec2a47; /* Light red */
-  }
-  
-  .high-hours {
-  color: #03fb0b; /* Light green */
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.input-item {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 150px;
+}
+.input-item ion-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.input-item ion-select,
+.input-item ion-input,
+.input-item ion-button {
+  border-radius: 10px;
+  --background: #F3F3F3;
+  --padding-top: 3px;
+  --padding-bottom: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid black;
+  height: 36px; /* Adjust the height as needed */
+}
+.table-responsive {
+  padding: 16px;
+  overflow-x: auto;
+}
+.forecast-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.forecast-table th,
+.forecast-table td {
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+.forecast-table th {
+  background-color: #F2F2F2;
+}
+.forecast-table th ion-select,
+.forecast-table td ion-select,
+.forecast-table td ion-input {
+  width: 100%;
+}
+.low-hours {
+  color: #EC2A47; /* Light red */
+}
+.high-hours {
+  color: #03FB0B; /* Light green */
+}
+.input-item {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+.stacked-label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+.styled-select, .styled-input {
+  border: 1px solid black;
+  border-radius: 10px;
+  // padding: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 100%;
+}
+.styled-select {
+  height: 35px; /* Ensures the select element has a consistent height */
+}
+input[type="date"].styled-input {
+  height: 40px; /* Ensures the date input element has a consistent height */
+}
+.borderArea {
+  border: 0.5px solid var(--ion-color-dark) !important;
+  background: var(--ion-color-light) !important;
+  border-radius: 10px;
+  height: 40px;
+  color: var(--ion-color-dark) !important;
+  font-weight: 400;
+  font-size: 14px;
+  width: 13rem;
+  outline: none;
+  margin-top: 5px;
+  text-align: center;
+}

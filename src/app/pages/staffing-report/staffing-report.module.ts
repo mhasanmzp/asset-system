@@ -8,12 +8,16 @@ import { StaffingReportPageRoutingModule } from './staffing-report-routing.modul
 
 import { StaffingReportPage } from './staffing-report.page';
 
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    StaffingReportPageRoutingModule
+    StaffingReportPageRoutingModule,
+    Ng2SearchPipeModule
   ],
   declarations: [StaffingReportPage]
 })

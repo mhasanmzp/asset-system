@@ -7,16 +7,25 @@
         Back
       </ion-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button expand="submit" (click)="exportToExcel()">Export to Excel</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
   <div class="input-group">
     <div class="input-item">
       <ion-label position="stacked">Employee Name</ion-label>
-      <ion-select [interfaceOptions]="customAlertOptions" interface="popover" placeholder="Select Employee" (ionChange)="filterItems($event, 'employee')" [(ngModel)]="selectedEmployee">
-        <ion-select-option *ngFor="let employee of filteredEmployees" [value]="employee">{{ employee.name }}</ion-select-option>
-      </ion-select>
+      <select
+        [(ngModel)]="selectedEmployee"
+        (change)="updateEmployeeId($event.target.value)"
+        class="styled-select"
+        placeholder="Select Resource Name">
+        <option value="">Select</option>
+        <option *ngFor="let employee of filteredEmployees" [ngValue]="employee">
+          {{ employee.name }}
+        </option>
+      </select>
     </div>
     <div class="input-item">
       <ion-label position="stacked">Start Date</ion-label>
@@ -34,7 +43,6 @@
       <ion-button expand="block" (click)="getData()">Filter</ion-button>
     </div>
   </div>
-
   <div class="table-responsive">
     <table class="forecast-table">
       <thead>
@@ -44,8 +52,8 @@
           <th>Employee Name</th>
           <th>Start Date</th>
           <th>End Date</th>
-          <th>Weekly Hours Spent</th>
-          <th>View More</th>
+          <th>Weekly Estimated Hours</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -58,13 +66,16 @@
             <td>{{ item.weekEndDate | date }}</td>
             <td [ngClass]="{'low-hours': item.totalWeekHours < 45, 'high-hours': item.totalWeekHours >= 45}">
               {{ item.totalWeekHours }}
+              <ion-icon name="create-outline" (click)="openEditModal(item)"></ion-icon>
             </td>
-            <td><ion-button fill="clear" (click)="toggleProjectDetails(i)">
-              <ion-icon [name]="item.showProjects ? 'chevron-up' : 'chevron-down'"></ion-icon>
-            </ion-button></td>
+            <td>
+              <ion-button fill="clear" (click)="toggleProjectDetails(i)">
+                <ion-icon [name]="item.showProjects ? 'chevron-up' : 'chevron-down'"></ion-icon>
+              </ion-button>
+            </td>
           </tr>
           <tr *ngIf="item.showProjects">
-            <td colspan="6">
+            <td colspan="7">
               <table class="project-table">
                 <thead>
                   <tr>
@@ -74,8 +85,12 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Hours Spent</td>
+                    <td><b>Hours Spent</b></td>
                     <td *ngFor="let project of getProjectEntries(item.projects)">{{ project.hours }}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Hourly Rate</b></td>
+                    <td>{{ item.hourlyRate }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -86,3 +101,70 @@
     </table>
   </div>
 </ion-content>
+<ion-modal [isOpen]="isModalOpen" style="--height: 90%; --width: 90%;">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Update Staffing Data</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <!-- Additional Header Section for Employee Name, Project Name, and Week Number -->
+      <div>
+        <ion-item>
+          <ion-label>Week No: {{ selectedWeek }}</ion-label>
+        </ion-item>
+      </div>
+      <table class="forecast-table">
+        <thead>
+          <tr>
+            <th>Sr. No</th>
+            <th>Team</th>
+            <th>Project</th>
+            <th>Resource Name</th>
+            <th>Date</th>
+            <th>Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of modalEntries; let i = index" class="borderArea">
+            <td>{{ i + 1 }}</td>
+            <td>
+              <ion-input [(ngModel)]="entry.team" readonly class="borderArea"></ion-input>
+            </td>
+            <td>
+              <!-- <ion-select [(ngModel)]="entry.projectName" (ionChange)="updateProjectId(entry)" placeholder="Select Project" [value]="entry.projectName"> -->
+                <select [(ngModel)]="entry.projectName" (ionChange)="updateProjectId(entry)" placeholder="Select Project" class="borderArea" [value]="entry.projectName">
+                  <!-- <ion-select-option *ngFor="let project of projects" [value]="project.projectName">{{ project.projectName }}</ion-select-option> -->
+                  <option value="">Select</option>
+                  <option *ngFor="let project of projects" [value]="project.projectName">
+                    {{ project.projectName }}
+                  </option>
+              </select>
+            </td>
+            <td>
+              <ion-input [(ngModel)]="entry.employeeName" readonly class="borderArea"></ion-input>
+            </td>
+            <td>
+              <ion-input type="date" [(ngModel)]="entry.date" [value]="entry.date | date: 'yyyy-MM-dd'" class="borderArea"></ion-input>
+            </td>
+            <td>
+              <ion-input type="number" [(ngModel)]="entry.hours" class="borderArea" (ionInput)="onInput($event)"></ion-input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ion-content>
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="submitChanges()">
+          <ion-icon name="submit"></ion-icon>
+         Submit
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ng-template>
+</ion-modal>

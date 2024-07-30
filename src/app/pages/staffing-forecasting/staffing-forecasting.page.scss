@@ -3,93 +3,106 @@
   justify-content: space-between;
   padding: 16px;
   gap: 16px;
+  border: 1px solid black;
+  border-radius: 10px;
 }
-
-.input-group ion-item {
-  --border-radius: 20px;
-  --background: #f3f3f3;
+.input-item {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.input-item:not(:last-child) {
+  margin-right: 16px;
+}
+.input-item ion-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.input-item ion-select,
+.input-item ion-input {
+  border-radius: 10px;
+  --background: #F3F3F3;
   --padding-start: 12px;
   --padding-end: 12px;
   --padding-top: 3px;
   --padding-bottom: 3px;
-  --margin-top: 0;
-  --margin-bottom: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 1px solid black; border-radius: 10px;
+  border: 1px solid black;
+  height: 36px;
 }
-
-.input-group ion-label {
-  font-weight: bold;
-}
-
-.month-select {
-  width: 210px; /* Adjust the width as needed */
-}
-
 .week-select {
-  width: 35px; /* Adjust the width as needed */
+  width: 60px;
 }
-
-
+.month-select {
+  width: 210px;
+}
+.week-select {
+  width: 80px;
+}
 .table-responsive {
   padding: 16px;
 }
-
 .button-container {
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding: 0 16px;
 }
-
 .total-hours-button {
   margin-right: auto;
-  color: #0762fe;
+  color: #0762FE;
 }
-
 .submit-button {
   margin-left: auto;
 }
-
 .actions {
   display: flex;
-  gap: 4px; /* Adjust the gap between action buttons as needed */
+  gap: 4px;
 }
-
-  
   .add-row-button,
   .save-button {
-    --background: #3880ff;
+    --background: #3880FF;
     --color: white;
     --border-radius: 5px;
     --padding: 10px 20px;
     font-size: 14px;
   }
-  
   .table-responsive {
     overflow-x: auto;
   }
-  
   .forecast-table {
     width: 100%;
     border-collapse: collapse;
   }
-  
   .forecast-table th,
   .forecast-table td {
     border: 1px solid #ddd;
-    padding: 4px 8px; // Adjusted for smaller height
+    padding: 4px 8px;
     text-align: center;
     vertical-align: middle;
   }
-  
   .forecast-table th {
-    background-color: #f2f2f2;
+    background-color: #F2F2F2;
   }
-  
   .forecast-table th ion-select,
   .forecast-table td ion-select,
   .forecast-table td ion-input {
     width: 100%;
   }
-  
+  .error-message {
+    color: red;
+    font-size: 12px;
+  }
+  .borderArea {
+    border: 0.5px solid var(--ion-color-dark) !important;
+    background: var(--ion-color-light) !important;
+    border-radius: 10px;
+    height: 40px;
+    color: var(--ion-color-dark) !important;
+    font-weight: 400;
+    font-size: 14px;
+    width: 13rem;
+    outline: none;
+    margin-top: 5px;
+    text-align: center;
+  }
