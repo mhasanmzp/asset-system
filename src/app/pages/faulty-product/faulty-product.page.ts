@@ -569,8 +569,10 @@ export class FaultyProductPage implements OnInit {
       });
   
       doc.text(`${totalQuantity}`, 166, 197);
+      console.log(this.selectedClientSite);
+      
   
-      doc.save(`${this.selectedClientSite}-Delivery-Return-Challan.pdf`);
+      doc.save(`${this.selectedClientSite} Delivery-Return-Challan.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
