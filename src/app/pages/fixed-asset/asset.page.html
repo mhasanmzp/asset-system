@@ -258,7 +258,7 @@
                 <div *ngFor="let input of warehouseInputs; let i = index" class="input-row">
                   <div class="input-group">
                     <ion-item>
-                      <ion-label position="floating">Select Client</ion-label>
+                      <ion-label position="floating">Select Customer</ion-label>
                       <ion-select [(ngModel)]="selectedClient" name="selectedClient" required class="input-field"
                         style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;" debounce="1500">
                         <ion-select-option *ngFor="let client of clients"
@@ -472,7 +472,7 @@
                 <ng-container *ngIf="data.masterData === 'Customer Warehouse'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Client Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Customer Name</ion-label>
                     <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Address</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
