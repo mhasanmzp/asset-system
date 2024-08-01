@@ -39,9 +39,17 @@
       <ion-label position="stacked">Week</ion-label>
       <ion-input type="text" [(ngModel)]="selectedWeek" readonly class="week-select" style="border: 1px solid black; border-radius: 10px;"></ion-input>
     </div>
-    <div>
+    <!-- <div>
       <ion-button expand="block" (click)="getData()">Filter</ion-button>
-    </div>
+    </div> -->
+    <ion-buttons>
+      <ion-button expand="block" shape="round" (click)="getData()">
+        <ion-icon slot="start" name="filter-outline"></ion-icon>
+        Filter
+      </ion-button>
+    </ion-buttons>
+    
+
   </div>
   <div class="table-responsive">
     <table class="forecast-table">
