@@ -10,7 +10,7 @@ export class DataService {
 
 
 
-  private baseUrl = 'https://a342-203-92-37-218.ngrok-free.app';
+  private baseUrl = 'https://69d6-203-92-37-218.ngrok-free.app';
 
   header: any = {}
 
