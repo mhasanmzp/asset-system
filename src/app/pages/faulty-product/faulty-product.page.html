@@ -239,7 +239,6 @@
         </ion-header>
         <ion-content>
           <form (ngSubmit)="submitSiteReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-            <!-- Form fields -->
             <ion-item>
               <ion-label position="stacked">Installation Site</ion-label>
               <ion-select [(ngModel)]="selectedClientSite" (ionChange)="onSiteChange()" name="clientSite" placeholder="Select Installation Site" class="styled-input">
