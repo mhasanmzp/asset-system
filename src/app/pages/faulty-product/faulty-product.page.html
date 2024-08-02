@@ -2,6 +2,10 @@
   <ion-toolbar>
     <ion-title>Delivery Return & Goods Issue</ion-title>
     <ion-buttons slot="end">
+      <ion-button (click)="openReturnGoodModal()">
+        <ion-icon name="arrow-undo-circle-outline"></ion-icon>      
+        Return
+      </ion-button>
       <ion-button (click)="submitReturn()" class="custom-blue-button">
         <ion-icon slot="start" name="save-outline"></ion-icon>
         Submit
@@ -39,6 +43,7 @@
           <ion-label>Action</ion-label>
           <ion-select [(ngModel)]="selectedAction" (ionChange)="onActionChange(selectedAction)">
             <ion-select-option value="null">None</ion-select-option>
+            <ion-select-option value="Return under inspection">Return Under Inspection</ion-select-option>
             <ion-select-option value="Sent Back to the OEM">Sent Back to the OEM</ion-select-option>
             <ion-select-option value="Sent Back to the Site">Sent Back to the Site</ion-select-option>
             <ion-select-option value="Mark as Scrap">Mark as Scrap</ion-select-option>
@@ -84,76 +89,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!-- Modals -->
-  <!-- <ng-container *ngIf="showOemModal">
-    <ion-modal isOpen="true" style="--width: 80%; --height: 80%;">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Sent Back to OEM</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="closeModal()">Close</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content>
-          <form (ngSubmit)="submitOemReturn()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-            <ion-item>
-              <ion-label position="stacked">OEM</ion-label>
-              <ion-select [(ngModel)]="selectedOem" (ionChange)="loadOems()" name="selectedOem" placeholder="Select Client" class="styled-input" 
-              style="border: 1px solid black; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background: #F3F3F3;"              >
-                <ion-select-option *ngFor="let oem of data" [value]="oem.oemName">{{ oem.oemName }}</ion-select-option>
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">OEM Address</ion-label>
-              <ion-input [(ngModel)]="selectedOemAddress" name="selectedOemAddress" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">GST Number</ion-label>
-              <ion-input [(ngModel)]="gstNumberOem" name="gstNumberOem" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Company PAN Number</ion-label>
-              <ion-input [(ngModel)]="companyPanNumberOem" name="companyPanNumberOem" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Dispatched Through</ion-label>
-              <ion-input [(ngModel)]="dispatchedThroughOem" name="dispatchedThroughOem" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Order Date</ion-label>
-              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="dispatchedDateOem" name="dispatchedDateOem" class="styled-input" required></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Dispatch Doc No.</ion-label>
-              <ion-input [(ngModel)]="dispatchDocNoOem" name="dispatchDocNoOem" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Destination</ion-label>
-              <ion-input [(ngModel)]="destinationOem" name="destinationOem" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Motor Vehicle No</ion-label>
-              <ion-input [(ngModel)]="motorVehicleNoOem" name="motorVehicleNoOem" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Terms of Delivery</ion-label>
-              <ion-input [(ngModel)]="termsOfDeliveryOem" name="termsOfDeliveryOem" class="styled-input"></ion-input>
-            </ion-item>
-          </form>
-        </ion-content>
-        <ion-footer>
-          <ion-toolbar>
-            <ion-buttons slot="end">
-              <ion-button type="submit" (click)="submitOemReturn()">Submit</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-footer>
-      </ng-template>
-    </ion-modal>
-  </ng-container> -->
 
   <ng-container *ngIf="showOemModal">
     <ion-modal isOpen="true" style="--width: 80%; --height: 80%;">
@@ -301,6 +236,59 @@
       </ng-template>
     </ion-modal>
   </ng-container>
+
+
+
+  <!-- Return Good Modal -->
+  <ng-container *ngIf="showReturnGoodModal">
+    <ion-modal isOpen="true" style="--width: 80%; --height: 80%;">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Return Good</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeModal()" (click)="resetReturnGoodModal()">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <form (ngSubmit)="submitReturnGood()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <ion-item>
+              <ion-label position="stacked">Site Name</ion-label>
+              <ion-select [(ngModel)]="selectedReturnSite" name="selectedReturnSite" placeholder="Select Site" class="styled-input">
+                <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Site Order Number</ion-label>
+              <ion-input [(ngModel)]="siteOrderNumber" name="siteOrderNumber" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Site Address</ion-label>
+              <ion-input [(ngModel)]="siteAddress" name="siteAddress" class="styled-input" placeholder="Enter Site Address"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">GST Number</ion-label>
+              <ion-input [(ngModel)]="gstNumberReturn" name="gstNumberReturn" class="styled-input"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Dispatched Through</ion-label>
+              <ion-input [(ngModel)]="dispatchedThroughReturn" name="dispatchedThroughReturn" class="styled-input"></ion-input>
+            </ion-item>
+          </form>
+        </ion-content>
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button type="submit" (click)="submitReturnGood()">Submit</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>
+      </ng-template>
+    </ion-modal>
+  </ng-container>
+
+
   
 </ion-content>
 

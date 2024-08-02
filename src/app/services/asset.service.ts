@@ -6,6 +6,9 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class DataService {
+  submitFaultyAssets(dataToSend: { assetsData: any[]; action: string; permissionName: string; employeeIdMiddleware: string; employeeId: string; }) {
+    throw new Error('Method not implemented.');
+  }
 
 
 
