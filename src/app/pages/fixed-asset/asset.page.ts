@@ -289,6 +289,10 @@ export class AssetPage implements OnInit {
     this.data.masterData = null; 
     this.editIndex = null; 
   }
+  resetData1() {
+    this.data.masterData = null; 
+    this.editIndex = null; 
+  }
 
   resetInputs() {
     this.categoryInputs = [{ name: '', hsn: '' }];
@@ -378,7 +382,8 @@ export class AssetPage implements OnInit {
       this.loadSites();
       this.loadStores();
       this.loadWarehouses();
-      this.closeAddDataModal();
+      this.resetData1()
+      // this.closeAddDataModal();
     } catch (error) {
       const toast = await this.toastController.create({
         message: 'Failed to save data!',
