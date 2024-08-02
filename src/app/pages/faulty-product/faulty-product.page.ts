@@ -67,9 +67,9 @@ export class FaultyProductPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
-    private dataService: DataService, // Inject the DataService
+    private dataService: DataService, 
     private toastController: ToastController,
-    private loadingController: LoadingController, // Inject LoadingController
+    private loadingController: LoadingController, 
     private router: Router,
 
   ) {}
@@ -179,7 +179,7 @@ export class FaultyProductPage implements OnInit {
         SerialNumber: product.serialNumber,
         ProductName: product.productName,
         Status: product.status,
-        selected: false // Add selected property
+        selected: false 
       }));
       this.applyWarehouseFilters(); // Filter products after loading
     }).catch(error => {
@@ -216,7 +216,7 @@ export class FaultyProductPage implements OnInit {
           SerialNumber: product.serialNumber,
           ProductName: product.productName,
           Status: product.status,
-          selected: false // Add selected property
+          selected: false 
         }));
         this.applyWarehouseFilters(); // Filter products after loading
         console.log("Client Warehouses Response:", res);
@@ -310,7 +310,7 @@ export class FaultyProductPage implements OnInit {
       const response = await this.dataService.submitReturn(dataToSend).toPromise();
       this.showToast('Data saved successfully!');
       this.changedAssets = [];
-      this.loadDeliveredData(); // Refresh product list after successful submission
+      this.loadDeliveredData();
     } catch (error) {
       console.error('Error saving data', error);
       this.showToast('Failed to save data');
@@ -327,14 +327,12 @@ export class FaultyProductPage implements OnInit {
   async submitOemReturn() {
     this.closeModal();
     this.generateOemChallan()
-    // Add any specific logic for OEM return here if needed
     await this.submitReturnToServer();
   }
 
   async submitSiteReturn() {
     this.closeModal();
     this.generateChallan();
-    // Add any specific logic for Site return here if needed
     await this.submitReturnToServer();
   }
 
@@ -414,11 +412,11 @@ export class FaultyProductPage implements OnInit {
   
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
-        doc.text(`${this.billingClientSite}`, 13.5, 90);
+        doc.text(`${this.selectedClientSite}`, 13.5, 90);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
   
-        const wrappedText2 = doc.splitTextToSize(this.selectedClientSite, 80);
+        const wrappedText2 = doc.splitTextToSize(this.selectedWarehouseSite, 80);
         startY = 97.5;
         wrappedText2.forEach(line => {
           doc.text(line, 13.5, startY);
@@ -444,7 +442,7 @@ export class FaultyProductPage implements OnInit {
       this.changedAssets.forEach((item) => {
         const productName = item.productName;
         const quantity = item.quantity || 1;
-        const hsnNumber = item.hsnNumber || ''; // Assuming hsnNumber is a property of item
+        const hsnNumber = item.hsnNumber || ''; 
   
         if (!itemDetails[productName]) {
           itemDetails[productName] = {
@@ -454,7 +452,6 @@ export class FaultyProductPage implements OnInit {
           };
         }
         itemDetails[productName].quantity += quantity;
-        // Assuming serialNumbers is a property of item
         itemDetails[productName].serialNumbers.push(item.serialNumbers);
       });
   
@@ -563,7 +560,7 @@ export class FaultyProductPage implements OnInit {
 
   async generateOemChallan() {
     const doc = new jsPDF();
-    const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
+    const imageUrl = 'assets/outwardChallan.jpg'; 
     let totalQuantity = 0;
     const productsPerPage = 11; 
   
