@@ -2,10 +2,10 @@
   <ion-toolbar>
     <ion-title>Delivery Return & Goods Issue</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="openReturnGoodModal()">
+      <!-- <ion-button (click)="openReturnGoodModal()">
         <ion-icon name="arrow-undo-circle-outline"></ion-icon>      
         Return
-      </ion-button>
+      </ion-button> -->
       <ion-button (click)="submitReturn()" class="custom-blue-button">
         <ion-icon slot="start" name="save-outline"></ion-icon>
         Submit
@@ -253,27 +253,40 @@
         </ion-header>
         <ion-content>
           <form (ngSubmit)="submitReturnGood()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-            <ion-item>
+            <!-- <ion-item>
               <ion-label position="stacked">Site Name</ion-label>
               <ion-select [(ngModel)]="selectedReturnSite" name="selectedReturnSite" placeholder="Select Site" class="styled-input">
                 <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
               </ion-select>
+            </ion-item> -->
+            <ion-item>
+              <ion-label position="stacked">Challan No (Return):</ion-label>
+              <ion-input [(ngModel)]="returnChallanNo" name="returnChallanNo" class="styled-input"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="stacked">Site Order Number</ion-label>
-              <ion-input [(ngModel)]="siteOrderNumber" name="siteOrderNumber" class="styled-input"></ion-input>
+              <ion-label position="stacked">Challan Date (Return)</ion-label>
+              <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="returnChallanDate" name="returnChallanDate" class="styled-input" required></ion-input>
             </ion-item>
+            <!-- <ion-item>
+              <ion-label position="stacked">Installation Site</ion-label>
+              <ion-select [(ngModel)]="selectedReturnSite" (ionChange)="onReturnSiteChange()" name="clientSite" placeholder="Select Installation Site" class="styled-input">
+                <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
+              </ion-select>
+            </ion-item> -->
+            <ion-item>
+              <ion-label position="stacked">Installation Site</ion-label>
+              <ion-select [(ngModel)]="selectedReturnSite" (ionChange)="onReturnSiteChange()" name="selectedReturnSite" placeholder="Select Installation Site" class="styled-input">
+                <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+                      
             <ion-item>
               <ion-label position="stacked">Site Address</ion-label>
-              <ion-input [(ngModel)]="siteAddress" name="siteAddress" class="styled-input" placeholder="Enter Site Address"></ion-input>
+              <ion-input [(ngModel)]="selectedReturnSiteAddress" name="selectedReturnSiteAddress" class="styled-input" placeholder="Enter Site Address"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="stacked">GST Number</ion-label>
-              <ion-input [(ngModel)]="gstNumberReturn" name="gstNumberReturn" class="styled-input"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Dispatched Through</ion-label>
-              <ion-input [(ngModel)]="dispatchedThroughReturn" name="dispatchedThroughReturn" class="styled-input"></ion-input>
+              <ion-label position="stacked">Description of Issue:</ion-label>
+              <ion-input [(ngModel)]="returnDescription" name="returnDescription" class="styled-input"></ion-input>
             </ion-item>
           </form>
         </ion-content>

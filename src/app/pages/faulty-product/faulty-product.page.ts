@@ -66,11 +66,15 @@ export class FaultyProductPage implements OnInit {
   data2: any[] = [];
   ///////
   showReturnGoodModal = false;
-  selectedReturnSite: string;
+  selectedReturnSite: string = '';
   siteOrderNumber: string;
   siteAddress: string;
   gstNumberReturn: string;
   dispatchedThroughReturn: string;
+returnChallanNo: any;
+returnChallanDate: any;
+returnDescription: string;
+selectedReturnSiteAddress: string = '';
 
   constructor(
     private modalController: ModalController,
@@ -783,20 +787,153 @@ export class FaultyProductPage implements OnInit {
     this.dispatchedThroughReturn = '';
   }
 
-  submitReturnGood() {
+ async submitReturnGood() {
+   await this.returnChallan()
     this.submitReturnToServer()
-    this.returnChallan()
-    // Handle form submission logic here
     this.closeModal();
     this.resetReturnGoodModal();
   }
 
 
+  // async returnChallan() {
+  //   const doc = new jsPDF();
+  //   const imageUrl = 'assets/returnChallan.jpg'; 
+  //   let totalQuantity = 0;
+  //   const productsPerPage = 11; 
+  
+  //   try {
+  //     const imgData = await this.getBase64ImageFromURL(imageUrl);
+  
+  //     const addTemplate = (pageIndex) => {
+  //       doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+  //       doc.setFontSize(10);
+  //       doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
+  //     };
+  
+  //     const addHeaderInfo = (siteName, siteAddress) => {
+  //       // doc.setFontSize(9);
+  //       // doc.setFont("helvetica", "bold");
+  //       // doc.text(`Installation Site Name: ${this.selectedReturnSite}`, 13.5, 30.5);
+  //       // // doc.text(`Challan No (Return): ${this.returnChallanNo}`, 155, 30.5);  // Adjusted X position for clarity
+  //       // doc.text(`Challan No (Return): ${this.returnChallanNo}`, 13.5, 35.5);  // Adjusted X position for clarity
+  //       // doc.text(`Challan Date (Return): ${this.returnChallanDate}`, 13.5, 40.5);  // Adjusted X position for clarity
+  //       // doc.setFont("helvetica", "normal");
+        
+  //       // doc.setFont("helvetica", "bold");
+  //       // doc.text(`Site Address: ${this.selectedReturnSiteAddress} `, 13.5, 45.5);
+  
+  //       doc.setFontSize(10);
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text('Installation Site Name:', 13.5, 30.5);
+  //       doc.text('Challan No (Return):', 13.5, 35.5);
+  //       doc.text('Challan Date (Return):', 13.5, 40.5);
+  //       doc.text('Site Address:', 13.5, 45.5);
+  
+  //       // Data with font size 9 and normal
+  //       doc.setFontSize(9);
+  //       doc.setFont("helvetica", "normal");
+  //       doc.text(this.selectedReturnSite || 'No Site Selected', 60, 30.5);
+  //       doc.text(this.returnChallanNo || 'No Challan No', 60, 35.5);
+  //       doc.text(this.returnChallanDate || 'No Challan Date', 60, 40.5);
+  //       doc.text(this.selectedReturnSiteAddress || 'No Address', 60, 45.5);
+  //     };
+  
+  //     console.log('Selected Site before PDF:', this.selectedReturnSite);  // Debugging statement
+  //     console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress);  // Debugging statement
+  
+  //     let pageIndex = 0;
+  //     addTemplate(pageIndex);
+  //     addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  
+  //     doc.setFontSize(8);
+  //     const initialY = 70; 
+  //     let startY = initialY;
+  //     const lineHeight = 8;
+  //     const reducedLineHeight = 3.5;
+  //     const maxPageHeight = 270;
+  
+  //     const itemDetails = {};
+  
+  //     this.changedAssets.forEach((item) => {
+  //       const productName = item.productName;
+  //       const quantity = item.quantity || 1;
+  //       const serialNumber = item.serialNumber || '';  // Use serialNumber instead of hsnNumber
+  
+  //       if (!itemDetails[productName]) {
+  //         itemDetails[productName] = {
+  //           quantity: 0,
+  //           serialNumbers: [],
+  //           serialNumber: serialNumber
+  //         };
+  //       }
+  //       itemDetails[productName].quantity += quantity;
+  //     });
+  
+  //     let productCount = 0;
+  
+  //     Object.keys(itemDetails).forEach((productName, index) => {
+  //       if (productCount >= productsPerPage) {
+  //         pageIndex++;
+  //         doc.addPage();
+  //         addTemplate(pageIndex);
+  //         addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  //         startY = initialY;
+  //         productCount = 0;
+  //       }
+  
+  //       const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
+  //       const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
+  //       const totalHeight = splitSerialNumbers.length * lineHeight;
+  
+  //       if (startY + totalHeight > maxPageHeight) {
+  //         pageIndex++;
+  //         doc.addPage();
+  //         addTemplate(pageIndex);
+  //         addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  //         startY = initialY;
+  //       }
+  
+  //       doc.setFontSize(10);
+  //       doc.text(`${index + 1}`, 14, startY);
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text(productName || '', 25, startY);
+  //       doc.setFont("helvetica", "normal");
+  //       doc.text(itemDetails[productName].quantity.toString(), 120.5, startY);
+  //       doc.setFontSize(9);
+  //       doc.text(this.returnDescription || '', 130, startY);
+  //       doc.text(itemDetails[productName].serialNumber, 80.5, startY);  // Use serialNumber instead of hsnNumber
+  
+  //       startY += lineHeight;
+  
+  //       splitSerialNumbers.forEach(line => {
+  //         if (startY + lineHeight > maxPageHeight) {
+  //           pageIndex++;
+  //           doc.addPage();
+  //           addTemplate(pageIndex);
+  //           addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  //           startY = initialY;
+  //         }
+  //         doc.text(line, 60, startY);
+  //         startY += reducedLineHeight;
+  //       });
+  
+  //       totalQuantity += itemDetails[productName].quantity;
+  
+  //       startY += reducedLineHeight / 2;
+  //       productCount++;
+  //     });
+  
+  //     doc.save(`${this.selectedReturnSite}Delivery-Return-Challan.pdf`);
+  //   } catch (error) {
+  //     console.error('Error generating PDF:', error);
+  //   }
+  // }
+  
   async returnChallan() {
     const doc = new jsPDF();
-    const imageUrl = 'assets/returnChallan.jpg'; 
+    const imageUrl = 'assets/returnChallan.jpg';
     let totalQuantity = 0;
-    const productsPerPage = 11; 
+    const productsPerPage = 11;
   
     try {
       const imgData = await this.getBase64ImageFromURL(imageUrl);
@@ -808,29 +945,32 @@ export class FaultyProductPage implements OnInit {
       };
   
       const addHeaderInfo = () => {
-        doc.setFontSize(9);
+        // Headings with font size 10 and bold
+        doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
         doc.text('Installation Site Name:', 13.5, 30.5);
+        doc.text('Challan No (Return):', 13.5, 35.5);
+        doc.text('Challan Date (Return):', 13.5, 40.5);
+        doc.text('Site Address:', 13.5, 45.5);
+  
+        // Data with font size 9 and normal
+        doc.setFontSize(9);
         doc.setFont("helvetica", "normal");
-        doc.text(`${this.selectedClientSite}`, 50, 30.5);
-        
-        doc.setFont("helvetica", "bold");
-        doc.text('Address:', 13.5, 60);
-        doc.setFont("helvetica", "normal");
-        const wrappedAddress = doc.splitTextToSize(this.selectedOemAddress, 80); 
-        let startY = 67;
-        wrappedAddress.forEach(line => {
-          doc.text(line, 13.5, startY);
-          startY += 8;
-        });
+        doc.text(this.selectedReturnSite || 'No Site Selected', 60, 30.5);
+        doc.text(this.returnChallanNo || 'No Challan No', 60, 35.5);
+        doc.text(this.returnChallanDate || 'No Challan Date', 60, 40.5);
+        doc.text(this.selectedReturnSiteAddress || 'No Address', 60, 45.5);
       };
+  
+      console.log('Selected Site before PDF:', this.selectedReturnSite); // Debugging statement
+      console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress); // Debugging statement
   
       let pageIndex = 0;
       addTemplate(pageIndex);
-      addHeaderInfo();
+      addHeaderInfo(); // Add header info with adjusted font sizes and styles
   
       doc.setFontSize(8);
-      const initialY = 100; 
+      const initialY = 70;
       let startY = initialY;
       const lineHeight = 8;
       const reducedLineHeight = 3.5;
@@ -841,16 +981,17 @@ export class FaultyProductPage implements OnInit {
       this.changedAssets.forEach((item) => {
         const productName = item.productName;
         const quantity = item.quantity || 1;
-        const hsnNumber = item.hsnNumber || ''; 
+        const serialNumber = item.serialNumber || ''; // Use serialNumber instead of hsnNumber
   
         if (!itemDetails[productName]) {
           itemDetails[productName] = {
             quantity: 0,
             serialNumbers: [],
-            hsnNumber: hsnNumber
+            serialNumber: serialNumber,
           };
         }
         itemDetails[productName].quantity += quantity;
+        itemDetails[productName].serialNumbers.push(serialNumber);
       });
   
       let productCount = 0;
@@ -860,7 +1001,7 @@ export class FaultyProductPage implements OnInit {
           pageIndex++;
           doc.addPage();
           addTemplate(pageIndex);
-          addHeaderInfo();
+          addHeaderInfo(); // Add header info with adjusted font sizes and styles
           startY = initialY;
           productCount = 0;
         }
@@ -873,31 +1014,34 @@ export class FaultyProductPage implements OnInit {
           pageIndex++;
           doc.addPage();
           addTemplate(pageIndex);
-          addHeaderInfo();
+          addHeaderInfo(); // Add header info with adjusted font sizes and styles
           startY = initialY;
         }
   
         doc.setFontSize(10);
-        doc.text(`${index + 1}`, 13.5, startY);
         doc.setFont("helvetica", "bold");
-        doc.text(productName || '', 20, startY);
+        doc.text(`${index + 1}`, 14, startY);
+        doc.setFont("helvetica", "bold");
+        doc.text(productName || '', 25, startY);
         doc.setFont("helvetica", "normal");
-        doc.text(itemDetails[productName].quantity.toString(), 167.5, startY);
+        doc.text(itemDetails[productName].quantity.toString(), 120.5, startY);
         doc.setFontSize(9);
-        doc.text(itemDetails[productName].hsnNumber, 141.5, startY); 
+        doc.text(this.returnDescription || '', 130, startY);
+        doc.text(itemDetails[productName].serialNumber, 80.5, startY); // Use serialNumber instead of hsnNumber
   
         startY += lineHeight;
   
-        splitSerialNumbers.forEach(line => {
+        // Print serial numbers, split into multiple lines if necessary
+        splitSerialNumbers.forEach((line, lineIndex) => {
           if (startY + lineHeight > maxPageHeight) {
             pageIndex++;
             doc.addPage();
             addTemplate(pageIndex);
-            addHeaderInfo();
+            addHeaderInfo(); // Add header info with adjusted font sizes and styles
             startY = initialY;
           }
           doc.text(line, 60, startY);
-          startY += reducedLineHeight;
+          startY += lineHeight;
         });
   
         totalQuantity += itemDetails[productName].quantity;
@@ -906,15 +1050,22 @@ export class FaultyProductPage implements OnInit {
         productCount++;
       });
   
-      // Print total quantity on the last page
-      doc.text(`Total Quantity: ${totalQuantity}`, 13.5, startY + lineHeight);
-  
-      doc.save(`${this.selectedOem}-Delivery-Return-Challan.pdf`);
+      doc.save(`${this.selectedReturnSite}Delivery-Return-Challan.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
   }
   
+  onReturnSiteChange() {
+    console.log('Selected Site:', this.selectedReturnSite);
+    const selectedSite = this.siteData.find(site => site.siteName === this.selectedReturnSite);
+    if (selectedSite) {
+      this.selectedReturnSiteAddress = selectedSite.address;
+    } else {
+      this.selectedReturnSiteAddress = '';
+    }
+    console.log('Selected Site Address:', this.selectedReturnSiteAddress);
+  }
 
 }
 
