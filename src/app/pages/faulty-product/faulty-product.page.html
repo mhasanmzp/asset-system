@@ -240,7 +240,8 @@
 
 
   <!-- Return Good Modal -->
-  <ng-container *ngIf="showReturnGoodModal">
+
+  <!-- <ng-container *ngIf="showReturnGoodModal">
     <ion-modal isOpen="true" style="--width: 80%; --height: 80%;">
       <ng-template>
         <ion-header>
@@ -253,12 +254,6 @@
         </ion-header>
         <ion-content>
           <form (ngSubmit)="submitReturnGood()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-            <!-- <ion-item>
-              <ion-label position="stacked">Site Name</ion-label>
-              <ion-select [(ngModel)]="selectedReturnSite" name="selectedReturnSite" placeholder="Select Site" class="styled-input">
-                <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
-              </ion-select>
-            </ion-item> -->
             <ion-item>
               <ion-label position="stacked">Challan No (Return):</ion-label>
               <ion-input [(ngModel)]="returnChallanNo" name="returnChallanNo" class="styled-input"></ion-input>
@@ -267,12 +262,6 @@
               <ion-label position="stacked">Challan Date (Return)</ion-label>
               <ion-input style="border: 1px solid black; border-radius: 10px;" type="date" [(ngModel)]="returnChallanDate" name="returnChallanDate" class="styled-input" required></ion-input>
             </ion-item>
-            <!-- <ion-item>
-              <ion-label position="stacked">Installation Site</ion-label>
-              <ion-select [(ngModel)]="selectedReturnSite" (ionChange)="onReturnSiteChange()" name="clientSite" placeholder="Select Installation Site" class="styled-input">
-                <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
-              </ion-select>
-            </ion-item> -->
             <ion-item>
               <ion-label position="stacked">Installation Site</ion-label>
               <ion-select [(ngModel)]="selectedReturnSite" (ionChange)="onReturnSiteChange()" name="selectedReturnSite" placeholder="Select Installation Site" class="styled-input">
@@ -299,9 +288,74 @@
         </ion-footer>
       </ng-template>
     </ion-modal>
+  </ng-container> -->
+
+  <ng-container *ngIf="showReturnGoodModal">
+    <ion-modal isOpen="true" style="--width: 80%; --height: 80%;">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Return Good</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeModal(); resetReturnGoodModal()">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <form (ngSubmit)="submitReturnGood()" style="display: grid; gap: 10px;">
+            <!-- Shared fields in a single row -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+              <ion-item>
+                <ion-label position="stacked">Challan No (Return):</ion-label>
+                <ion-input [(ngModel)]="returnChallanNo" name="returnChallanNo" class="styled-input"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Challan Date (Return):</ion-label>
+                <ion-input type="date" [(ngModel)]="returnChallanDate" name="returnChallanDate" class="styled-input" required></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Installation Site</ion-label>
+                <ion-select [(ngModel)]="selectedReturnSite" (ionChange)="onReturnSiteChange()" name="selectedReturnSite" placeholder="Select Installation Site" class="styled-input">
+                  <ion-select-option *ngFor="let site of siteData" [value]="site.siteName">{{ site.siteName }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+                        
+              <ion-item>
+                <ion-label position="stacked">Site Address</ion-label>
+                <ion-input [(ngModel)]="selectedReturnSiteAddress" name="selectedReturnSiteAddress" class="styled-input" placeholder="Enter Site Address"></ion-input>
+              </ion-item>
+            </div>
+  
+            <!-- Loop through changedAssets to generate fields for each product -->
+            <ng-container *ngFor="let item of changedAssets; let i = index">
+              <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
+                <ion-item>
+                  <ion-label position="stacked">Product Name {{i + 1}}:</ion-label>
+                  <ion-input [(ngModel)]="item.productName" name="productName{{i}}" class="styled-input" disabled></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Serial Number:</ion-label>
+                  <ion-input [(ngModel)]="item.serialNumber" name="serialNumber{{i}}" class="styled-input" disabled></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Description of Issue:</ion-label>
+                  <ion-input [(ngModel)]="item.descriptionOfIssue" name="descriptionOfIssue{{i}}" class="styled-input"></ion-input>
+                </ion-item>
+              </div>
+            </ng-container>
+          </form>
+        </ion-content>
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button type="submit" (click)="submitReturnGood()">Submit</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>
+      </ng-template>
+    </ion-modal>
   </ng-container>
-
-
+  
   
 </ion-content>
 

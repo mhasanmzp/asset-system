@@ -23,7 +23,6 @@ export class FaultyProductPage implements OnInit {
   showSiteModal: boolean = false;
   oemReason: string = '';
   newSite: string = '';
-  // Form data for OEM return
   selectedOem: string = '';
   selectedOemAddress: string = '';
   gstNumberOem: string = '';
@@ -40,8 +39,6 @@ export class FaultyProductPage implements OnInit {
   destinationOem: string = '';
   motorVehicleNoOem: string = '';
   siteData: any[];
-
-  // Form data for Site return
   selectedClientSite: string = '';
   selectedWarehouseSite: string = '';
   gstNumberSite: string = '';
@@ -61,29 +58,28 @@ export class FaultyProductPage implements OnInit {
   warehouseProductData: any[] = [];
   selectedClient: any;
   filteredWarehouseProductList: any[] = [];
-  storeData:any[] = [];
+  storeData: any[] = [];
   data: any[] = [];
   data2: any[] = [];
-  ///////
   showReturnGoodModal = false;
   selectedReturnSite: string = '';
   siteOrderNumber: string;
   siteAddress: string;
   gstNumberReturn: string;
   dispatchedThroughReturn: string;
-returnChallanNo: any;
-returnChallanDate: any;
-returnDescription: string;
-selectedReturnSiteAddress: string = '';
+  returnChallanNo: any;
+  returnChallanDate: any;
+  returnDescription: string;
+  selectedReturnSiteAddress: string = '';
 
   constructor(
     private modalController: ModalController,
-    private dataService: DataService, 
+    private dataService: DataService,
     private toastController: ToastController,
-    private loadingController: LoadingController, 
+    private loadingController: LoadingController,
     private router: Router,
 
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadDeliveredData();
@@ -94,8 +90,8 @@ selectedReturnSiteAddress: string = '';
     this.loadClients();
     this.fetchClientWarehouses()
     this.loadSites()
-    
-    
+
+
   }
 
   navigateToAsset() {
@@ -138,8 +134,8 @@ selectedReturnSiteAddress: string = '';
       employeeIdMiddleware: this.userId,
       employeeId: this.userId
     };
-    console.log("UserId:::::::::::::::",formData);
-    
+    console.log("UserId:::::::::::::::", formData);
+
     this.dataService.fetchOEM(formData).then((res: any) => {
       this.data = res;
       console.log("Response ::::::::::::::", res);
@@ -162,7 +158,7 @@ selectedReturnSiteAddress: string = '';
       console.error('Error fetching categories data', error);
     });
   }
-  
+
   loadClients() {
     const formData = {
       permissionName: 'Tasks',
@@ -190,7 +186,7 @@ selectedReturnSiteAddress: string = '';
         SerialNumber: product.serialNumber,
         ProductName: product.productName,
         Status: product.status,
-        selected: false 
+        selected: false
       }));
       this.applyWarehouseFilters(); // Filter products after loading
     }).catch(error => {
@@ -227,7 +223,7 @@ selectedReturnSiteAddress: string = '';
           SerialNumber: product.serialNumber,
           ProductName: product.productName,
           Status: product.status,
-          selected: false 
+          selected: false
         }));
         this.applyWarehouseFilters(); // Filter products after loading
         console.log("Client Warehouses Response:", res);
@@ -398,23 +394,23 @@ selectedReturnSiteAddress: string = '';
     const doc = new jsPDF();
     const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
     let totalQuantity = 0;
-  
+
     try {
       const imgData = await this.getBase64ImageFromURL(imageUrl);
-  
+
       const addTemplate = (pageIndex) => {
         doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
         doc.setFontSize(10);
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
       };
-  
+
       const addCommonInfo = () => {
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
         doc.text(`${this.selectedClientSite}`, 13.5, 53.5);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
-  
+
         const wrappedText = doc.splitTextToSize(this.selectedWarehouseSite, 80);
         let startY = 60;
         wrappedText.forEach(line => {
@@ -422,13 +418,13 @@ selectedReturnSiteAddress: string = '';
           startY += 8;
         });
         doc.text(`GSTIN/UIN:   ${this.gstNumberSite}`, 13.5, startY);
-  
+
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
         doc.text(`${this.selectedClientSite}`, 13.5, 90);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
-  
+
         const wrappedText2 = doc.splitTextToSize(this.selectedWarehouseSite, 80);
         startY = 97.5;
         wrappedText2.forEach(line => {
@@ -437,11 +433,11 @@ selectedReturnSiteAddress: string = '';
         });
         doc.text(`GSTIN/UIN:   ${this.gstNumberSite}`, 13.5, startY);
       };
-  
+
       let pageIndex = 0;
       addTemplate(pageIndex);
       addCommonInfo();
-  
+
       doc.setFontSize(8);
       const initialY = 140; // Adjusted Y position for product list
       let startY = initialY;
@@ -449,14 +445,14 @@ selectedReturnSiteAddress: string = '';
       const reducedLineHeight = 3.5;
       const maxPageHeight = 270;
       const maxProductsPerPage = 11;
-  
+
       const itemDetails = {};
-  
+
       this.changedAssets.forEach((item) => {
         const productName = item.productName;
         const quantity = item.quantity || 1;
-        const hsnNumber = item.hsnNumber || ''; 
-  
+        const hsnNumber = item.hsnNumber || '';
+
         if (!itemDetails[productName]) {
           itemDetails[productName] = {
             quantity: 0,
@@ -467,12 +463,12 @@ selectedReturnSiteAddress: string = '';
         itemDetails[productName].quantity += quantity;
         itemDetails[productName].serialNumbers.push(item.serialNumbers);
       });
-  
+
       let randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
       let formattedDate = new Date().toISOString().slice(0, 10).split('-').reverse().join('-');
-  
+
       let productCounter = 0;
-  
+
       Object.keys(itemDetails).forEach((productName, index) => {
         if (productCounter >= maxProductsPerPage) {
           pageIndex++;
@@ -482,16 +478,16 @@ selectedReturnSiteAddress: string = '';
           startY = initialY;
           productCounter = 0;
         }
-  
+
         const serialNumbers = itemDetails[productName].serialNumbers.join(' ');
         const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
         const totalHeight = splitSerialNumbers.length * lineHeight;
-  
+
         const productNameY = startY;
         const quantityY = startY;
         const serialNumbersY = startY;
         const hsnNumberY = startY;
-  
+
         doc.setFontSize(10);
         doc.text(`${index + 1}`, 13.5, productNameY);
         doc.setFont("helvetica", "bold");
@@ -500,7 +496,7 @@ selectedReturnSiteAddress: string = '';
         doc.text(itemDetails[productName].quantity.toString(), 167.5, quantityY);
         doc.setFontSize(9);
         doc.text(itemDetails[productName].hsnNumber, 141.5, hsnNumberY); // HSN Number
-  
+
         splitSerialNumbers.forEach(line => {
           if (startY + lineHeight > maxPageHeight) {
             pageIndex++;
@@ -513,12 +509,12 @@ selectedReturnSiteAddress: string = '';
           doc.text(line, 60, serialNumbersY);
           startY += reducedLineHeight;
         });
-  
+
         totalQuantity += itemDetails[productName].quantity;
-  
+
         startY += reducedLineHeight / 2;
         productCounter++;
-  
+
         if (index === 0) {
           doc.setFontSize(9);
           doc.text(`${this.companyPanNumberSite}`, 60, 224);
@@ -538,15 +534,15 @@ selectedReturnSiteAddress: string = '';
           doc.text(`${refNoAndDate}`, 96.5, 41.7);
         }
       });
-  
+
       doc.text(`${totalQuantity}`, 166, 197);
-  
+
       doc.save(`${this.selectedClientSite}-Delivery-Return-Challan.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
   }
-  
+
 
   getBase64ImageFromURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -573,48 +569,48 @@ selectedReturnSiteAddress: string = '';
 
   async generateOemChallan() {
     const doc = new jsPDF();
-    const imageUrl = 'assets/outwardChallan.jpg'; 
+    const imageUrl = 'assets/outwardChallan.jpg';
     let totalQuantity = 0;
-    const productsPerPage = 11; 
-  
+    const productsPerPage = 11;
+
     try {
       const imgData = await this.getBase64ImageFromURL(imageUrl);
-  
+
       const addTemplate = (pageIndex) => {
         doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
         doc.setFontSize(10);
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
       };
-  
+
       const addCommonInfo = (pageIndex) => {
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
         doc.text(`${this.selectedOem}`, 13.5, 53.5);
-  
+
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
-        const wrappedText = doc.splitTextToSize(this.selectedOemAddress, 80); 
+        const wrappedText = doc.splitTextToSize(this.selectedOemAddress, 80);
         let startY = 60;
         wrappedText.forEach(line => {
           doc.text(line, 13.5, startY);
           startY += 8;
         });
         doc.text(`GSTIN/UIN:   ${this.gstNumberOem}`, 13.5, startY);
-  
+
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
         doc.text(`${this.selectedOem}`, 13.5, 90);
-  
+
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
-        const wrappedText2 = doc.splitTextToSize(this.selectedOemAddress, 80); 
+        const wrappedText2 = doc.splitTextToSize(this.selectedOemAddress, 80);
         startY = 97.5;
         wrappedText2.forEach(line => {
           doc.text(line, 13.5, startY);
           startY += 8;
         });
         doc.text(`GSTIN/UIN:   ${this.gstNumberOem}`, 13.5, startY);
-  
+
         doc.setFontSize(9);
         doc.text(`${this.companyPanNumberOem}`, 60, 224);
         doc.text(`DN-${randomSixDigitNumber}`, 96.5, 24);
@@ -632,28 +628,28 @@ selectedReturnSiteAddress: string = '';
         let refNoAndDate = `SO/${randomSixDigitNumber} dt. ${formattedDate}`;
         doc.text(`${refNoAndDate}`, 96.5, 41.7);
       };
-  
+
       let pageIndex = 0;
       let randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
       let formattedDate = new Date().toISOString().slice(0, 10).split('-').reverse().join('-');
-      
+
       addTemplate(pageIndex);
       addCommonInfo(pageIndex);
-  
+
       doc.setFontSize(8);
-      const initialY = 140; 
+      const initialY = 140;
       let startY = initialY;
       const lineHeight = 8;
       const reducedLineHeight = 3.5;
       const maxPageHeight = 270;
-  
+
       const itemDetails = {};
-  
+
       this.changedAssets.forEach((item) => {
         const productName = item.productName;
         const quantity = item.quantity || 1;
-        const hsnNumber = item.hsnNumber || ''; 
-  
+        const hsnNumber = item.hsnNumber || '';
+
         if (!itemDetails[productName]) {
           itemDetails[productName] = {
             quantity: 0,
@@ -663,9 +659,9 @@ selectedReturnSiteAddress: string = '';
         }
         itemDetails[productName].quantity += quantity;
       });
-  
+
       let productCount = 0;
-  
+
       Object.keys(itemDetails).forEach((productName, index) => {
         if (productCount >= productsPerPage) {
           pageIndex++;
@@ -675,11 +671,11 @@ selectedReturnSiteAddress: string = '';
           startY = initialY;
           productCount = 0;
         }
-  
+
         const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
         const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
         const totalHeight = splitSerialNumbers.length * lineHeight;
-  
+
         if (startY + totalHeight > maxPageHeight) {
           pageIndex++;
           doc.addPage();
@@ -687,12 +683,12 @@ selectedReturnSiteAddress: string = '';
           addCommonInfo(pageIndex);
           startY = initialY;
         }
-  
+
         const productNameY = startY;
         const quantityY = startY;
         const serialNumbersY = startY;
         const hsnNumberY = startY;
-  
+
         doc.setFontSize(10);
         doc.text(`${index + 1}`, 13.5, productNameY);
         doc.setFont("helvetica", "bold");
@@ -700,8 +696,8 @@ selectedReturnSiteAddress: string = '';
         doc.setFont("helvetica", "normal");
         doc.text(itemDetails[productName].quantity.toString(), 167.5, quantityY);
         doc.setFontSize(9);
-        doc.text(itemDetails[productName].hsnNumber, 141.5, hsnNumberY); 
-  
+        doc.text(itemDetails[productName].hsnNumber, 141.5, hsnNumberY);
+
         splitSerialNumbers.forEach(line => {
           if (startY + lineHeight > maxPageHeight) {
             pageIndex++;
@@ -713,22 +709,21 @@ selectedReturnSiteAddress: string = '';
           doc.text(line, 60, serialNumbersY);
           startY += reducedLineHeight;
         });
-  
+
         totalQuantity += itemDetails[productName].quantity;
-  
+
         startY += reducedLineHeight / 2;
         productCount++;
       });
-  
-      // Print total quantity on the last page
+
       doc.text(`${totalQuantity} `, 166, 197);
-  
+
       doc.save(`${this.selectedOem}-Delivery-Return-Challan.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
   }
-  
+
   onSiteChange() {
     const selectedSiteData = this.siteData.find(site => site.siteName === this.selectedClientSite);
     this.selectedWarehouseSite = selectedSiteData ? selectedSiteData.address : '';
@@ -739,7 +734,7 @@ selectedReturnSiteAddress: string = '';
     this.selectedOemAddress = selectedOemData ? selectedOemData.address : '';
   }
 
-    resetSiteModal() {
+  resetSiteModal() {
     this.selectedClientSite = '';
     this.selectedWarehouseSite = '';
     this.gstNumberSite = '';
@@ -767,16 +762,14 @@ selectedReturnSiteAddress: string = '';
     this.termsOfDeliveryOem = '';
   }
 
-
-
-  
-
   openReturnGoodModal() {
     this.showReturnGoodModal = true;
   }
 
   closeModal() {
     this.showReturnGoodModal = false;
+    this.showOemModal  = false;
+    this.showSiteModal =false;
   }
 
   resetReturnGoodModal() {
@@ -787,8 +780,8 @@ selectedReturnSiteAddress: string = '';
     this.dispatchedThroughReturn = '';
   }
 
- async submitReturnGood() {
-   await this.returnChallan()
+  async submitReturnGood() {
+    await this.returnChallan()
     this.submitReturnToServer()
     this.closeModal();
     this.resetReturnGoodModal();
@@ -797,9 +790,9 @@ selectedReturnSiteAddress: string = '';
 
   // async returnChallan() {
   //   const doc = new jsPDF();
-  //   const imageUrl = 'assets/returnChallan.jpg'; 
+  //   const imageUrl = 'assets/returnChallan.jpg';
   //   let totalQuantity = 0;
-  //   const productsPerPage = 11; 
+  //   const productsPerPage = 11;
   
   //   try {
   //     const imgData = await this.getBase64ImageFromURL(imageUrl);
@@ -810,18 +803,7 @@ selectedReturnSiteAddress: string = '';
   //       doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
   //     };
   
-  //     const addHeaderInfo = (siteName, siteAddress) => {
-  //       // doc.setFontSize(9);
-  //       // doc.setFont("helvetica", "bold");
-  //       // doc.text(`Installation Site Name: ${this.selectedReturnSite}`, 13.5, 30.5);
-  //       // // doc.text(`Challan No (Return): ${this.returnChallanNo}`, 155, 30.5);  // Adjusted X position for clarity
-  //       // doc.text(`Challan No (Return): ${this.returnChallanNo}`, 13.5, 35.5);  // Adjusted X position for clarity
-  //       // doc.text(`Challan Date (Return): ${this.returnChallanDate}`, 13.5, 40.5);  // Adjusted X position for clarity
-  //       // doc.setFont("helvetica", "normal");
-        
-  //       // doc.setFont("helvetica", "bold");
-  //       // doc.text(`Site Address: ${this.selectedReturnSiteAddress} `, 13.5, 45.5);
-  
+  //     const addHeaderInfo = () => {
   //       doc.setFontSize(10);
   //       doc.setFont("helvetica", "bold");
   //       doc.text('Installation Site Name:', 13.5, 30.5);
@@ -829,7 +811,6 @@ selectedReturnSiteAddress: string = '';
   //       doc.text('Challan Date (Return):', 13.5, 40.5);
   //       doc.text('Site Address:', 13.5, 45.5);
   
-  //       // Data with font size 9 and normal
   //       doc.setFontSize(9);
   //       doc.setFont("helvetica", "normal");
   //       doc.text(this.selectedReturnSite || 'No Site Selected', 60, 30.5);
@@ -838,50 +819,32 @@ selectedReturnSiteAddress: string = '';
   //       doc.text(this.selectedReturnSiteAddress || 'No Address', 60, 45.5);
   //     };
   
-  //     console.log('Selected Site before PDF:', this.selectedReturnSite);  // Debugging statement
-  //     console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress);  // Debugging statement
+  //     console.log('Selected Site before PDF:', this.selectedReturnSite);
+  //     console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress);
   
   //     let pageIndex = 0;
   //     addTemplate(pageIndex);
-  //     addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  //     addHeaderInfo();
   
   //     doc.setFontSize(8);
-  //     const initialY = 70; 
+  //     const initialY = 70;
   //     let startY = initialY;
   //     const lineHeight = 8;
-  //     const reducedLineHeight = 3.5;
   //     const maxPageHeight = 270;
-  
-  //     const itemDetails = {};
-  
-  //     this.changedAssets.forEach((item) => {
-  //       const productName = item.productName;
-  //       const quantity = item.quantity || 1;
-  //       const serialNumber = item.serialNumber || '';  // Use serialNumber instead of hsnNumber
-  
-  //       if (!itemDetails[productName]) {
-  //         itemDetails[productName] = {
-  //           quantity: 0,
-  //           serialNumbers: [],
-  //           serialNumber: serialNumber
-  //         };
-  //       }
-  //       itemDetails[productName].quantity += quantity;
-  //     });
   
   //     let productCount = 0;
   
-  //     Object.keys(itemDetails).forEach((productName, index) => {
+  //     this.changedAssets.forEach((item, index) => {
   //       if (productCount >= productsPerPage) {
   //         pageIndex++;
   //         doc.addPage();
   //         addTemplate(pageIndex);
-  //         addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  //         addHeaderInfo();
   //         startY = initialY;
   //         productCount = 0;
   //       }
   
-  //       const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
+  //       const serialNumbers = item.serialNumber || '';
   //       const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
   //       const totalHeight = splitSerialNumbers.length * lineHeight;
   
@@ -889,37 +852,37 @@ selectedReturnSiteAddress: string = '';
   //         pageIndex++;
   //         doc.addPage();
   //         addTemplate(pageIndex);
-  //         addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  //         addHeaderInfo();
   //         startY = initialY;
   //       }
   
   //       doc.setFontSize(10);
+  //       doc.setFont("helvetica", "bold");
   //       doc.text(`${index + 1}`, 14, startY);
   //       doc.setFont("helvetica", "bold");
-  //       doc.text(productName || '', 25, startY);
+  //       doc.text(item.productName || '', 25, startY);
   //       doc.setFont("helvetica", "normal");
-  //       doc.text(itemDetails[productName].quantity.toString(), 120.5, startY);
+  //       doc.text((item.quantity || 1).toString(), 120.5, startY);
   //       doc.setFontSize(9);
-  //       doc.text(this.returnDescription || '', 130, startY);
-  //       doc.text(itemDetails[productName].serialNumber, 80.5, startY);  // Use serialNumber instead of hsnNumber
+  //       doc.text(item.descriptionOfIssue || '', 130, startY);  // Accessing descriptionOfIssue from item
+  //       doc.text(item.serialNumber, 80.5, startY);
   
   //       startY += lineHeight;
   
-  //       splitSerialNumbers.forEach(line => {
+  //       splitSerialNumbers.forEach((line) => {
   //         if (startY + lineHeight > maxPageHeight) {
   //           pageIndex++;
   //           doc.addPage();
   //           addTemplate(pageIndex);
-  //           addHeaderInfo(this.selectedReturnSite, this.selectedReturnSiteAddress);  // Pass values directly
+  //           addHeaderInfo();
   //           startY = initialY;
   //         }
   //         doc.text(line, 60, startY);
-  //         startY += reducedLineHeight;
+  //         startY += lineHeight;
   //       });
   
-  //       totalQuantity += itemDetails[productName].quantity;
+  //       totalQuantity += item.quantity || 1;
   
-  //       startY += reducedLineHeight / 2;
   //       productCount++;
   //     });
   
@@ -945,7 +908,6 @@ selectedReturnSiteAddress: string = '';
       };
   
       const addHeaderInfo = () => {
-        // Headings with font size 10 and bold
         doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
         doc.text('Installation Site Name:', 13.5, 30.5);
@@ -953,7 +915,6 @@ selectedReturnSiteAddress: string = '';
         doc.text('Challan Date (Return):', 13.5, 40.5);
         doc.text('Site Address:', 13.5, 45.5);
   
-        // Data with font size 9 and normal
         doc.setFontSize(9);
         doc.setFont("helvetica", "normal");
         doc.text(this.selectedReturnSite || 'No Site Selected', 60, 30.5);
@@ -962,51 +923,33 @@ selectedReturnSiteAddress: string = '';
         doc.text(this.selectedReturnSiteAddress || 'No Address', 60, 45.5);
       };
   
-      console.log('Selected Site before PDF:', this.selectedReturnSite); // Debugging statement
-      console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress); // Debugging statement
+  
+      console.log('Selected Site before PDF:', this.selectedReturnSite);
+      console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress);
   
       let pageIndex = 0;
       addTemplate(pageIndex);
-      addHeaderInfo(); // Add header info with adjusted font sizes and styles
+      addHeaderInfo();
   
       doc.setFontSize(8);
       const initialY = 70;
       let startY = initialY;
       const lineHeight = 8;
-      const reducedLineHeight = 3.5;
       const maxPageHeight = 270;
-  
-      const itemDetails = {};
-  
-      this.changedAssets.forEach((item) => {
-        const productName = item.productName;
-        const quantity = item.quantity || 1;
-        const serialNumber = item.serialNumber || ''; // Use serialNumber instead of hsnNumber
-  
-        if (!itemDetails[productName]) {
-          itemDetails[productName] = {
-            quantity: 0,
-            serialNumbers: [],
-            serialNumber: serialNumber,
-          };
-        }
-        itemDetails[productName].quantity += quantity;
-        itemDetails[productName].serialNumbers.push(serialNumber);
-      });
   
       let productCount = 0;
   
-      Object.keys(itemDetails).forEach((productName, index) => {
+      this.changedAssets.forEach((item, index) => {
         if (productCount >= productsPerPage) {
           pageIndex++;
           doc.addPage();
           addTemplate(pageIndex);
-          addHeaderInfo(); // Add header info with adjusted font sizes and styles
+          addHeaderInfo();
           startY = initialY;
           productCount = 0;
         }
   
-        const serialNumbers = itemDetails[productName].serialNumbers.join(', ');
+        const serialNumbers = item.serialNumber || '';
         const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
         const totalHeight = splitSerialNumbers.length * lineHeight;
   
@@ -1014,7 +957,7 @@ selectedReturnSiteAddress: string = '';
           pageIndex++;
           doc.addPage();
           addTemplate(pageIndex);
-          addHeaderInfo(); // Add header info with adjusted font sizes and styles
+          addHeaderInfo();
           startY = initialY;
         }
   
@@ -1022,31 +965,17 @@ selectedReturnSiteAddress: string = '';
         doc.setFont("helvetica", "bold");
         doc.text(`${index + 1}`, 14, startY);
         doc.setFont("helvetica", "bold");
-        doc.text(productName || '', 25, startY);
+        doc.text(item.productName || '', 25, startY);
         doc.setFont("helvetica", "normal");
-        doc.text(itemDetails[productName].quantity.toString(), 120.5, startY);
+        doc.text(serialNumbers, 80.5, startY); // Correct position for serial number
+        doc.text((item.quantity || 1).toString(), 120.5, startY);
         doc.setFontSize(9);
-        doc.text(this.returnDescription || '', 130, startY);
-        doc.text(itemDetails[productName].serialNumber, 80.5, startY); // Use serialNumber instead of hsnNumber
+        doc.text(item.descriptionOfIssue || '', 130, startY);  // Accessing descriptionOfIssue from item
   
         startY += lineHeight;
   
-        // Print serial numbers, split into multiple lines if necessary
-        splitSerialNumbers.forEach((line, lineIndex) => {
-          if (startY + lineHeight > maxPageHeight) {
-            pageIndex++;
-            doc.addPage();
-            addTemplate(pageIndex);
-            addHeaderInfo(); // Add header info with adjusted font sizes and styles
-            startY = initialY;
-          }
-          doc.text(line, 60, startY);
-          startY += lineHeight;
-        });
+        totalQuantity += item.quantity || 1;
   
-        totalQuantity += itemDetails[productName].quantity;
-  
-        startY += reducedLineHeight / 2;
         productCount++;
       });
   
@@ -1055,6 +984,9 @@ selectedReturnSiteAddress: string = '';
       console.error('Error generating PDF:', error);
     }
   }
+  
+  
+  
   
   onReturnSiteChange() {
     console.log('Selected Site:', this.selectedReturnSite);
@@ -1069,7 +1001,7 @@ selectedReturnSiteAddress: string = '';
 
 }
 
-  
+
 
 
 
