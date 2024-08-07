@@ -10,10 +10,9 @@ export class DataService {
     throw new Error('Method not implemented.');
   }
 
+  // private baseUrl = 'https://api.hr.timesofpeople.com';
+  private baseUrl = 'http://localhost:3000';
 
-
-
-  private baseUrl = 'https://api.hr.timesofpeople.com';
 
   header: any = {}
 

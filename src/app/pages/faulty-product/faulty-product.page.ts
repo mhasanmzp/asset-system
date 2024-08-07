@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { jsPDF } from 'jspdf'; // Ensure you have the jsPDF library installed
+import { jsPDF } from 'jspdf'; //for challan pdf.
 import { ModalController, ToastController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { DataService } from 'src/app/services/asset.service'; // Adjust the path as necessary
-
+import { DataService } from 'src/app/services/asset.service'; 
 // import { CommonService } from 'src/app/services/common.service';
 @Component({
   selector: 'app-faulty-product',
@@ -69,6 +68,8 @@ export class FaultyProductPage implements OnInit {
   dispatchedThroughReturn: string;
   returnChallanNo: any;
   returnChallanDate: any;
+  returnReceivingDate: any;
+
   returnDescription: string;
   selectedReturnSiteAddress: string = '';
 
@@ -88,10 +89,8 @@ export class FaultyProductPage implements OnInit {
     this.loadCategories();
     this.loadStores();
     this.loadClients();
-    this.fetchClientWarehouses()
-    this.loadSites()
-
-
+    this.fetchClientWarehouses();
+    this.loadSites();
   }
 
   navigateToAsset() {
@@ -328,11 +327,6 @@ export class FaultyProductPage implements OnInit {
     }
   }
 
-  // closeModal() {
-  //   this.showOemModal = false;
-  //   this.showSiteModal = false;
-  // }
-
   async submitOemReturn() {
     this.closeModal();
     this.generateOemChallan()
@@ -389,10 +383,9 @@ export class FaultyProductPage implements OnInit {
       });
   }
 
-
   async generateChallan() {
     const doc = new jsPDF();
-    const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
+    const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path.
     let totalQuantity = 0;
 
     try {
@@ -439,7 +432,7 @@ export class FaultyProductPage implements OnInit {
       addCommonInfo();
 
       doc.setFontSize(8);
-      const initialY = 140; // Adjusted Y position for product list
+      const initialY = 140; 
       let startY = initialY;
       const lineHeight = 8;
       const reducedLineHeight = 3.5;
@@ -495,7 +488,7 @@ export class FaultyProductPage implements OnInit {
         doc.setFont("helvetica", "normal");
         doc.text(itemDetails[productName].quantity.toString(), 167.5, quantityY);
         doc.setFontSize(9);
-        doc.text(itemDetails[productName].hsnNumber, 141.5, hsnNumberY); // HSN Number
+        doc.text(itemDetails[productName].hsnNumber, 141.5, hsnNumberY); 
 
         splitSerialNumbers.forEach(line => {
           if (startY + lineHeight > maxPageHeight) {
@@ -543,7 +536,6 @@ export class FaultyProductPage implements OnInit {
     }
   }
 
-
   getBase64ImageFromURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -565,7 +557,6 @@ export class FaultyProductPage implements OnInit {
       img.src = url;
     });
   }
-
 
   async generateOemChallan() {
     const doc = new jsPDF();
@@ -787,7 +778,6 @@ export class FaultyProductPage implements OnInit {
     this.resetReturnGoodModal();
   }
 
-
   // async returnChallan() {
   //   const doc = new jsPDF();
   //   const imageUrl = 'assets/returnChallan.jpg';
@@ -805,18 +795,74 @@ export class FaultyProductPage implements OnInit {
   
   //     const addHeaderInfo = () => {
   //       doc.setFontSize(10);
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text('Installation Site Name:', 13.5, 30.5);
-  //       doc.text('Challan No (Return):', 13.5, 35.5);
-  //       doc.text('Challan Date (Return):', 13.5, 40.5);
-  //       doc.text('Site Address:', 13.5, 45.5);
   
+  //       // Print "Return from Site:"
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text('Return from Site:', 13.5, 30.5);
+  
+  //       // Print selected site name
+  //       doc.setFont("helvetica", "normal");
+  //       const siteText = this.selectedReturnSite || 'No Site Selected';
+  //       doc.text(siteText, 45, 30.5);
+  
+  //       // Calculate the width of the site name text and position the "Address:" text
+  //       const siteTextWidth = doc.getTextWidth(siteText);
+  //       const addressLabelX = 48 + siteTextWidth + 5; // 5 is the space before the comma
+  
+  //       // Print ", Address:"
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text('Address:', addressLabelX, 30.5);
+  
+  //       // Calculate the width of ", Address:" text and position the address text
+  //       const addressLabelWidth = doc.getTextWidth(', Address:');
+  //       const addressTextX = addressLabelX + addressLabelWidth + 2; // 2 is the space after the colon
+  
+  //       // Print the address
+  //       doc.setFont("helvetica", "normal");
+  //       doc.text(this.selectedReturnSiteAddress || 'No Address', addressTextX, 30.5);
+  
+  //       // Extract client and clientWarehouse from the first item in changedAssets
+  //       const firstItem = this.changedAssets[0] || {};
+  //       const client = firstItem.client || 'No Data';
+  //       const clientWarehouse = firstItem.clientWarehouse || 'No Data';
+  
+  //       // Print "To: client Address: clientWarehouse" just below the "Return from Site" row
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text('To:', 13.5, 35.5);
+  //       doc.setFont("helvetica", "normal");
+  //       doc.text(client, 22.5, 35.5);
+        
+  //       const clientTextWidth = doc.getTextWidth(client);
+  //       const clientAddressLabelX = 28 + clientTextWidth + 1; // 5 is the space before the comma
+        
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text('Address:', clientAddressLabelX, 35.5);
+        
+  //       const clientAddressLabelWidth = doc.getTextWidth('Address:');
+  //       const clientAddressTextX = clientAddressLabelX + clientAddressLabelWidth + 2; // 2 is the space after the colon
+        
+  //       doc.setFont("helvetica", "normal");
+  //       doc.text(clientWarehouse, clientAddressTextX, 35.5);
+  
+  //       // Print "Challan No:" and "Challan Date:"
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text('Challan No:', 13.5, 40.5);
+  //       doc.text('Challan Date:', 13.5, 45.5);
+  
+  //       // Print the challan number and date
   //       doc.setFontSize(9);
   //       doc.setFont("helvetica", "normal");
-  //       doc.text(this.selectedReturnSite || 'No Site Selected', 60, 30.5);
-  //       doc.text(this.returnChallanNo || 'No Challan No', 60, 35.5);
-  //       doc.text(this.returnChallanDate || 'No Challan Date', 60, 40.5);
-  //       doc.text(this.selectedReturnSiteAddress || 'No Address', 60, 45.5);
+  //       doc.text(this.returnChallanNo || 'No Challan No', 40, 40.5);
+  //       doc.text(this.returnChallanDate || 'No Challan Date', 40, 45.5);
+  
+  //       // Print the return receiving date
+  //       doc.setFontSize(10);
+  //       doc.setFont("helvetica", "normal");
+  //       // doc.text(`Return Receiving Date: ${this.returnReceivingDate}`, 145, 30);
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text('Return Receiving Date:', 147.5, 30);
+  //       doc.setFont("helvetica", "normal");
+  //       doc.text(this.returnReceivingDate, 188.5, 30);
   //     };
   
   //     console.log('Selected Site before PDF:', this.selectedReturnSite);
@@ -862,28 +908,17 @@ export class FaultyProductPage implements OnInit {
   //       doc.setFont("helvetica", "bold");
   //       doc.text(item.productName || '', 25, startY);
   //       doc.setFont("helvetica", "normal");
+  //       doc.text(serialNumbers, 80.5, startY);
   //       doc.text((item.quantity || 1).toString(), 120.5, startY);
   //       doc.setFontSize(9);
-  //       doc.text(item.descriptionOfIssue || '', 130, startY);  // Accessing descriptionOfIssue from item
-  //       doc.text(item.serialNumber, 80.5, startY);
+  //       doc.text(item.descriptionOfIssue || '', 130, startY);
   
   //       startY += lineHeight;
-  
-  //       splitSerialNumbers.forEach((line) => {
-  //         if (startY + lineHeight > maxPageHeight) {
-  //           pageIndex++;
-  //           doc.addPage();
-  //           addTemplate(pageIndex);
-  //           addHeaderInfo();
-  //           startY = initialY;
-  //         }
-  //         doc.text(line, 60, startY);
-  //         startY += lineHeight;
-  //       });
   
   //       totalQuantity += item.quantity || 1;
   
   //       productCount++;
+  //       console.log("ChangedAssets:::::::::::::", this.changedAssets);
   //     });
   
   //     doc.save(`${this.selectedReturnSite}Delivery-Return-Challan.pdf`);
@@ -909,20 +944,73 @@ export class FaultyProductPage implements OnInit {
   
       const addHeaderInfo = () => {
         doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text('Installation Site Name:', 13.5, 30.5);
-        doc.text('Challan No (Return):', 13.5, 35.5);
-        doc.text('Challan Date (Return):', 13.5, 40.5);
-        doc.text('Site Address:', 13.5, 45.5);
   
+        // Print "Return from Site:"
+        doc.setFont("helvetica", "bold");
+        doc.text('Return from Site:', 13.5, 30.5);
+  
+        // Print selected site name
+        doc.setFont("helvetica", "normal");
+        const siteText = this.selectedReturnSite || 'No Site Selected';
+        doc.text(siteText, 45, 30.5);
+  
+        // Calculate the width of the site name text and position the "Address:" text
+        const siteTextWidth = doc.getTextWidth(siteText);
+        const addressLabelX = 48 + siteTextWidth + 5; // 5 is the space before the comma
+  
+        // Print ", Address:"
+        doc.setFont("helvetica", "bold");
+        doc.text('Address:', addressLabelX, 30.5);
+  
+        // Calculate the width of ", Address:" text and position the address text
+        const addressLabelWidth = doc.getTextWidth(', Address:');
+        const addressTextX = addressLabelX + addressLabelWidth + 2; // 2 is the space after the colon
+  
+        // Print the address
+        doc.setFont("helvetica", "normal");
+        doc.text(this.selectedReturnSiteAddress || 'No Address', addressTextX, 30.5);
+  
+        // Extract client and clientWarehouse from the first item in changedAssets
+        const firstItem = this.changedAssets[0] || {};
+        const client = firstItem.client || 'No Data';
+        const clientWarehouse = firstItem.clientWarehouse || 'No Data';
+  
+        // Print "To: client Address: clientWarehouse" just below the "Return from Site" row
+        doc.setFont("helvetica", "bold");
+        doc.text('To:', 13.5, 35.5);
+        doc.setFont("helvetica", "normal");
+        doc.text(client, 22.5, 35.5);
+  
+        const clientTextWidth = doc.getTextWidth(client);
+        const clientAddressLabelX = 28 + clientTextWidth + 1; // 1 is the space before the comma
+  
+        doc.setFont("helvetica", "bold");
+        doc.text('Address:', clientAddressLabelX, 35.5);
+  
+        const clientAddressLabelWidth = doc.getTextWidth('Address:');
+        const clientAddressTextX = clientAddressLabelX + clientAddressLabelWidth + 2; // 2 is the space after the colon
+  
+        doc.setFont("helvetica", "normal");
+        doc.text(clientWarehouse, clientAddressTextX, 35.5);
+  
+        // Print "Challan No:" and "Challan Date:"
+        doc.setFont("helvetica", "bold");
+        doc.text('Challan No:', 13.5, 40.5);
+        doc.text('Challan Date:', 13.5, 45.5);
+  
+        // Print the challan number and date
         doc.setFontSize(9);
         doc.setFont("helvetica", "normal");
-        doc.text(this.selectedReturnSite || 'No Site Selected', 60, 30.5);
-        doc.text(this.returnChallanNo || 'No Challan No', 60, 35.5);
-        doc.text(this.returnChallanDate || 'No Challan Date', 60, 40.5);
-        doc.text(this.selectedReturnSiteAddress || 'No Address', 60, 45.5);
-      };
+        doc.text(this.returnChallanNo || 'No Challan No', 40, 40.5);
+        doc.text(this.returnChallanDate || 'No Challan Date', 40, 45.5);
   
+        // Print the return receiving date
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.text('Return Receiving Date:', 147.5, 30);
+        doc.setFont("helvetica", "normal");
+        doc.text(this.returnReceivingDate, 188.5, 30);
+      };
   
       console.log('Selected Site before PDF:', this.selectedReturnSite);
       console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress);
@@ -951,7 +1039,9 @@ export class FaultyProductPage implements OnInit {
   
         const serialNumbers = item.serialNumber || '';
         const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
-        const totalHeight = splitSerialNumbers.length * lineHeight;
+        const descriptionOfIssue = item.descriptionOfIssue || '';
+        const splitDescription = doc.splitTextToSize(descriptionOfIssue, 55);
+        const totalHeight = Math.max(splitSerialNumbers.length, splitDescription.length) * lineHeight;
   
         if (startY + totalHeight > maxPageHeight) {
           pageIndex++;
@@ -967,16 +1057,19 @@ export class FaultyProductPage implements OnInit {
         doc.setFont("helvetica", "bold");
         doc.text(item.productName || '', 25, startY);
         doc.setFont("helvetica", "normal");
-        doc.text(serialNumbers, 80.5, startY); // Correct position for serial number
+        doc.text(splitSerialNumbers, 80.5, startY);
         doc.text((item.quantity || 1).toString(), 120.5, startY);
         doc.setFontSize(9);
-        doc.text(item.descriptionOfIssue || '', 130, startY);  // Accessing descriptionOfIssue from item
+        splitDescription.forEach((line, i) => {
+          doc.text(line, 130, startY + (i * lineHeight));
+        });
   
-        startY += lineHeight;
+        startY += totalHeight;
   
         totalQuantity += item.quantity || 1;
   
         productCount++;
+        console.log("ChangedAssets:::::::::::::", this.changedAssets);
       });
   
       doc.save(`${this.selectedReturnSite}Delivery-Return-Challan.pdf`);
@@ -985,9 +1078,7 @@ export class FaultyProductPage implements OnInit {
     }
   }
   
-  
-  
-  
+
   onReturnSiteChange() {
     console.log('Selected Site:', this.selectedReturnSite);
     const selectedSite = this.siteData.find(site => site.siteName === this.selectedReturnSite);
