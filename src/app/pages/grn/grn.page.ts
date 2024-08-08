@@ -90,8 +90,6 @@ export class GrnPage implements OnInit {
       this.selectedOemName = selectedPo.oemName;
     }
   }
-  
-  
 
   loadStores() {
     const formData = {
@@ -159,7 +157,6 @@ export class GrnPage implements OnInit {
     this.router.navigate(['/asset']);
   }
 
-
   async openDetailsModal(challanNumber: string) {
     const loading = await this.loadingController.create({
       message: 'Loading...',
@@ -207,7 +204,6 @@ export class GrnPage implements OnInit {
       console.error('Error fetching data:', error);
     });
   }
-
 
   closeDetailsModal() {
     this.isDetailModalOpen = false;
@@ -274,7 +270,6 @@ export class GrnPage implements OnInit {
       this.moreDataRows.splice(index, 1);
     }
   }
-
 
   updateSerialNumbersArray(row) {
   }
@@ -364,7 +359,6 @@ export class GrnPage implements OnInit {
 
   }
 
-
   async saveMaterial2() {
     const duplicates = this.checkForDuplicatesInSave();
     if (duplicates.length > 0) {
@@ -418,9 +412,6 @@ export class GrnPage implements OnInit {
     });
   }
   
-  
- 
-
  async saveMoreData() {
   const duplicates = this.checkForDuplicatesInSave();
   if (duplicates.length > 0) {
@@ -621,8 +612,7 @@ export class GrnPage implements OnInit {
       console.error('Error generating PDF:', error);
     }
   }
-  
-  
+
   getBase64ImageFromURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -645,16 +635,15 @@ export class GrnPage implements OnInit {
     });
   }
 
-
   async generateChallanforNew(items: any[], challanNo: string) {
     const doc = new jsPDF();
-    const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; // Update the path to the actual path where the image is stored
+    const imageUrl = 'assets/challanFormatFinal_page-0002.jpg'; // Update the path to the actual path where the image is stored...
   
     try {
       const imgData = await this.getBase64ImageFromURL(imageUrl);
   
       const addTemplate = (pageIndex) => {
-        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Position the image as per your template layout
+        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);  
         doc.setFontSize(12);
         const oemName = this.selectedPurchase.oemName || '';
         const textWidth = doc.getTextWidth(`${oemName}`);

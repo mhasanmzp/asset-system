@@ -260,11 +260,12 @@ export class FaultyProductPage implements OnInit {
     });
   }
 
-  async showToast(message: string) {
+  async showToast(message: string, color: string = 'default') {
     const toast = await this.toastController.create({
       message,
-      duration: 2000,
+      duration: 4000,
       position: 'top',
+      color,
     });
     await toast.present();
   }
@@ -273,19 +274,117 @@ export class FaultyProductPage implements OnInit {
     this.changedAssets = this.deliveredData.filter(asset => asset.selected);
   }
 
+  // async submitReturn() {
+  //   if (!this.selectedAction || this.selectedAction === 'null') {
+  //     this.showToast('Please select an action.');
+  //     return;
+  //   }
+  
+  //   const filteredAssets = this.changedAssets.filter(asset => asset.selected);
+  
+  //   if (filteredAssets.length === 0) {
+  //     this.showToast('No data to save.');
+  //     return;
+  //   }
+  
+  //   // Check if any product has an empty or null siteName
+  //   const hasEmptySiteName = filteredAssets.some(asset => !asset.siteName);
+  
+  //   // Remove the restriction if action is "Mark as Scrap" or if any siteName is null/empty
+  //   if (this.selectedAction !== 'Mark as Scrap' && !hasEmptySiteName) {
+  //     // Check if all selected products are from the same installation site
+  //     const installationSites = new Set(filteredAssets.map(asset => asset.siteName));
+  //     if (installationSites.size > 1) {
+  //       this.showToast('Please ensure all selected products are from the same Installation Site.', 'danger');
+  //       return;
+  //     }
+  //   }
+  
+  //   // Map the selected action to the corresponding status
+  //   const actionStatusMap = {
+  //     'Mark as Scrap': 'SCRAP',
+  //     'Return under inspection': 'RETURN UNDER INSPECTION',
+  //     'Sent Back to the Site': 'RETURN TO SITE',
+  //     'Sent Back to the OEM': 'RETURN TO OEM',
+  //   };
+  
+  //   const expectedStatus = actionStatusMap[this.selectedAction];
+  
+  //   // Check if any asset's status matches the selected action's expected status
+  //   const conflictingAsset = filteredAssets.find(asset => asset.status === expectedStatus);
+  //   if (conflictingAsset) {
+  //     this.showToast(`The selected product "${conflictingAsset.productName}" already has the status "${expectedStatus}".`, 'danger');
+  //     return;
+  //   }
+  
+  //   // Proceed with action based on the selected option
+  //   if (this.selectedAction === 'Sent Back to the OEM') {
+  //     this.showOemModal = true;
+  //   } else if (this.selectedAction === 'Sent Back to the Site') {
+  //     this.showSiteModal = true;
+  //   } else if (this.selectedAction === 'Return under inspection') {
+  //     this.showReturnGoodModal = true;
+  //   } else if (this.selectedAction === 'Mark as Scrap') {
+  //     await this.submitReturnToServer();
+  //   }
+  // }
+  
   async submitReturn() {
     if (!this.selectedAction || this.selectedAction === 'null') {
       this.showToast('Please select an action.');
       return;
     }
-
+  
     const filteredAssets = this.changedAssets.filter(asset => asset.selected);
-
+  
     if (filteredAssets.length === 0) {
       this.showToast('No data to save.');
       return;
     }
-
+  
+    // Separate assets with empty and non-empty site names
+    const assetsWithEmptySiteName = filteredAssets.filter(asset => !asset.siteName);
+    const assetsWithNonEmptySiteName = filteredAssets.filter(asset => asset.siteName);
+  
+    // Get unique site names from the non-empty siteName assets
+    const uniqueSiteNames = new Set(assetsWithNonEmptySiteName.map(asset => asset.siteName));
+  
+    // Check if there are multiple unique non-empty site names
+    if (uniqueSiteNames.size > 1) {
+      this.showToast('Please ensure all selected products are from the same Installation Site.', 'danger');
+      return;
+    }
+  
+    // Check if both empty site names and a unique non-empty site name are selected
+    if (assetsWithEmptySiteName.length > 0 && uniqueSiteNames.size === 1) {
+      // Allow selection if only one unique site name is present alongside empty site names
+    } else if (assetsWithEmptySiteName.length === 0 && uniqueSiteNames.size === 1) {
+      // Allow selection if only one unique site name is present
+    } else if (assetsWithEmptySiteName.length > 0 && uniqueSiteNames.size === 0) {
+      // Allow selection if only empty site names are present
+    } else {
+      this.showToast('Please ensure all selected products are either from the same Installation Site or have no site name.', 'danger');
+      return;
+    }
+  
+    // Map the selected action to the corresponding status
+    const actionStatusMap = {
+      'Mark as Scrap': 'SCRAP',
+      'Return under inspection': 'RETURN UNDER INSPECTION',
+      'Sent Back to the Site': 'RETURN TO SITE',
+      'Sent Back to the OEM': 'RETURN TO OEM',
+    };
+  
+    const expectedStatus = actionStatusMap[this.selectedAction];
+  
+    // Check if any asset's status matches the selected action's expected status
+    const conflictingAsset = filteredAssets.find(asset => asset.status === expectedStatus);
+    if (conflictingAsset) {
+      this.showToast(`The selected product "${conflictingAsset.productName}" already has the status "${expectedStatus}".`, 'danger');
+      return;
+    }
+  
+    // Proceed with action based on the selected option
     if (this.selectedAction === 'Sent Back to the OEM') {
       this.showOemModal = true;
     } else if (this.selectedAction === 'Sent Back to the Site') {
@@ -296,6 +395,7 @@ export class FaultyProductPage implements OnInit {
       await this.submitReturnToServer();
     }
   }
+  
 
   async submitReturnToServer() {
     const loading = await this.loadingController.create({
@@ -777,156 +877,8 @@ export class FaultyProductPage implements OnInit {
     this.closeModal();
     this.resetReturnGoodModal();
   }
-
-  // async returnChallan() {
-  //   const doc = new jsPDF();
-  //   const imageUrl = 'assets/returnChallan.jpg';
-  //   let totalQuantity = 0;
-  //   const productsPerPage = 11;
-  
-  //   try {
-  //     const imgData = await this.getBase64ImageFromURL(imageUrl);
-  
-  //     const addTemplate = (pageIndex) => {
-  //       doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-  //       doc.setFontSize(10);
-  //       doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
-  //     };
-  
-  //     const addHeaderInfo = () => {
-  //       doc.setFontSize(10);
-  
-  //       // Print "Return from Site:"
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text('Return from Site:', 13.5, 30.5);
-  
-  //       // Print selected site name
-  //       doc.setFont("helvetica", "normal");
-  //       const siteText = this.selectedReturnSite || 'No Site Selected';
-  //       doc.text(siteText, 45, 30.5);
-  
-  //       // Calculate the width of the site name text and position the "Address:" text
-  //       const siteTextWidth = doc.getTextWidth(siteText);
-  //       const addressLabelX = 48 + siteTextWidth + 5; // 5 is the space before the comma
-  
-  //       // Print ", Address:"
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text('Address:', addressLabelX, 30.5);
-  
-  //       // Calculate the width of ", Address:" text and position the address text
-  //       const addressLabelWidth = doc.getTextWidth(', Address:');
-  //       const addressTextX = addressLabelX + addressLabelWidth + 2; // 2 is the space after the colon
-  
-  //       // Print the address
-  //       doc.setFont("helvetica", "normal");
-  //       doc.text(this.selectedReturnSiteAddress || 'No Address', addressTextX, 30.5);
-  
-  //       // Extract client and clientWarehouse from the first item in changedAssets
-  //       const firstItem = this.changedAssets[0] || {};
-  //       const client = firstItem.client || 'No Data';
-  //       const clientWarehouse = firstItem.clientWarehouse || 'No Data';
-  
-  //       // Print "To: client Address: clientWarehouse" just below the "Return from Site" row
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text('To:', 13.5, 35.5);
-  //       doc.setFont("helvetica", "normal");
-  //       doc.text(client, 22.5, 35.5);
-        
-  //       const clientTextWidth = doc.getTextWidth(client);
-  //       const clientAddressLabelX = 28 + clientTextWidth + 1; // 5 is the space before the comma
-        
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text('Address:', clientAddressLabelX, 35.5);
-        
-  //       const clientAddressLabelWidth = doc.getTextWidth('Address:');
-  //       const clientAddressTextX = clientAddressLabelX + clientAddressLabelWidth + 2; // 2 is the space after the colon
-        
-  //       doc.setFont("helvetica", "normal");
-  //       doc.text(clientWarehouse, clientAddressTextX, 35.5);
-  
-  //       // Print "Challan No:" and "Challan Date:"
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text('Challan No:', 13.5, 40.5);
-  //       doc.text('Challan Date:', 13.5, 45.5);
-  
-  //       // Print the challan number and date
-  //       doc.setFontSize(9);
-  //       doc.setFont("helvetica", "normal");
-  //       doc.text(this.returnChallanNo || 'No Challan No', 40, 40.5);
-  //       doc.text(this.returnChallanDate || 'No Challan Date', 40, 45.5);
-  
-  //       // Print the return receiving date
-  //       doc.setFontSize(10);
-  //       doc.setFont("helvetica", "normal");
-  //       // doc.text(`Return Receiving Date: ${this.returnReceivingDate}`, 145, 30);
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text('Return Receiving Date:', 147.5, 30);
-  //       doc.setFont("helvetica", "normal");
-  //       doc.text(this.returnReceivingDate, 188.5, 30);
-  //     };
-  
-  //     console.log('Selected Site before PDF:', this.selectedReturnSite);
-  //     console.log('Selected Site Address before PDF:', this.selectedReturnSiteAddress);
-  
-  //     let pageIndex = 0;
-  //     addTemplate(pageIndex);
-  //     addHeaderInfo();
-  
-  //     doc.setFontSize(8);
-  //     const initialY = 70;
-  //     let startY = initialY;
-  //     const lineHeight = 8;
-  //     const maxPageHeight = 270;
-  
-  //     let productCount = 0;
-  
-  //     this.changedAssets.forEach((item, index) => {
-  //       if (productCount >= productsPerPage) {
-  //         pageIndex++;
-  //         doc.addPage();
-  //         addTemplate(pageIndex);
-  //         addHeaderInfo();
-  //         startY = initialY;
-  //         productCount = 0;
-  //       }
-  
-  //       const serialNumbers = item.serialNumber || '';
-  //       const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
-  //       const totalHeight = splitSerialNumbers.length * lineHeight;
-  
-  //       if (startY + totalHeight > maxPageHeight) {
-  //         pageIndex++;
-  //         doc.addPage();
-  //         addTemplate(pageIndex);
-  //         addHeaderInfo();
-  //         startY = initialY;
-  //       }
-  
-  //       doc.setFontSize(10);
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text(`${index + 1}`, 14, startY);
-  //       doc.setFont("helvetica", "bold");
-  //       doc.text(item.productName || '', 25, startY);
-  //       doc.setFont("helvetica", "normal");
-  //       doc.text(serialNumbers, 80.5, startY);
-  //       doc.text((item.quantity || 1).toString(), 120.5, startY);
-  //       doc.setFontSize(9);
-  //       doc.text(item.descriptionOfIssue || '', 130, startY);
-  
-  //       startY += lineHeight;
-  
-  //       totalQuantity += item.quantity || 1;
-  
-  //       productCount++;
-  //       console.log("ChangedAssets:::::::::::::", this.changedAssets);
-  //     });
-  
-  //     doc.save(`${this.selectedReturnSite}Delivery-Return-Challan.pdf`);
-  //   } catch (error) {
-  //     console.error('Error generating PDF:', error);
-  //   }
-  // }
-  
+ 
+//WORKING FINE
   async returnChallan() {
     const doc = new jsPDF();
     const imageUrl = 'assets/returnChallan.jpg';
@@ -1072,13 +1024,12 @@ export class FaultyProductPage implements OnInit {
         console.log("ChangedAssets:::::::::::::", this.changedAssets);
       });
   
-      doc.save(`${this.selectedReturnSite}Delivery-Return-Challan.pdf`);
+      doc.save(`${this.selectedReturnSite}-Delivery-Return-Challan.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
   }
   
-
   onReturnSiteChange() {
     console.log('Selected Site:', this.selectedReturnSite);
     const selectedSite = this.siteData.find(site => site.siteName === this.selectedReturnSite);
