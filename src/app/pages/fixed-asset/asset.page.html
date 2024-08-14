@@ -329,6 +329,12 @@
                     <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
                       Address
                     </ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      PAN
+                    </ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      GST No.
+                    </ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
                 
@@ -341,6 +347,12 @@
                       <ion-label class="data-item">
                         {{ oem.address }}
                       </ion-label>
+                      <ion-label class="data-item">
+                        {{ oem.panNo }}
+                      </ion-label>
+                      <ion-label class="data-item">
+                        {{ oem.gstNo }}
+                      </ion-label>
                       <ion-button slot="end" fill="clear" (click)="startEdit(i)">
                         <ion-icon name="create-outline" slot="icon-only"></ion-icon>
                       </ion-button>
@@ -349,6 +361,10 @@
                       <ion-input [(ngModel)]="oem.oemName" placeholder="Enter OEM Name" class="editable-input"
                         style="border: 0.5px solid; border-radius: 10px;"></ion-input>
                       <ion-input [(ngModel)]="oem.address" placeholder="Enter Address" class="editable-input"
+                        style="border: 0.5px solid; border-radius: 10px;"></ion-input>
+                        <ion-input [(ngModel)]="oem.panNo" placeholder="Enter PAN" class="editable-input"
+                        style="border: 0.5px solid; border-radius: 10px;"></ion-input>
+                        <ion-input [(ngModel)]="oem.gstNo" placeholder="Enter GST No" class="editable-input"
                         style="border: 0.5px solid; border-radius: 10px;"></ion-input>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('OEM', oem)" title="Save">
                         <ion-icon name="bookmark"></ion-icon>

@@ -28,12 +28,12 @@ export class AppComponent {
   
     
    
-    {
-      title: 'Employee List',
-      url: 'employee-list',
-      icon: 'people',
-      permission: 'EmployeeList',
-    },
+    // {
+    //   title: 'Employee List',
+    //   url: 'employee-list',
+    //   icon: 'people',
+    //   permission: 'EmployeeList',
+    // },
  
   
    
@@ -47,12 +47,12 @@ export class AppComponent {
       permission: 'Leaves',
     },
 
-    {
-      title: 'Staffing Forecasting',
-      url: 'staffing-forecasting',
-      icon: 'people',
-      permission: 'Leaves',
-    },
+    // {
+    //   title: 'Staffing Forecasting',
+    //   url: 'staffing-forecasting',
+    //   icon: 'people',
+    //   permission: 'Leaves',
+    // },
 
 
    
