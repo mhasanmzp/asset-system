@@ -195,7 +195,7 @@ export class AssetPage implements OnInit {
     });
   }
 
-  loadStores() {
+   loadStores() {
     const formData = {
       permissionName: 'Tasks',
       employeeIdMiddleware: 342,

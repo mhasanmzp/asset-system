@@ -74,6 +74,21 @@ export class DeliveryPage implements OnInit {
     }
   }
 
+  fetchWarehouseDetails() {
+    const selectedAddress = this.warehouseProductData.find(address => address.name === this.selectedWarehouse);
+  
+    if (selectedAddress) {
+      this.gstNumber = selectedAddress.gstNo || '';
+      this.companyPanNumber = selectedAddress.panNo || '';
+      this.billingGstNumber = selectedAddress.gstNo || '';
+    } else {
+      this.gstNumber = '';
+      this.companyPanNumber = '';
+    }
+  }
+  
+
+
  async fetchProductsByClient() {
     if (this.selectedClient) {
       const formData = {

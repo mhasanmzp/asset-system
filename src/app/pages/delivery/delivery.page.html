@@ -162,10 +162,10 @@
         </ion-item>
         <ion-item>
           <ion-label position="stacked">Customer Warehouse</ion-label>
-          <ion-select [(ngModel)]="selectedWarehouse" name="warehouse" placeholder="Select Warehouse" class="styled-input">
+          <ion-select [(ngModel)]="selectedWarehouse" name="warehouse" placeholder="Select Warehouse" (ionChange)="fetchWarehouseDetails()" class="styled-input">
             <ion-select-option *ngFor="let warehouse of warehouseProductData" [value]="warehouse.name">{{ warehouse.name }}</ion-select-option>
           </ion-select>
-        </ion-item>
+        </ion-item> 
         <ion-item>
           <ion-label position="stacked">GST Number</ion-label>
           <ion-input [(ngModel)]="gstNumber" name="gstNumber" class="styled-input"></ion-input>

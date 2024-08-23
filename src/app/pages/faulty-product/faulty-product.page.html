@@ -65,20 +65,24 @@
             <div class="scroll-container">
               <ion-grid>
                 <ion-row>
-                  <ion-col size="1.5"><strong>Serial Number</strong></ion-col>
-                  <ion-col size="2.2"><strong>Product Name</strong></ion-col>
-                  <ion-col size="2.2"><strong>Warranty End Date</strong></ion-col>
-                  <ion-col size="2.2"><strong>Installation Site Name</strong></ion-col>
+                  <ion-col size="1"><strong>PO Number</strong></ion-col>
+                  <ion-col size="1"><strong>Challan No</strong></ion-col>
+                  <ion-col size="1.2"><strong>Serial Number</strong></ion-col>
+                  <ion-col size="2"><strong>Product Name</strong></ion-col>
+                  <ion-col size="1.5"><strong>Warranty End Date</strong></ion-col>
+                  <ion-col size="2"><strong>Installation Site Name</strong></ion-col>
                   <ion-col size="2.2"><strong>Status</strong></ion-col>
-                  <ion-col size="1.5"><strong>Select</strong></ion-col>
+                  <ion-col size="1"><strong>Select</strong></ion-col>
                 </ion-row>
                 <ion-row *ngFor="let data of filteredAssets()">
-                  <ion-col size="1.5" class="content">{{ data.serialNumber }}</ion-col>
-                  <ion-col size="2.2" class="content">{{ data.productName }}</ion-col>
-                  <ion-col size="2.2" class="content">{{ data.warrantyEndDate }}</ion-col>
-                  <ion-col size="2.2" class="content">{{ data.siteName }}</ion-col>
+                  <ion-col size="1" class="content">{{ data.purchaseOrder }}</ion-col>
+                  <ion-col size="1" class="content">{{ data.challanNo }}</ion-col>
+                  <ion-col size="1.2" class="content">{{ data.serialNumber }}</ion-col>
+                  <ion-col size="2" class="content">{{ data.productName }}</ion-col>
+                  <ion-col size="1.5" class="content">{{ data.warrantyEndDate }}</ion-col>
+                  <ion-col size="2" class="content">{{ data.siteName }}</ion-col>
                   <ion-col size="2.2" class="content">{{ data.status }}</ion-col>
-                  <ion-col size="1.5" class="content" style="text-align: left;">
+                  <ion-col size="1" class="content" style="text-align: left;">
                     <ion-checkbox [(ngModel)]="data.selected" (ionChange)="onSelectChange(data)"></ion-checkbox>
                   </ion-col>
                 </ion-row>
@@ -148,6 +152,33 @@
               <ion-input [(ngModel)]="termsOfDeliveryOem" name="termsOfDeliveryOem" class="styled-input"></ion-input>
             </ion-item>
           </form>
+  
+          <!-- Separate row for each product -->
+          <div style="margin-top: 20px;">
+            <ng-container *ngFor="let item of changedAssets; let i = index">
+              <div style="border-top: 1px solid #ccc; padding-top: 10px; margin-top: 10px;">
+                <!-- Adjust grid layout to fit all fields in one row -->
+                <div style="display: grid; grid-template-columns: 1.2fr 1.5fr 1.5fr 3fr; gap: 10px;">
+                  <ion-item>
+                    <ion-label position="stacked">Challan No:</ion-label>
+                    <ion-input [(ngModel)]="item.challanNo" name="challanNo{{i}}" class="styled-input" disabled></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Product Name {{i + 1}}:</ion-label>
+                    <ion-input [(ngModel)]="item.productName" name="productName{{i}}" class="styled-input" disabled></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Serial Number:</ion-label>
+                    <ion-input [(ngModel)]="item.serialNumber" name="serialNumber{{i}}" class="styled-input" disabled></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Description of Issue:</ion-label>
+                    <ion-input [(ngModel)]="item.remarks" [value]="item.remarks" name="descriptionOfIssue{{i}}" class="styled-input"></ion-input>
+                  </ion-item>
+                </div>
+              </div>
+            </ng-container>
+          </div>
         </ion-content>
         <ion-footer>
           <ion-toolbar>
@@ -225,6 +256,37 @@
               <ion-input [(ngModel)]="motorVehicleNoSite" name="motorVehicleNoSite" class="styled-input"></ion-input>
             </ion-item>
           </form>
+          <div style="margin-top: 20px;">
+            <ng-container *ngFor="let item of changedAssets; let i = index">
+              <div style="border-top: 1px solid #ccc; padding-top: 10px; margin-top: 10px;">
+                <!-- Adjust grid layout to fit all fields in one row -->
+                <div style="display: grid; grid-template-columns: 1.2fr 1.2fr 1.2fr 1.2fr 3fr; gap: 10px;">
+                  <ion-item>
+                    <ion-label position="stacked">Challan No:</ion-label>
+                    <ion-input [(ngModel)]="item.challanNo" name="challanNo{{i}}" class="styled-input" disabled></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Product Name {{i + 1}}:</ion-label>
+                    <ion-input [(ngModel)]="item.productName" name="productName{{i}}" class="styled-input" disabled></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Serial Number:</ion-label>
+                    <ion-input [(ngModel)]="item.serialNumber" name="serialNumber{{i}}" class="styled-input" disabled></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Warranty End Date:</ion-label>
+                    <ion-input [(ngModel)]="item.warrantyEndDate" name="warrantyEndDate{{i}}" (onChange)="updateWarrantyRemarks()" class="styled-input" disabled></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="stacked">Description of Issue:</ion-label>
+                    <ion-input [(ngModel)]="item.remarks" name="item.remarks{{i}}" class="styled-input"></ion-input>
+                  </ion-item>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          
+          
         </ion-content>
         <ion-footer>
           <ion-toolbar>
@@ -347,7 +409,11 @@
   
             <!-- Loop through changedAssets to generate fields for each product -->
             <ng-container *ngFor="let item of changedAssets; let i = index">
-              <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 2fr; gap: 10px; margin-bottom: 10px;">
+                <ion-item>
+                  <ion-label position="stacked">Challan No:</ion-label>
+                  <ion-input [(ngModel)]="item.challanNo" name="challanNo{{i}}" class="styled-input" disabled></ion-input>
+                </ion-item>
                 <ion-item>
                   <ion-label position="stacked">Product Name {{i + 1}}:</ion-label>
                   <ion-input [(ngModel)]="item.productName" name="productName{{i}}" class="styled-input" disabled></ion-input>

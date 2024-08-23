@@ -501,14 +501,16 @@
             
                 <ng-container *ngIf="data.masterData === 'Customer Warehouse'">
                   <!-- Column heading -->
-                  <div class="header-row">
+                  <!-- <div class="header-row">
                     <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Customer Name</ion-label>
                     <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Address</ion-label>
-                    <div class="header-item"></div> <!-- Empty header for the edit button column -->
-                  </div>
+                    <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">PAN</ion-label>
+                    <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">GST No.</ion-label>
+                    <div class="header-item"></div> 
+                  </div> -->
                 
                   <!-- Data rows -->
-                  <ion-item *ngFor="let warehouse of viewData['Warehouse']; let i = index" class="data-row">
+                  <!-- <ion-item *ngFor="let warehouse of viewData['Warehouse']; let i = index" class="data-row">
                     <ng-container *ngIf="editIndex !== i">
                       <ion-label class="data-item">
                         {{ warehouse.clientName }}
@@ -530,6 +532,75 @@
                         <ion-input [(ngModel)]="warehouse.name" placeholder="Enter Warehouse Address"
                           class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
                       </div>
+                      <div class="data-item">
+                        <ion-input [(ngModel)]="warehouse.panNo" placeholder="Enter PAN"
+                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
+                      </div>
+                      <div class="data-item">
+                        <ion-input [(ngModel)]="warehouse.gstNo" placeholder="Enter GST No"
+                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
+                      </div>
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer Warehouse', warehouse)" title="Save">
+                        <ion-icon name="bookmark"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
+                      </ion-button>
+                    </ng-container>
+                  </ion-item> -->
+                  <div class="header-row">
+                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      Customer Name
+                    </ion-label>
+                    <ion-label class="header-item" style="margin-left: 40px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      Warehouse Address
+                    </ion-label>
+                    <ion-label class="header-item" style="margin-left: 40px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      PAN
+                    </ion-label>
+                    <ion-label class="header-item" style="margin-left: 40px; border: 1px solid; border-radius: 10px; font-size: large;">
+                      GST No.
+                    </ion-label>
+                    <div class="header-item"></div> <!-- Empty header for the edit button column -->
+                  </div>
+                  
+                  <!-- Data rows -->
+                  <ion-item *ngFor="let warehouse of viewData['Warehouse']; let i = index" class="data-row">
+                    <ng-container *ngIf="editIndex !== i">
+                      <ion-label class="data-item">
+                        {{ warehouse.clientName }}
+                      </ion-label>
+                      <ion-label class="data-item">
+                        {{ warehouse.name }}
+                      </ion-label>
+                      <ion-label class="data-item">
+                        {{ warehouse.panNo }}
+                      </ion-label>
+                      <ion-label class="data-item">
+                        {{ warehouse.gstNo }}
+                      </ion-label>
+                      <ion-button slot="end" fill="clear" (click)="startEdit(i)">
+                        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                      </ion-button>
+                    </ng-container>
+                    <ng-container *ngIf="editIndex === i">
+                      <div class="data-item">
+                        <ion-label class="data-item">
+                          {{ warehouse.clientName }}
+                        </ion-label>
+                      </div>
+                      <div class="data-item">
+                        <ion-input [(ngModel)]="warehouse.name" placeholder="Enter Warehouse Address"
+                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
+                      </div>
+                      <div class="data-item">
+                        <ion-input [(ngModel)]="warehouse.panNo" placeholder="Enter PAN"
+                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
+                      </div>
+                      <div class="data-item">
+                        <ion-input [(ngModel)]="warehouse.gstNo" placeholder="Enter GST No."
+                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
+                      </div>
                       <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer Warehouse', warehouse)" title="Save">
                         <ion-icon name="bookmark"></ion-icon>
                       </ion-button>
@@ -538,6 +609,7 @@
                       </ion-button>
                     </ng-container>
                   </ion-item>
+                  
                 </ng-container>
                 
               </ion-list>

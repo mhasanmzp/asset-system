@@ -91,6 +91,12 @@ export class GrnPage implements OnInit {
     }
   }
 
+  getToday(): string {
+    const todayDate = new Date();
+    return todayDate.toISOString().split('T')[0];
+  }
+
+
   loadStores() {
     const formData = {
       permissionName: 'Tasks',
