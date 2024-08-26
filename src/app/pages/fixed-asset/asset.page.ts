@@ -28,14 +28,15 @@ export class AssetPage implements OnInit {
   categoryInputs = [{ name: '', hsn: '' }];
   engineerInputs: string[] = [''];
   modelInputs: string[] = [''];
-  oemInputs: [{ name: '', address: '' }];
+  oemInputs: [{ name: '', address: '', panNo: '', gstNo: '' }];
   originalData: any = {};
 
   projectInputs: string[] = [''];
-  siteInputs: [{name:'',address:''}];
+  siteInputs: [{name:'',address:'', panNo: '', gstNo: ''}];
   storeInputs = [{ name: '', address: '' }];
   clientInputs: string[] = [''];
-  warehouseInputs: string[] = [''];
+  warehouseInputs: [{name:'',address:'', panNo: '', gstNo: ''}];
+  // warehouseInputs: string[] = [''];
 
   selectedClient: any;
   currentView: string = 'add'; 
@@ -296,12 +297,13 @@ export class AssetPage implements OnInit {
 
   resetInputs() {
     this.categoryInputs = [{ name: '', hsn: '' }];
-    this.oemInputs = [{name:'',address:''}];
+    this.oemInputs = [{name:'',address:'', panNo: '', gstNo: ''}];
     this.projectInputs = [''];
-    this.siteInputs = [{name:'',address:''}];
+    this.siteInputs = [{name:'',address:'', panNo: '', gstNo: ''}];
+    this.warehouseInputs = [{name:'',address:'', panNo: '', gstNo: ''}];
     this.storeInputs = [{ name: '', address: '' }];
     this.clientInputs = [''];
-    this.warehouseInputs = [''];
+    // this.warehouseInputs = [''];
     this.selectedClient = '';
   }
 
@@ -320,10 +322,10 @@ export class AssetPage implements OnInit {
       case 'OEM':
         console.log(this.oemInputs);
         
-        inputs = this.oemInputs.map(item => ({ name: item.name, address:item.address }));
+        inputs = this.oemInputs.map(item => ({ name: item.name, address:item.address, gstNo:item.gstNo, panNo:item.panNo }));
         break;
       case 'Installation Site':
-        inputs = this.siteInputs.map(item => ({ name: item.name,address:item.address }));
+        inputs = this.siteInputs.map(item => ({ name: item.name,address:item.address, gstNo:item.gstNo, panNo:item.panNo }));
         break;
       case 'Warehouse':
         inputs = this.storeInputs.map(item => ({ store: item }));
@@ -332,7 +334,9 @@ export class AssetPage implements OnInit {
         inputs = this.clientInputs.map(item => ({ client: item }));
         break;
       case 'Customer Warehouse':
-        inputs = this.warehouseInputs.map(item => ({ warehouse: item, client: this.selectedClient }));
+        // inputs = this.warehouseInputs.map(item => ({ warehouse: item, client: this.selectedClient }));
+        inputs = this.warehouseInputs.map(item => ({ name: item.name,address:item.address, gstNo:item.gstNo, panNo:item.panNo }));
+
         break;
       default:
         return;
@@ -420,7 +424,7 @@ export class AssetPage implements OnInit {
   }
 
   addOEMInput() {
-    this.oemInputs.push({name:'',address:''});
+    this.oemInputs.push({name:'',address:'', panNo: '', gstNo: ''});
   }
 
   removeOEMInput(index: number) {
@@ -436,7 +440,7 @@ export class AssetPage implements OnInit {
   }
 
   addSiteInput() {
-    this.siteInputs.push({name:'',address:''});
+    this.siteInputs.push({name:'',address:'', panNo: '', gstNo: ''});
   }
 
   removeSiteInput(index: number) {
@@ -444,7 +448,7 @@ export class AssetPage implements OnInit {
   }
 
   addStoreInput() {
-    this.storeInputs.push({ name: '', address: '' });
+    this.storeInputs.push({ name: '', address: '',  });
   }
 
   removeStoreInput(index: number) {
@@ -460,7 +464,7 @@ export class AssetPage implements OnInit {
   }
 
   addWarehouseInput() {
-    this.warehouseInputs.push('');
+    this.warehouseInputs.push({name:'',address:'', panNo: '', gstNo: ''});;
   }
 
   removeWarehouseInput(index: number) {

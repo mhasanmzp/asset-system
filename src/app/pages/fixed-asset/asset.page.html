@@ -96,7 +96,7 @@
   </ion-grid>
 
   <!-- Modal for adding data -->
-  <ion-modal [isOpen]="isModalOpen" style="--width: 70%; --height: 80%;">
+  <ion-modal [isOpen]="isModalOpen" style="--width: 90%; --height: 90%;">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -109,7 +109,6 @@
 
       <ion-content>
         <div class="modal-container">
-          <!-- Sidebar for selecting data types -->
           <div class="sidebar">
             <ul>
               <li *ngFor="let type of dataTypes" (click)="selectDataType(type)"
@@ -119,7 +118,6 @@
             </ul>
           </div>
 
-          <!-- Modal content -->
           <div class="modal-content">
             <div class="segment-buttons">
               <button (click)="currentView = 'add'" [class.active]="currentView === 'add'">Add</button>
@@ -127,8 +125,6 @@
             </div>
 
             <div *ngIf="currentView === 'add'">
-              <!-- Add segment content -->
-
               <div *ngIf="data.masterData === 'Category'">
                 <div *ngFor="let input of categoryInputs; let i = index" class="input-row">
                   <div class="input-group">
@@ -168,6 +164,17 @@
                         class="input-field"
                         style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">GST Number</ion-label>
+                      <ion-input [(ngModel)]="input.gstNo" placeholder="Enter GST Number" class="input-field"
+                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">PAN Number</ion-label>
+                      <ion-input [(ngModel)]="input.panNo" placeholder="Enter PAN Number" class="input-field"
+                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeOEMInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
@@ -177,8 +184,6 @@
                   </div>
                 </div>
               </div>
-              
-
               <div *ngIf="data.masterData === 'Installation Site'">
                 <div *ngFor="let input of siteInputs; let i = index" class="input-row">
                   <div class="input-group">
@@ -194,6 +199,16 @@
                         class="input-field" debounce="1500"
                         style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">GST Number</ion-label>
+                      <ion-input [(ngModel)]="input.gstNo" placeholder="Enter GST Number" class="input-field"
+                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">PAN Number</ion-label>
+                      <ion-input [(ngModel)]="input.panNo" placeholder="Enter PAN Number" class="input-field"
+                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>                    
                     <ion-button *ngIf="i > 0" slot="end" (click)="removeSiteInput(i)" fill="clear">
                       <ion-icon name="close-circle"></ion-icon>
                     </ion-button>
@@ -257,7 +272,7 @@
                   <div class="input-group">
                     <ion-item>
                       <ion-label position="floating">Select Customer</ion-label>
-                      <ion-select [(ngModel)]="selectedClient" name="selectedClient" required class="input-field"
+                      <ion-select [(ngModel)]="input.name" name="selectedClient" required class="input-field"
                         style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;" debounce="1500">
                         <ion-select-option *ngFor="let client of clients"
                           [value]="client.name">{{client.name}}</ion-select-option>
@@ -265,7 +280,19 @@
                     </ion-item>
                     <ion-item>
                       <ion-label position="floating">Customer Warehouse Address</ion-label>
-                      <ion-input [(ngModel)]="warehouseInputs[i]" placeholder="Enter Warehouse Address"
+                      <ion-input [(ngModel)]="input.address" placeholder="Enter Warehouse Address"
+                        name="warehouse{{i}}" debounce="1500" class="input-field"
+                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">Customer GST No</ion-label>
+                      <ion-input [(ngModel)]="input.gstNo" placeholder="Enter GST Number" class="input-field"
+                        name="warehouse{{i}}" debounce="1500" class="input-field"
+                        style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label position="floating">Customer GST No</ion-label>
+                      <ion-input [(ngModel)]="input.panNo" placeholder="Enter PAN Number" class="input-field"
                         name="warehouse{{i}}" debounce="1500" class="input-field"
                         style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
@@ -287,8 +314,8 @@
                 <ng-container *ngIf="data.masterData === 'Category'">
                   <!-- Column headings -->
                   <div class="header-row">
-                    <ion-label class="header-item category-header" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Category</ion-label>
-                    <ion-label class="header-item category-header" style="margin-left: 70px;border: 1px solid;border-radius: 10px; font-size: large;">HSN Number</ion-label>
+                    <ion-label class="header-item category-header" style="margin-left: 20px;border-radius: 10px; font-size: medium;">Category</ion-label>
+                    <ion-label class="header-item category-header" style="margin-left: 155px;border-radius: 10px; font-size: medium;">HSN Number</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
@@ -323,16 +350,16 @@
                 <ng-container *ngIf="data.masterData === 'OEM'">
                   <!-- Column headings -->
                   <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 20px;  border-radius: 10px; font-size: medium;">
                       OEM Name
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 55px;  border-radius: 10px; font-size: medium;">
                       Address
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 55px;  border-radius: 10px; font-size: medium;">
                       PAN
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 60px;  border-radius: 10px; font-size: medium;">
                       GST No.
                     </ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
@@ -379,16 +406,16 @@
                 <ng-container *ngIf="data.masterData === 'Installation Site'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 20px;  border-radius: 10px; font-size: medium;">
                       Site Name
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 58px;  border-radius: 10px; font-size: medium;">
                       Address
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 60px; border-radius: 10px; font-size: medium;">
                       PAN
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 60px;  border-radius: 10px; font-size: medium;">
                       GST No.
                     </ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
@@ -436,8 +463,8 @@
                 <ng-container *ngIf="data.masterData === 'Warehouse'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Name</ion-label>
-                    <ion-label class="header-item" style="margin-left: 50px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Address</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px;border-radius: 10px; font-size: medium;">Warehouse Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 50px;border-radius: 10px; font-size: medium;">Warehouse Address</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
@@ -447,7 +474,7 @@
                       <ion-label class="data-item">
                         {{ store.storeName }}
                       </ion-label>
-                      <ion-label class="data-item">
+                      <ion-label class="data-item" style="margin-left: -150px;">
                         {{ store.address }}
                       </ion-label>
                       <ion-button slot="end" fill="clear" (click)="startEdit(i)">
@@ -472,7 +499,7 @@
                 <ng-container *ngIf="data.masterData === 'Customer'">
                   <!-- Column heading -->
                   <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Customer Name</ion-label>
+                    <ion-label class="header-item" style="margin-left: 20px;border-radius: 10px; font-size: medium;">Customer Name</ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
                   </div>
             
@@ -500,65 +527,17 @@
                 </ng-container>
             
                 <ng-container *ngIf="data.masterData === 'Customer Warehouse'">
-                  <!-- Column heading -->
-                  <!-- <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px;border: 1px solid;border-radius: 10px; font-size: large;">Customer Name</ion-label>
-                    <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">Warehouse Address</ion-label>
-                    <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">PAN</ion-label>
-                    <ion-label class="header-item" style="margin-left: 40px;border: 1px solid;border-radius: 10px; font-size: large;">GST No.</ion-label>
-                    <div class="header-item"></div> 
-                  </div> -->
-                
-                  <!-- Data rows -->
-                  <!-- <ion-item *ngFor="let warehouse of viewData['Warehouse']; let i = index" class="data-row">
-                    <ng-container *ngIf="editIndex !== i">
-                      <ion-label class="data-item">
-                        {{ warehouse.clientName }}
-                      </ion-label>
-                      <ion-label class="data-item">
-                        {{ warehouse.name }}
-                      </ion-label>
-                      <ion-button slot="end" fill="clear" (click)="startEdit(i)">
-                        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-                      </ion-button>
-                    </ng-container>
-                    <ng-container *ngIf="editIndex === i">
-                      <div class="data-item">
-                        <ion-label class="data-item">
-                          {{ warehouse.clientName }}
-                        </ion-label>
-                      </div>
-                      <div class="data-item">
-                        <ion-input [(ngModel)]="warehouse.name" placeholder="Enter Warehouse Address"
-                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
-                      </div>
-                      <div class="data-item">
-                        <ion-input [(ngModel)]="warehouse.panNo" placeholder="Enter PAN"
-                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
-                      </div>
-                      <div class="data-item">
-                        <ion-input [(ngModel)]="warehouse.gstNo" placeholder="Enter GST No"
-                          class="rounded-input" style="border:.5px solid;border-radius:10px;"></ion-input>
-                      </div>
-                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Customer Warehouse', warehouse)" title="Save">
-                        <ion-icon name="bookmark"></ion-icon>
-                      </ion-button>
-                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
-                        <ion-icon name="close-circle"></ion-icon>
-                      </ion-button>
-                    </ng-container>
-                  </ion-item> -->
                   <div class="header-row">
-                    <ion-label class="header-item" style="margin-left: 20px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 20px;  border-radius: 10px; font-size: medium;">
                       Customer Name
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 40px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 45px;  border-radius: 10px; font-size: medium;">
                       Warehouse Address
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 40px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 60px;  border-radius: 10px; font-size: medium;">
                       PAN
                     </ion-label>
-                    <ion-label class="header-item" style="margin-left: 40px; border: 1px solid; border-radius: 10px; font-size: large;">
+                    <ion-label class="header-item" style="margin-left: 50px;  border-radius: 10px; font-size: medium;">
                       GST No.
                     </ion-label>
                     <div class="header-item"></div> <!-- Empty header for the edit button column -->
