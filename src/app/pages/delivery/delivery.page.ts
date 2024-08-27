@@ -16,6 +16,7 @@ export class DeliveryPage implements OnInit {
   filteredProductList: any[] = [];
   filteredWarehouseProductList: any[] = [];
   clients: any[] = [];
+  replProducts: any[] = [];
   clientWarehouses: any[] = [];
   selectedClient: any;
   selectedWarehouse: any;
@@ -61,7 +62,32 @@ export class DeliveryPage implements OnInit {
     this.loadCategories();
     this.loadClients();
     this.loadSites();
-    this.fetchWarehouseProducts()
+    this.fetchWarehouseProducts();
+    this.loadReplacementProducts()
+  }
+
+  isReplacement: boolean = false; // To track checkbox state
+  selectedReplacementProduct: any; // Selected replacement product
+
+  loadReplacementProducts() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
+    };
+
+    this.dataService.fetchReplacementProducts(formData).then((res: any) => {
+      this.replProducts = res;
+      console.log("Clients Response:", res);
+    }).catch(error => {
+      console.error('Error fetching clients data', error);
+    });
+  }
+
+  toggleReplacementInput() {
+    if (!this.isReplacement) {
+      this.selectedReplacementProduct = null; // Clear selection if checkbox is unchecked
+    }
   }
 
   navigateToAsset() {

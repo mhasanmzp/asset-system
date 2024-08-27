@@ -114,3 +114,14 @@ ion-content {
   background: #F3F3F3;
 
 }
+/* Style for small checkbox */
+.small-checkbox {
+  max-width: 150px; /* Adjust the width */
+  --padding-start: 5px; /* Reduce padding */
+  font-size: 0.9rem; /* Adjust font size */
+}
+
+/* Style the checkbox size specifically */
+.small-checkbox ion-checkbox {
+  --size: 20px; /* Make the checkbox smaller */
+}

@@ -11,7 +11,7 @@
   </ion-toolbar>
   <ion-row>
     <!-- Category Selection -->
-    <ion-col size="12" size-md="4">
+    <ion-col size="12" size-md="3">
       <ion-item>
         <ion-label>Category</ion-label>
         <ion-select [(ngModel)]="selectedCategory" (ionChange)="selectCategory($event)" class="responsive-filter filter-select" placeholder="Select Category" interface="popover">
@@ -23,7 +23,7 @@
     </ion-col>
 
     <!-- OEM Selection -->
-    <ion-col size="12" size-md="4">
+    <ion-col size="12" size-md="3">
       <ion-item class="text-black">
         <ion-label>OEM</ion-label>
         <ion-select [(ngModel)]="selectedOEM" (ionChange)="selectOEM($event)" class="responsive-filter filter-select" placeholder="Select OEM" interface="popover">
@@ -33,9 +33,21 @@
         </ion-select>
       </ion-item>
     </ion-col>
+
+      <!-- QA Engineer Selection -->
+      <ion-col size="12" size-md="3">
+        <ion-item class="text-black">
+          <ion-label>QA Engineer</ion-label>
+          <ion-select [(ngModel)]="selectedEngineer" (ionChange)="selectEngineer($event)" class="responsive-filter filter-select" placeholder="Select Engineer" interface="popover">
+            <ion-select-option *ngFor="let engineer of engineers" [value]="engineer.name">
+              {{ engineer.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
     
     <!-- Submit Button -->
-    <ion-col size="12" size-md="4" class="ion-text-end">
+    <ion-col size="12" size-md="2.5" class="ion-text-end">
       <ion-button type="button" (click)="submitSelectedProducts()">Submit</ion-button>
     </ion-col>
   </ion-row>

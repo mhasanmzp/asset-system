@@ -291,7 +291,7 @@
                         style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
                     </ion-item>
                     <ion-item>
-                      <ion-label position="floating">Customer GST No</ion-label>
+                      <ion-label position="floating">Customer PAN</ion-label>
                       <ion-input [(ngModel)]="input.panNo" placeholder="Enter PAN Number" class="input-field"
                         name="warehouse{{i}}" debounce="1500" class="input-field"
                         style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
@@ -306,6 +306,35 @@
                   </div>
                 </div>
               </div>
+              <div *ngIf="data.masterData === 'QA Engineer'">
+                <div *ngFor="let input of qaEngineerInputs; let i = index" class="input-row">
+                  <div class="input-group">
+                    <ion-item>
+                      <ion-label position="floating">Engineer Name</ion-label>
+                      <ion-input [(ngModel)]="input.name" placeholder="Enter QA Engineer Name" name="qaEngineerName{{i}}"
+                        class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item>
+                    <!-- <ion-item>
+                      <ion-label position="floating">Employee ID</ion-label>
+                      <ion-input [(ngModel)]="input.engineerId" placeholder="Enter Employee ID" name="employeeId{{i}}"
+                        class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item> -->
+                    <!-- <ion-item>
+                      <ion-label position="floating">Email Address</ion-label>
+                      <ion-input [(ngModel)]="input.email" placeholder="Enter Email Address" name="email{{i}}"
+                        class="input-field" style="border: 1px solid #ccc; border-radius: 10px; padding: 8px;"></ion-input>
+                    </ion-item> -->
+                    <ion-button *ngIf="i > 0" slot="end" (click)="removeQAEngineerInput(i)" fill="clear">
+                      <ion-icon name="close-circle"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="medium" (click)="addQAEngineerInput()" class="add-button add-inline-button">
+                      <ion-icon name="add-circle-outline"></ion-icon>
+                    </ion-button>
+                  </div>
+                </div>
+              </div>
+              
+              
             </div>
 
             <div *ngIf="currentView === 'view'">
@@ -589,6 +618,36 @@
                     </ng-container>
                   </ion-item>
                   
+                </ng-container>
+
+                <ng-container *ngIf="data.masterData === 'QA Engineer'">
+                  <!-- Column heading -->
+                  <div class="header-row">
+                    <ion-label class="header-item" style="margin-left: 20px;border-radius: 10px; font-size: medium;">Engineer Name</ion-label>
+                    <div class="header-item"></div> <!-- Empty header for the edit button column -->
+                  </div>
+            
+                  <!-- Data rows -->
+                  <ion-item *ngFor="let eng of viewData['QAEngineer']; let i = index" class="data-row">
+                    <ng-container *ngIf="editIndex !== i">
+                      <ion-label class="data-item">
+                        {{ eng.name }}
+                      </ion-label>
+                      <ion-button slot="end" fill="clear" (click)="startEdit(i)">
+                        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                      </ion-button>
+                    </ng-container>
+                    <ng-container *ngIf="editIndex === i">
+                      <ion-input [(ngModel)]="eng.name" placeholder="Enter Engineer Name"
+                        class="editable-input" style=" border:.5px solid;border-radius:10px;"></ion-input>
+                      <ion-button slot="end" fill="clear" (click)="submitUpdate('Engineer', eng)" title="Save">
+                        <ion-icon name="bookmark"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" (click)="cancelEdit()" title="Cancel">
+                        <ion-icon name="close-circle"></ion-icon>
+                      </ion-button>
+                    </ng-container>
+                  </ion-item>
                 </ng-container>
                 
               </ion-list>

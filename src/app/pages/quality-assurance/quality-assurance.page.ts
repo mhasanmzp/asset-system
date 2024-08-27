@@ -48,6 +48,13 @@ export class QualityAssurancePage implements OnInit {
     this.fetchQAProducts();
   }
 
+   // Handle engineer selection
+   selectEngineer(event: any) {
+    this.selectedEngineer = event.detail.value;
+    console.log("Selected Engineer:", this.selectedEngineer);
+  }
+
+
   selectCategory(event: any) {
     // Handle category selection
     console.log('Selected Category:', this.selectedCategory);
@@ -194,10 +201,89 @@ export class QualityAssurancePage implements OnInit {
     }
   }
 
-  async submitSelectedProducts() {
- 
-    const selectedProducts = this.products.filter(product => product.selection);
 
+  // async submitSelectedProducts() {
+  //   // Filter selected products
+  //   const selectedProducts = this.products.filter(product => product.selection);
+  
+  //   // If no products are selected, show a toast and exit
+  //   if (selectedProducts.length === 0) {
+  //     this.toastController.create({
+  //       message: 'No products selected',
+  //       duration: 2000,
+  //       position: 'bottom'
+  //     }).then(toast => toast.present());
+  //     return;
+  //   }
+  
+  //   // Show loading indicator
+  //   const loading = await this.loadingController.create({
+  //     message: 'Loading...',
+  //   });
+  //   await loading.present();
+  
+  //   // Prepare payload
+  //   const payload = {
+  //     permissionName: 'Tasks',
+  //     employeeIdMiddleware: this.userId,
+  //     employeeId: this.userId,
+  //     engineerName: typeof this.selectedEngineer === 'object' ? this.selectedEngineer?.name : this.selectedEngineer, // Handle both object and string cases
+  //     items: selectedProducts.map(product => ({
+  //       purchaseId: product.purchaseId,
+  //       categoryName: product.categoryName,
+  //       oemName: product.oemName,
+  //       productName: product.productName,
+  //       serialNumber: product.serialNumber,
+  //       testResult: product.selection,
+  //       remark: product.remark || '' // Add remark if it exists
+  //     }))
+  //   };
+  
+  //   // Submit the payload
+  //   this.dataService.submitProducts(payload).subscribe(async response => {
+  //     // Show success toast
+  //     this.toastController.create({
+  //       message: 'Products submitted successfully!',
+  //       duration: 2000,
+  //       position: 'bottom',
+  //       color: 'success'
+  //     }).then(toast => toast.present());
+  
+  //     // Remove submitted products from the list and reset the page
+  //     this.products = this.products.filter(product => !product.selection);
+  //     this.changePage(-this.currentPage + 1); // Reset to the first page if necessary
+  //     this.filteredProducts(); // Refresh the displayed products
+  
+  //     // Dismiss loading
+  //     loading.dismiss();
+  //   }, async error => {
+  //     // Dismiss loading and show error toast
+  //     loading.dismiss();
+  //     this.toastController.create({
+  //       message: 'Failed to submit products. Please try again.',
+  //       duration: 2000,
+  //       position: 'bottom',
+  //       color: 'danger'
+  //     }).then(toast => toast.present());
+  //   });
+  // }
+  
+  async submitSelectedProducts() {
+    // Ensure an engineer is selected
+    if (!this.selectedEngineer) {
+      this.toastController.create({
+        message: 'Please select an Engineer before submitting.',
+        duration: 2000,
+        position: 'top',
+        color: 'warning'
+      }).then(toast => toast.present());
+      return; // Stop execution if no engineer is selected
+    }
+  
+    // Filter selected products
+    const selectedProducts = this.products.filter(product => product.selection);
+  
+    // If no products are selected, show a toast and exit
     if (selectedProducts.length === 0) {
       this.toastController.create({
         message: 'No products selected',
@@ -206,15 +292,19 @@ export class QualityAssurancePage implements OnInit {
       }).then(toast => toast.present());
       return;
     }
+  
+    // Show loading indicator
     const loading = await this.loadingController.create({
       message: 'Loading...',
     });
     await loading.present();
+  
+    // Prepare payload
     const payload = {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
       employeeId: this.userId,
-      engineerName: this.selectedEngineer?.name,  // Assuming selectedEngineer is an object with a 'name' property
+      engineerName: typeof this.selectedEngineer === 'object' ? this.selectedEngineer?.name : this.selectedEngineer, // Handle both object and string cases
       items: selectedProducts.map(product => ({
         purchaseId: product.purchaseId,
         categoryName: product.categoryName,
@@ -225,32 +315,37 @@ export class QualityAssurancePage implements OnInit {
         remark: product.remark || '' // Add remark if it exists
       }))
     };
-
+  
+    // Submit the payload
     this.dataService.submitProducts(payload).subscribe(async response => {
+      // Show success toast
       this.toastController.create({
         message: 'Products submitted successfully!',
         duration: 2000,
         position: 'bottom',
         color: 'success'
       }).then(toast => toast.present());
-      // loading.dismiss();
-      // Remove submitted products from the list
+  
+      // Remove submitted products from the list and reset the page
       this.products = this.products.filter(product => !product.selection);
-      this.changePage(-this.currentPage + 1); // Reset to first page if necessary
-      this.filteredProducts()
+      this.changePage(-this.currentPage + 1); // Reset to the first page if necessary
+      this.filteredProducts(); // Refresh the displayed products
+  
+      // Dismiss loading
       loading.dismiss();
-
     }, async error => {
+      // Dismiss loading and show error toast
       loading.dismiss();
       this.toastController.create({
         message: 'Failed to submit products. Please try again.',
         duration: 2000,
         position: 'bottom',
         color: 'danger'
-        
       }).then(toast => toast.present());
     });
   }
+  
+
   navigateToAsset() {
     this.router.navigate(['/asset']);
   }

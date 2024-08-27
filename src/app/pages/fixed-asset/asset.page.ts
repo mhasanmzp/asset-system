@@ -22,6 +22,8 @@ export class AssetPage implements OnInit {
   sites = [];
   stores = [];
   clients: any[] = [];
+  engineers= [];
+
   warehouses = [];
   viewData: any = {};
 
@@ -36,7 +38,18 @@ export class AssetPage implements OnInit {
   storeInputs = [{ name: '', address: '' }];
   clientInputs: string[] = [''];
   warehouseInputs: [{name:'',address:'', panNo: '', gstNo: ''}];
-  // warehouseInputs: string[] = [''];
+  qaEngineerInputs = [
+    { name: '', engineerId: '', email: '' }
+  ];
+  
+  addQAEngineerInput() {
+    this.qaEngineerInputs.push({ name: '', engineerId: '', email: '' });
+  }
+  
+  removeQAEngineerInput(index: number) {
+    this.qaEngineerInputs.splice(index, 1);
+  }
+    // warehouseInputs: string[] = [''];
 
   selectedClient: any;
   currentView: string = 'add'; 
@@ -55,6 +68,21 @@ export class AssetPage implements OnInit {
     this.loadSites();
     this.loadStores();
     this.loadWarehouses();
+    this. loadEngineers();
+  }
+
+  loadEngineers() {
+    const formData = {
+      permissionName: 'Tasks',
+      employeeIdMiddleware: this.userId,
+      employeeId: this.userId,
+    };
+    this.dataService.fetchEngineers(formData).then((res: any) => {
+      this.engineers = res;
+      this.viewData.QAEngineer = res;
+    }).catch(error => {
+      console.error('Error fetching clients data', error);
+    });
   }
 
   // Load data methods
@@ -284,6 +312,7 @@ export class AssetPage implements OnInit {
     this.loadSites();
     this.loadStores();
     this.loadWarehouses();
+    this.loadEngineers()
   }
 
   resetData() {
@@ -305,6 +334,9 @@ export class AssetPage implements OnInit {
     this.clientInputs = [''];
     // this.warehouseInputs = [''];
     this.selectedClient = '';
+   this. qaEngineerInputs = [
+      { name: '', engineerId: '', email: '' }
+    ];
   }
 
   selectDataType(type: string) {
@@ -336,8 +368,10 @@ export class AssetPage implements OnInit {
       case 'Customer Warehouse':
         // inputs = this.warehouseInputs.map(item => ({ warehouse: item, client: this.selectedClient }));
         inputs = this.warehouseInputs.map(item => ({ name: item.name,address:item.address, gstNo:item.gstNo, panNo:item.panNo }));
-
         break;
+        case 'QA Engineer' :
+          inputs = this.qaEngineerInputs.map(item=>({name: item.name, engineerId: item.engineerId, email: item.email}))
+          break;
       default:
         return;
     }
@@ -369,6 +403,9 @@ export class AssetPage implements OnInit {
       case 'Customer Warehouse':
         saveObservable = this.dataService.saveWarehouse(payload);
         break;
+      case 'QA Engineer':
+      saveObservable = this.dataService.saveEngineer(payload);
+          break;
     }
 
     try {
@@ -387,6 +424,7 @@ export class AssetPage implements OnInit {
       this.loadStores();
       this.loadWarehouses();
       this.resetData1()
+      this.loadEngineers()
       // this.closeAddDataModal();
     } catch (error) {
       const toast = await this.toastController.create({
@@ -471,8 +509,10 @@ export class AssetPage implements OnInit {
     this.warehouseInputs.splice(index, 1);
   }
 
+ 
+
   dataTypes = [
-    'Category', 'OEM', 'Installation Site', 'Warehouse', 'Customer', 'Customer Warehouse'
+    'Category', 'OEM', 'Installation Site', 'Warehouse', 'Customer', 'Customer Warehouse','QA Engineer'
   ];
 
   startEdit(index: number) {
@@ -497,7 +537,8 @@ export class AssetPage implements OnInit {
         this.loadOems1(),
         this.loadSites1(),
         this.loadStores1(),
-        this.loadWarehouses1()
+        this.loadWarehouses1(),
+        this.loadEngineers()
       ]);
       console.log('All data loaded successfully');
     } catch (error) {

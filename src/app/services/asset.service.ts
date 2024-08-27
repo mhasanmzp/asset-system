@@ -36,6 +36,17 @@ export class DataService {
     });
   }
 
+  fetchReplacementProducts(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.baseUrl + '/replacement-product-list', data, { headers: this.header }).subscribe((resp: any) => {
+        resolve(resp);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+  
+
   fetchClientWarehouses(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.baseUrl + '/asset-warehouse-dropdown', data, { headers: this.header }).subscribe((resp: any) => {
