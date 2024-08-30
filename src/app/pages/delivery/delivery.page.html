@@ -85,7 +85,6 @@
       <!-- Step 2: Select Products from Warehouse and Deliver to Site -->
       <ion-grid>
         <ion-row>
-          <!-- Main Content Area -->
           <ion-col size="9">
             <ion-card>
               <ion-card-header>
@@ -155,7 +154,7 @@
     <ion-content>
       <form (ngSubmit)="deliverProductToWarehouse()" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
         
-        <ion-item>
+        <ion-item>  
           <ion-label position="stacked">Customer</ion-label>
           <ion-select [(ngModel)]="selectedClient" (ionChange)="fetchClientWarehouses()" name="client" placeholder="Select Client" class="styled-input">
             <ion-select-option *ngFor="let client of clients" [value]="client.name">{{ client.name }}</ion-select-option>
@@ -231,21 +230,34 @@
           <ion-label position="stacked">Motor Vehicle No</ion-label>
           <ion-input [(ngModel)]="motorVehicleNo" name="motorVehicleNo" class="styled-input"></ion-input>
         </ion-item>
-             <!-- Is Replacement Checkbox and Product Selection -->
-             <ion-item lines="none" style="display: flex; align-items: center; grid-column: span 1; width: 100%;">
-              <ion-label style="flex: 1;">Is Replacement</ion-label>
-              <ion-checkbox [(ngModel)]="isReplacement" name="isReplacement" (ionChange)="toggleReplacementInput()"></ion-checkbox>
-            </ion-item>
-            
+
+        <ion-item lines="none" style="display: flex; align-items: center; width: 100%;">
+          <ion-label style="flex: 1;">Is Replacement</ion-label>
+          <ion-checkbox [(ngModel)]="isReplacement" name="isReplacement" (ionChange)="toggleReplacementInput()"></ion-checkbox>
+      </ion-item>
     
-            <ion-item *ngIf="isReplacement" style="grid-column: span 1;">
-              <ion-label position="stacked">Select Product for Replacement</ion-label>
-              <ion-select [(ngModel)]="selectedReplacementProduct" name="replacementProduct" placeholder="Select Product" class="styled-input">
-                <ion-select-option *ngFor="let product of replProducts" [value]="product">  {{ product.productName }} : {{ product.serialNumber }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
       </form>
+
+    <ng-container *ngIf="isReplacement">
+        <div *ngFor="let product of selectedProductsForReplacement; let i = index" style="display: flex; align-items: center; margin-top: 10px;">
+            <!-- Selected Product Display -->
+            <ion-item style="flex: 2; margin-right: 10px;">
+                <ion-label position="floating">Selected Product</ion-label>
+                <ion-input [value]="product.ProductName + ' : ' + product.SerialNumber" disabled class="styled-input"></ion-input>
+              </ion-item>
+    
+            <!-- Replacement Product Dropdown -->
+            <ion-item style="flex: 2;">
+                <ion-label position="floating">Replacement for {{ product.ProductName }}</ion-label>
+                <ion-select [(ngModel)]="replacementProductSelections[i]" (ionChange)="onReplacementProductChange(i, $event)" name="replacementProduct{{i}}" placeholder="Select Replacement Product" class="styled-input">
+                    <ion-select-option *ngFor="let replacementProduct of replProducts" [value]="replacementProduct">
+                        {{ replacementProduct.productName }} : {{ replacementProduct.serialNumber }}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+        </div>
+    </ng-container>
+    
     </ion-content>
     <ion-footer>
       <ion-toolbar>
@@ -274,6 +286,5 @@
   }
 </style>
 
-  <!-- New One -->
   
 </ion-content>

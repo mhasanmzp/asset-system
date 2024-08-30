@@ -66,6 +66,38 @@ export class DeliveryPage implements OnInit {
     this.loadReplacementProducts()
   }
 
+//////////////////
+selectedProductsForReplacement: any[] = [];
+replacementProductSelections: any[] = [];
+// toggleReplacementInput() {
+//   if (this.isReplacement) {
+//       this.selectedProductsForReplacement = this.productData.filter(product => product.selected);
+//       this.replacementProductSelections = new Array(this.selectedProductsForReplacement.length).fill(null);
+//   } else {
+//       this.replacementProductSelections = [];
+//   }
+// }
+// onReplacementProductChange(index: number, product: any) {
+//   this.replacementProductSelections[index] = product;
+// }
+
+//////////
+onReplacementProductChange(index: number, event: any) {
+  this.replacementProductSelections[index] = event.detail.value;
+}
+toggleReplacementInput() {
+  if (this.isReplacement) {
+      this.selectedProductsForReplacement = this.productData.filter(product => product.selected);
+      this.replacementProductSelections = Array(this.selectedProductsForReplacement.length).fill(null);
+  } else {
+      this.selectedProductsForReplacement = [];
+      this.replacementProductSelections = [];
+  }
+}
+
+
+////////////////
+
   isReplacement: boolean = false; // To track checkbox state
   selectedReplacementProduct: any; // Selected replacement product
 
@@ -84,11 +116,12 @@ export class DeliveryPage implements OnInit {
     });
   }
 
-  toggleReplacementInput() {
-    if (!this.isReplacement) {
-      this.selectedReplacementProduct = null; // Clear selection if checkbox is unchecked
-    }
-  }
+  // toggleReplacementInput() {
+  //   if (!this.isReplacement) {
+  //     this.selectedReplacementProduct = null; // Clear selection if checkbox is unchecked
+  //     console.log("Selected Products:::::::::", this.selectedPurchase)
+  //   }
+  // }
 
   navigateToAsset() {
     this.router.navigate(['/asset']);
@@ -347,11 +380,13 @@ export class DeliveryPage implements OnInit {
         quantity: 1, // Assuming quantity is 1 for each selected product
         serialNumbers: [product.SerialNumber],
         hsnNumber: product.hsnNumber,
+        replacementProduct: this.replacementProductSelections.find((replacement, i) => this.productData[i].ProductName === product.ProductName) || null
+
       })),
-      challanNo: new Date().getTime(), // Example challan number
+      challanNo: new Date().getTime(), 
       storeLocation: this.selectedWarehouse.name,
-      warrantyPeriodMonths: 12, // Example warranty period
-      status: 'Delivered' // Example status
+      warrantyPeriodMonths: 12, 
+      status: 'Delivered' 
     };
 
     const loading = await this.loadingController.create({
@@ -365,6 +400,8 @@ export class DeliveryPage implements OnInit {
       permissionName: 'Tasks',
       employeeIdMiddleware: this.userId,
       employeeId: this.userId,
+      replacementProductSelections: this.selectedPurchase.items.map(item => item.replacementProduct)
+
     };
 
     // Call the service to save the delivery details
@@ -395,20 +432,175 @@ export class DeliveryPage implements OnInit {
   
   
   
+  // async generateChallan() {
+  //   const doc = new jsPDF();
+  //   const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
+  //   let totalQuantity = 0;
+  
+  //   try {
+  //     const imgData = await this.getBase64ImageFromURL(imageUrl);
+  
+  //     const addTemplate = (pageIndex) => {
+  //       doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+  //       doc.setFontSize(10);
+  //       doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
+  //     };
+  
+  //     const addCommonInfo = () => {
+  //       doc.setFontSize(9);
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text(`${this.selectedClient}`, 13.5, 53.5);
+  //       doc.setFont("helvetica", "normal");
+  //       doc.setFontSize(8);
+  
+  //       const wrappedText = doc.splitTextToSize(this.selectedWarehouse, 80);
+  //       let startY = 60;
+  //       wrappedText.forEach(line => {
+  //         doc.text(line, 13.5, startY);
+  //         startY += 8;
+  //       });
+  //       doc.text(`GSTIN/UIN:   ${this.gstNumber}`, 13.5, startY);
+  
+  //       doc.setFontSize(9);
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text(`${this.billingClient}`, 13.5, 90);
+  //       doc.setFont("helvetica", "normal");
+  //       doc.setFontSize(8);
+  
+  //       const wrappedText2 = doc.splitTextToSize(this.billingWarehouse, 80);
+  //       startY = 97.5;
+  //       wrappedText2.forEach(line => {
+  //         doc.text(line, 13.5, startY);
+  //         startY += 8;
+  //       });
+  //       doc.text(`GSTIN/UIN:   ${this.billingGstNumber}`, 13.5, startY);
+  //     };
+  
+  //     let pageIndex = 0;
+  //     addTemplate(pageIndex);
+  //     addCommonInfo();
+  
+  //     doc.setFontSize(8);
+  //     const initialY = 140; // Adjusted Y position for product list
+  //     let startY = initialY;
+  //     const lineHeight = 8;
+  //     const reducedLineHeight = 3.5;
+  //     const maxPageHeight = 270;
+  //     const maxProductsPerPage = 11;
+  
+  //     const itemDetails = {};
+  
+  //     this.selectedPurchase.items.forEach((item) => {
+  //       const productName = item.productName;
+  //       const quantity = item.quantity || 1;
+  //       const hsnNumber = item.hsnNumber || ''; // Assuming hsnNumber is a property of item
+  
+  //       if (!itemDetails[productName]) {
+  //         itemDetails[productName] = {
+  //           quantity: 0,
+  //           serialNumbers: [],
+  //           hsnNumber: hsnNumber
+  //         };
+  //       }
+  //       itemDetails[productName].quantity += quantity;
+  //     });
+  
+  //     let randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
+  //     let formattedDate = new Date().toISOString().slice(0, 10).split('-').reverse().join('-');
+  
+  //     let productCounter = 0;
+  
+  //     Object.keys(itemDetails).forEach((productName, index) => {
+  //       if (productCounter >= maxProductsPerPage) {
+  //         pageIndex++;
+  //         doc.addPage();
+  //         addTemplate(pageIndex);
+  //         addCommonInfo();
+  //         startY = initialY;
+  //         productCounter = 0;
+  //       }
+  
+  //       const serialNumbers = itemDetails[productName].serialNumbers.join(' ');
+  //       const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
+  //       const totalHeight = splitSerialNumbers.length * lineHeight;
+  
+  //       const productNameY = startY;
+  //       const quantityY = startY;
+  //       const serialNumbersY = startY;
+  //       const hsnNumberY = startY;
+  
+  //       doc.setFontSize(10);
+  //       doc.text(`${index + 1}`, 13.5, productNameY);
+  //       doc.setFont("helvetica", "bold");
+  //       doc.text(productName || '', 20, productNameY);
+  //       doc.setFont("helvetica", "normal");
+  //       doc.text(itemDetails[productName].quantity.toString(), 167.5, quantityY);
+  //       doc.setFontSize(9);
+  //       doc.text(itemDetails[productName].hsnNumber, 141.5, hsnNumberY); // HSN Number
+  
+  //       splitSerialNumbers.forEach(line => {
+  //         if (startY + lineHeight > maxPageHeight) {
+  //           pageIndex++;
+  //           doc.addPage();
+  //           addTemplate(pageIndex);
+  //           addCommonInfo();
+  //           startY = initialY;
+  //           productCounter = 0;
+  //         }
+  //         doc.text(line, 60, serialNumbersY);
+  //         startY += reducedLineHeight;
+  //       });
+  
+  //       totalQuantity += itemDetails[productName].quantity;
+  
+  //       startY += reducedLineHeight / 2;
+  //       productCounter++;
+  
+  //       if (index === 0) {
+  //         doc.setFontSize(9);
+  //         doc.text(`${this.companyPanNumber}`, 60, 224);
+  //         doc.text(`DN-${randomSixDigitNumber}`, 96.5, 24);
+  //         doc.text(`${this.buyersOrderNumber}`, 96.5, 51.25);
+  //         doc.text(`${this.dispatchDocNo}`, 96.5, 60);
+  //         doc.text(`${this.termsOfDelivery}`, 96.5, 86);
+  //         doc.text(`${this.dispatchedThrough}`, 96.5, 68);
+  //         doc.text(formattedDate, 137, 24);
+  //         doc.text(`${this.paymentTerms}`, 137, 33.5);
+  //         doc.text(`${this.dispatchedDate}`, 137, 51);
+  //         doc.text(`${this.destination}`, 137, 68);
+  //         doc.text(`${this.motorVehicleNo}`, 137, 77);
+  //         let billOfLading = `${this.dispatchDocNo} dt. ${formattedDate}`;
+  //         doc.text(`${billOfLading}`, 96.5, 77);
+  //         let refNoAndDate = `SO/${randomSixDigitNumber} dt. ${formattedDate}`;
+  //         doc.text(`${refNoAndDate}`, 96.5, 41.7);
+  //       }
+  //     });
+  
+  //     doc.text(`${totalQuantity}`, 166, 197);
+  
+  //     doc.save(`${this.selectedClient}-Delivery-Challan.pdf`);
+  //   } catch (error) {
+  //     console.error('Error generating PDF:', error);
+  //   }
+  // }
+  
+
   async generateChallan() {
     const doc = new jsPDF();
-    const imageUrl = 'assets/outwardChallan.jpg'; // Update the path to the actual path where the image is stored
+    const imageUrl = 'assets/outwardChallan.jpg'; // Path to the template image
     let totalQuantity = 0;
   
     try {
       const imgData = await this.getBase64ImageFromURL(imageUrl);
   
+      // Function to add the template image to each page
       const addTemplate = (pageIndex) => {
         doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
         doc.setFontSize(10);
         doc.text(`Page ${pageIndex + 1}`, 200, 10, { align: 'right' });
       };
   
+      // Function to add common information on each page
       const addCommonInfo = () => {
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
@@ -451,29 +643,14 @@ export class DeliveryPage implements OnInit {
       const maxPageHeight = 270;
       const maxProductsPerPage = 11;
   
-      const itemDetails = {};
-  
-      this.selectedPurchase.items.forEach((item) => {
-        const productName = item.productName;
-        const quantity = item.quantity || 1;
-        const hsnNumber = item.hsnNumber || ''; // Assuming hsnNumber is a property of item
-  
-        if (!itemDetails[productName]) {
-          itemDetails[productName] = {
-            quantity: 0,
-            serialNumbers: [],
-            hsnNumber: hsnNumber
-          };
-        }
-        itemDetails[productName].quantity += quantity;
-      });
-  
-      let randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
-      let formattedDate = new Date().toISOString().slice(0, 10).split('-').reverse().join('-');
-  
       let productCounter = 0;
   
-      Object.keys(itemDetails).forEach((productName, index) => {
+      this.selectedPurchase.items.forEach((item, index) => {
+        // Print product details
+        const productName = item.productName;
+        const hsnNumber = item.hsnNumber || '';
+        const serialNumbers = item.serialNumbers.join(' '); // Assuming serialNumbers is an array
+  
         if (productCounter >= maxProductsPerPage) {
           pageIndex++;
           doc.addPage();
@@ -483,25 +660,23 @@ export class DeliveryPage implements OnInit {
           productCounter = 0;
         }
   
-        const serialNumbers = itemDetails[productName].serialNumbers.join(' ');
-        const splitSerialNumbers = doc.splitTextToSize(serialNumbers, 95);
-        const totalHeight = splitSerialNumbers.length * lineHeight;
-  
-        const productNameY = startY;
-        const quantityY = startY;
-        const serialNumbersY = startY;
-        const hsnNumberY = startY;
-  
         doc.setFontSize(10);
-        doc.text(`${index + 1}`, 13.5, productNameY);
+        doc.text(`${index + 1}`, 13.5, startY);
         doc.setFont("helvetica", "bold");
-        doc.text(productName || '', 20, productNameY);
+        doc.text(productName || '', 20, startY);
         doc.setFont("helvetica", "normal");
-        doc.text(itemDetails[productName].quantity.toString(), 167.5, quantityY);
+        doc.text('1', 167.5, startY); // Quantity is set to 1
         doc.setFontSize(9);
-        doc.text(itemDetails[productName].hsnNumber, 141.5, hsnNumberY); // HSN Number
+        doc.text(hsnNumber, 141.5, startY); // HSN Number
+        doc.text(doc.splitTextToSize(serialNumbers, 95).join(' '), 52, startY); // Serial Numbers
   
-        splitSerialNumbers.forEach(line => {
+        startY += lineHeight;
+  
+        // Print replacement product details if "Is Replacement" is checked
+        if (this.isReplacement && this.replacementProductSelections[index]) {
+          const replacementProduct = this.replacementProductSelections[index].productName;
+          const replacementProductSerial = this.replacementProductSelections[index].serialNumber;
+
           if (startY + lineHeight > maxPageHeight) {
             pageIndex++;
             doc.addPage();
@@ -510,32 +685,34 @@ export class DeliveryPage implements OnInit {
             startY = initialY;
             productCounter = 0;
           }
-          doc.text(line, 60, serialNumbersY);
-          startY += reducedLineHeight;
-        });
   
-        totalQuantity += itemDetails[productName].quantity;
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(8);
+          doc.text(`Replacement for: ${replacementProduct}: ${replacementProductSerial}`, 75, startY-8);
+          startY += lineHeight;
+          doc.setFontSize(9);
+
+        }
   
-        startY += reducedLineHeight / 2;
+        totalQuantity += 1; // Increase the total quantity for each printed product
         productCounter++;
   
         if (index === 0) {
+          // Adding header fields on the first page
           doc.setFontSize(9);
           doc.text(`${this.companyPanNumber}`, 60, 224);
-          doc.text(`DN-${randomSixDigitNumber}`, 96.5, 24);
+          doc.text(`DN-${Math.floor(100000 + Math.random() * 900000)}`, 96.5, 24);
           doc.text(`${this.buyersOrderNumber}`, 96.5, 51.25);
           doc.text(`${this.dispatchDocNo}`, 96.5, 60);
           doc.text(`${this.termsOfDelivery}`, 96.5, 86);
           doc.text(`${this.dispatchedThrough}`, 96.5, 68);
-          doc.text(formattedDate, 137, 24);
+          doc.text(new Date().toISOString().slice(0, 10).split('-').reverse().join('-'), 137, 24);
           doc.text(`${this.paymentTerms}`, 137, 33.5);
           doc.text(`${this.dispatchedDate}`, 137, 51);
           doc.text(`${this.destination}`, 137, 68);
           doc.text(`${this.motorVehicleNo}`, 137, 77);
-          let billOfLading = `${this.dispatchDocNo} dt. ${formattedDate}`;
-          doc.text(`${billOfLading}`, 96.5, 77);
-          let refNoAndDate = `SO/${randomSixDigitNumber} dt. ${formattedDate}`;
-          doc.text(`${refNoAndDate}`, 96.5, 41.7);
+          doc.text(`${this.dispatchDocNo} dt. ${new Date().toISOString().slice(0, 10).split('-').reverse().join('-')}`, 96.5, 77);
+          doc.text(`SO/${Math.floor(100000 + Math.random() * 900000)} dt. ${new Date().toISOString().slice(0, 10).split('-').reverse().join('-')}`, 96.5, 41.7);
         }
       });
   
